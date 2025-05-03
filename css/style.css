@@ -264,12 +264,14 @@ a:focus {
 /********** Hero CSS ***********/
 /*******************************/
 .carousel {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 35px);
-    min-height: 400px;
-    background: #303030;
-    margin-bottom: 45px;
+	position: relative;
+	width: 100%;
+	height: calc(100vh - 35px);
+	min-height: 400px;
+	margin-bottom: 45px;
+	background-color: #303030;
+	background-image: url(../img/areas%20de%20atua%C3%A7%C3%A3o/ico/57c55a100f309801cdaccc522fde21d4.png);
+	background-repeat: repeat;
 }
 
 .carousel .container-fluid {
