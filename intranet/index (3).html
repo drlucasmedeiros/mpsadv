@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPS Advogados - Intranet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .login-card {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-georgia">
+    <!-- Login Page (shown by default) -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-[#004D40] p-4">
+        <div class="login-card bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+            <div class="flex justify-center mb-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-[#004D40] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-balance-scale text-white text-3xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-[#004D40]">MPS Advogados</h1>
+                    <p class="text-gray-600 mt-2">Intranet Corporativa</p>
+                </div>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50 p-2 border">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                    <div class="relative mt-1">
+                        <input type="password" id="password" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50 p-2 border">
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#004D40]">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-[#004D40] focus:ring-[#004D40]">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
+                    </div>
+                    
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-[#004D40] hover:text-[#00382e]">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#004D40] hover:bg-[#00382e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#004D40] transition-colors">
+                        Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard (hidden by default) -->
+    <div id="dashboard" class="hidden min-h-screen bg-gray-100">
+        <!-- Mobile Header -->
+        <div class="lg:hidden bg-[#004D40] text-white p-4 flex justify-between items-center shadow-md">
+            <button id="mobile-menu-button" class="text-white focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-2">
+                <span class="font-bold">MPS Advogados</span>
+            </div>
+            <div class="w-6"></div> <!-- Spacer for alignment -->
+        </div>
+        
+        <!-- Mobile Sidebar -->
+        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 left-0 z-50 w-64 bg-[#004D40] text-white shadow-lg lg:hidden">
+            <div class="p-4 flex items-center space-x-3 border-b border-[#00695C]">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <i class="fas fa-balance-scale text-[#004D40]"></i>
+                </div>
+                <span class="font-bold">MPS Advogados</span>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li><a href="#" class="sidebar-item active flex items-center p-3 rounded-lg text-white" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="documents">
+                        <i class="fas fa-folder mr-3"></i> Documentos Internos
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="templates">
+                        <i class="fas fa-file-alt mr-3"></i> Modelos de Petição
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="calendar">
+                        <i class="fas fa-calendar-alt mr-3"></i> Calendário
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="team">
+                        <i class="fas fa-users mr-3"></i> Equipe
+                    </a></li>
+                    <li id="admin-item" class="hidden"><a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="admin">
+                        <i class="fas fa-lock mr-3"></i> Administração
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-[#00695C]">
+                <button id="logout-btn" class="w-full flex items-center justify-center p-2 rounded-lg text-white hover:bg-[#00695C]">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                </button>
+            </div>
+        </div>
+        
+        <!-- Desktop Sidebar -->
+        <div class="hidden lg:flex lg:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-[#004D40] text-white">
+                <div class="flex items-center h-16 flex-shrink-0 px-4 border-b border-[#00695C]">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-balance-scale text-[#004D40]"></i>
+                    </div>
+                    <span class="font-bold">MPS Advogados</span>
+                </div>
+                <div class="flex-1 flex flex-col overflow-y-auto">
+                    <nav class="flex-1 px-4 py-4 space-y-1">
+                        <a href="#" class="sidebar-item active flex items-center p-3 rounded-lg text-white" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="documents">
+                            <i class="fas fa-folder mr-3"></i> Documentos Internos
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="templates">
+                            <i class="fas fa-file-alt mr-3"></i> Modelos de Petição
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="calendar">
+                            <i class="fas fa-calendar-alt mr-3"></i> Calendário
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-white" data-section="team">
+                            <i class="fas fa-users mr-3"></i> Equipe
+                        </a>
+                        <a href="#" id="admin-item-desktop" class="sidebar-item hidden flex items-center p-3 rounded-lg text-white" data-section="admin">
+                            <i class="fas fa-lock mr-3"></i> Administração
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-[#00695C]">
+                    <button id="logout-btn-desktop" class="w-full flex items-center justify-center p-2 rounded-lg text-white hover:bg-[#00695C]">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Navigation -->
+            <div class="bg-white shadow-sm hidden lg:block">
+                <div class="flex justify-between items-center px-6 py-3">
+                    <h1 class="text-xl font-semibold text-gray-800" id="section-title">Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button id="notifications-btn" class="text-gray-500 hover:text-[#004D40] relative">
+                                <i class="far fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                            </button>
+                            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg py-1 z-50">
+                                <div class="px-4 py-2 border-b border-gray-200">
+                                    <p class="text-sm font-medium text-gray-700">Notificações</p>
+                                </div>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Nova petição atribuída</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reunião em 15 minutos</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Documento atualizado</a>
+                                <div class="px-4 py-2 border-t border-gray-200">
+                                    <a href="#" class="text-xs text-[#004D40] hover:underline">Ver todas</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <button id="profile-btn" class="flex items-center space-x-2 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-[#004D40] flex items-center justify-center text-white">
+                                    <span>JD</span>
+                                </div>
+                                <span class="text-gray-700 hidden md:inline">Dr. João Silva</span>
+                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                            </button>
+                            <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Meu Perfil</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configurações</a>
+                                <div class="border-t border-gray-200"></div>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Sections -->
+            <div class="p-4 lg:p-6">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white rounded-lg shadow p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-[#E0F2F1] text-[#004D40] mr-4">
+                                    <i class="fas fa-file-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Petições em andamento</p>
+                                    <p class="text-2xl font-bold">12</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-[#E0F2F1] text-[#004D40] mr-4">
+                                    <i class="fas fa-calendar-check text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Audiências hoje</p>
+                                    <p class="text-2xl font-bold">3</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-[#E0F2F1] text-[#004D40] mr-4">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Prazos próximos</p>
+                                    <p class="text-2xl font-bold">5</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 card-hover">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-[#E0F2F1] text-[#004D40] mr-4">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Clientes ativos</p>
+                                    <p class="text-2xl font-bold">24</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-lg font-semibold">Atividades Recentes</h2>
+                                <a href="#" class="text-sm text-[#004D40] hover:underline">Ver todas</a>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-[#E0F2F1] flex items-center justify-center text-[#004D40]">
+                                            <i class="fas fa-file-signature"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium">Petição protocolada</p>
+                                        <p class="text-sm text-gray-500">Processo #12345 - 2 horas atrás</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-[#E0F2F1] flex items-center justify-center text-[#004D40]">
+                                            <i class="fas fa-comments"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium">Nova mensagem</p>
+                                        <p class="text-sm text-gray-500">Cliente Silva - 5 horas atrás</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-[#E0F2F1] flex items-center justify-center text-[#004D40]">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium">Audiência marcada</p>
+                                        <p class="text-sm text-gray-500">15/06 - 9:30h - 1 dia atrás</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-lg font-semibold">Próximos Eventos</h2>
+                                <a href="#" class="text-sm text-[#004D40] hover:underline">Ver calendário</a>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-[#004D40] pl-4 py-1">
+                                    <p class="text-sm font-medium">Audiência - Processo #12345</p>
+                                    <p class="text-xs text-gray-500">Hoje - 14:30h</p>
+                                </div>
+                                <div class="border-l-4 border-[#004D40] pl-4 py-1">
+                                    <p class="text-sm font-medium">Reunião com cliente</p>
+                                    <p class="text-xs text-gray-500">Amanhã - 10:00h</p>
+                                </div>
+                                <div class="border-l-4 border-[#004D40] pl-4 py-1">
+                                    <p class="text-sm font-medium">Prazo para contestação</p>
+                                    <p class="text-xs text-gray-500">18/06 - Final do dia</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Documents Section -->
+                <div id="documents-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Documentos Internos</h2>
+                            <button class="bg-[#004D40] text-white px-4 py-2 rounded-md hover:bg-[#00382e] flex items-center">
+                                <i class="fas fa-plus mr-2"></i> Novo Documento
+                            </button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última Modificação</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-file-word text-blue-600 mr-3"></i>
+                                                <span class="text-sm font-medium">Modelo de Contrato</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Modelo</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/05/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-download"></i></a>
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-file-pdf text-red-600 mr-3"></i>
+                                                <span class="text-sm font-medium">Manual de Procedimentos</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Manual</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/05/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-download"></i></a>
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-file-excel text-green-600 mr-3"></i>
+                                                <span class="text-sm font-medium">Planilha de Custas</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Planilha</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">05/05/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-download"></i></a>
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Templates Section -->
+                <div id="templates-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Modelos de Petição</h2>
+                            <div class="flex space-x-2">
+                                <button class="bg-[#004D40] text-white px-4 py-2 rounded-md hover:bg-[#00382e] flex items-center">
+                                    <i class="fas fa-plus mr-2"></i> Novo Modelo
+                                </button>
+                                <button class="bg-white border border-[#004D40] text-[#004D40] px-4 py-2 rounded-md hover:bg-gray-50 flex items-center">
+                                    <i class="fas fa-filter mr-2"></i> Filtrar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-medium">Ação de Cobrança</h3>
+                                    <span class="bg-[#E0F2F1] text-[#004D40] text-xs px-2 py-1 rounded">Cível</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">Modelo padrão para ações de cobrança com fundamentação jurídica completa.</p>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Atualizado: 12/05</span>
+                                    <div>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-2"><i class="fas fa-download"></i></a>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-medium">Defesa Trabalhista</h3>
+                                    <span class="bg-[#E0F2F1] text-[#004D40] text-xs px-2 py-1 rounded">Trabalhista</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">Modelo para defesa em ações trabalhistas com cláusulas padrão.</p>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Atualizado: 10/05</span>
+                                    <div>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-2"><i class="fas fa-download"></i></a>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-medium">Recurso Administrativo</h3>
+                                    <span class="bg-[#E0F2F1] text-[#004D40] text-xs px-2 py-1 rounded">Administrativo</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">Modelo para recursos administrativos com formatação padrão.</p>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Atualizado: 08/05</span>
+                                    <div>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-2"><i class="fas fa-download"></i></a>
+                                        <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calendar Section -->
+                <div id="calendar-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Calendário</h2>
+                            <div class="flex space-x-2">
+                                <button class="bg-[#004D40] text-white px-4 py-2 rounded-md hover:bg-[#00382e] flex items-center">
+                                    <i class="fas fa-plus mr-2"></i> Novo Evento
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-2">
+                                <div id="full-calendar" class="border rounded-lg p-4">
+                                    <!-- Calendar would be rendered here with a proper library -->
+                                    <div class="text-center py-8 text-gray-500">
+                                        <i class="fas fa-calendar-alt text-4xl mb-4 text-[#004D40]"></i>
+                                        <p>Calendário interativo seria exibido aqui</p>
+                                        <p class="text-sm mt-2">(Integração com biblioteca de calendário)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="border rounded-lg p-4">
+                                    <h3 class="font-medium mb-4">Próximos Compromissos</h3>
+                                    <div class="space-y-4">
+                                        <div class="border-l-4 border-[#004D40] pl-4 py-2">
+                                            <p class="font-medium">Audiência - Processo #12345</p>
+                                            <p class="text-sm text-gray-600">15/06 - 14:30h</p>
+                                            <p class="text-xs text-gray-500">Tribunal de Justiça - Sala 203</p>
+                                        </div>
+                                        <div class="border-l-4 border-[#004D40] pl-4 py-2">
+                                            <p class="font-medium">Reunião com Cliente</p>
+                                            <p class="text-sm text-gray-600">16/06 - 10:00h</p>
+                                            <p class="text-xs text-gray-500">Escritório - Sala de Reuniões</p>
+                                        </div>
+                                        <div class="border-l-4 border-[#004D40] pl-4 py-2">
+                                            <p class="font-medium">Prazo para Contestação</p>
+                                            <p class="text-sm text-gray-600">18/06 - Final do dia</p>
+                                            <p class="text-xs text-gray-500">Processo #67890</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Section -->
+                <div id="team-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Equipe</h2>
+                            <div class="flex space-x-2">
+                                <button class="bg-white border border-[#004D40] text-[#004D40] px-4 py-2 rounded-md hover:bg-gray-50 flex items-center">
+                                    <i class="fas fa-search mr-2"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-12 h-12 rounded-full bg-[#004D40] flex items-center justify-center text-white mr-3">
+                                        <span>JS</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Dr. João Silva</h3>
+                                        <p class="text-sm text-gray-600">Sócio - Cível</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span><i class="fas fa-phone-alt mr-1"></i> (11) 9999-9999</span>
+                                    <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-12 h-12 rounded-full bg-[#004D40] flex items-center justify-center text-white mr-3">
+                                        <span>MA</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Dra. Maria Andrade</h3>
+                                        <p class="text-sm text-gray-600">Sócia - Trabalhista</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span><i class="fas fa-phone-alt mr-1"></i> (11) 8888-8888</span>
+                                    <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-12 h-12 rounded-full bg-[#004D40] flex items-center justify-center text-white mr-3">
+                                        <span>PC</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Dr. Pedro Costa</h3>
+                                        <p class="text-sm text-gray-600">Associado - Tributário</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span><i class="fas fa-phone-alt mr-1"></i> (11) 7777-7777</span>
+                                    <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-12 h-12 rounded-full bg-[#004D40] flex items-center justify-center text-white mr-3">
+                                        <span>AS</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Ana Souza</h3>
+                                        <p class="text-sm text-gray-600">Secretária Jurídica</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span><i class="fas fa-phone-alt mr-1"></i> (11) 6666-6666</span>
+                                    <a href="#" class="text-[#004D40] hover:text-[#00382e]"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Section -->
+                <div id="admin-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Administração</h2>
+                            <div class="flex space-x-2">
+                                <button class="bg-[#004D40] text-white px-4 py-2 rounded-md hover:bg-[#00382e] flex items-center">
+                                    <i class="fas fa-plus mr-2"></i> Novo Usuário
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cargo</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#004D40] flex items-center justify-center text-white">
+                                                    <span>JS</span>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Dr. João Silva</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">joao.silva@mpsadv.com.br</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sócio</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#004D40] flex items-center justify-center text-white">
+                                                    <span>MA</span>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Dra. Maria Andrade</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">maria.andrade@mpsadv.com.br</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sócia</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#004D40] flex items-center justify-center text-white">
+                                                    <span>PC</span>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Dr. Pedro Costa</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">pedro.costa@mpsadv.com.br</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Associado</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-[#004D40] hover:text-[#00382e] mr-3"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Login form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate login
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (email && password) {
+                // Hide login page
+                document.getElementById('login-page').classList.add('hidden');
+                
+                // Show dashboard
+                document.getElementById('dashboard').classList.remove('hidden');
+                
+                // Check if admin (for demo purposes, any email containing "admin" will show admin section)
+                if (email.includes('admin')) {
+                    document.getElementById('admin-item').classList.remove('hidden');
+                    document.getElementById('admin-item-desktop').classList.remove('hidden');
+                }
+            }
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            
+            if (!mobileMenu.contains(e.target) && e.target !== mobileMenuButton) {
+                mobileMenu.classList.remove('open');
+            }
+        });
+        
+        // Navigation between sections
+        document.querySelectorAll('[data-section]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-item').forEach(el => {
+                    el.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Update section title
+                const sectionName = this.getAttribute('data-section');
+                let title = '';
+                
+                switch(sectionName) {
+                    case 'dashboard':
+                        title = 'Dashboard';
+                        break;
+                    case 'documents':
+                        title = 'Documentos Internos';
+                        break;
+                    case 'templates':
+                        title = 'Modelos de Petição';
+                        break;
+                    case 'calendar':
+                        title = 'Calendário';
+                        break;
+                    case 'team':
+                        title = 'Equipe';
+                        break;
+                    case 'admin':
+                        title = 'Administração';
+                        break;
+                }
+                
+                document.getElementById('section-title').textContent = title;
+                
+                // Hide all sections
+                document.querySelectorAll('[id$="-section"]').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Show selected section
+                document.getElementById(`${sectionName}-section`).classList.remove('hidden');
+                
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.remove('open');
+            });
+        });
+        
+        // Dropdown menus
+        document.getElementById('notifications-btn').addEventListener('click', function() {
+            document.getElementById('notifications-dropdown').classList.toggle('hidden');
+            document.getElementById('profile-dropdown').classList.add('hidden');
+        });
+        
+        document.getElementById('profile-btn').addEventListener('click', function() {
+            document.getElementById('profile-dropdown').classList.toggle('hidden');
+            document.getElementById('notifications-dropdown').classList.add('hidden');
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('notifications-btn').contains(e.target)) {
+                document.getElementById('notifications-dropdown').classList.add('hidden');
+            }
+            
+            if (!document.getElementById('profile-btn').contains(e.target)) {
+                document.getElementById('profile-dropdown').classList.add('hidden');
+            }
+        });
+        
+        // Logout buttons
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            // Hide dashboard
+            document.getElementById('dashboard').classList.add('hidden');
+            
+            // Show login page
+            document.getElementById('login-page').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('login-form').reset();
+        });
+        
+        document.getElementById('logout-btn-desktop').addEventListener('click', function() {
+            // Hide dashboard
+            document.getElementById('dashboard').classList.add('hidden');
+            
+            // Show login page
+            document.getElementById('login-page').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('login-form').reset();
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=DRLUCASMEDEIROS/mps" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>

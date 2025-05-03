@@ -699,8 +699,9 @@ a:focus {
 }
 
 .service .service-item p {
-    margin-bottom: 10px;
-    font-size: 16px;
+	margin-bottom: 10px;
+	font-size: 16px;
+	text-align: justify;
 }
 
 .service .service-item a {
@@ -1326,9 +1327,10 @@ a:focus {
 /******* Single Page CSS *******/
 /*******************************/
 .single {
-    position: relative;
-    width: 100%;
-    padding: 45px 0 15px 0;
+	position: relative;
+	width: 100%;
+	padding: 45px 0 15px 0;
+	font-size: 16px;
 }
 
 .single img {
@@ -1516,4 +1518,24 @@ a:focus {
         margin: 5px 0;
         text-align: center;
     }
+}
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 5%;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.whatsapp-float img {
+    width: 32px;
+    height: 32px;
 }
