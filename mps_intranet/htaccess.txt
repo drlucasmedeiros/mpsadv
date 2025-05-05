@@ -1,0 +1,17 @@
+# Bloqueia acesso a arquivos sensíveis
+<Files ~ "\.(env|config|sql|log|ini)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Força HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Protege contra ataques XSS e outros
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header always append X-Frame-Options SAMEORIGIN
+    Header set X-Content-Type-Options nosniff
+</IfModule>

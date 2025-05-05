@@ -1,0 +1,19 @@
+/mps_intranet
+│   index.php
+│   login.php
+│   logout.php
+│   dashboard.php
+├── /assets
+│   ├── /css
+│   │   style.css
+│   ├── /js
+│   │   script.js
+│   └── /img
+├── /includes
+│   │   config.php
+│   │   auth.php
+│   │   header.php
+│   │   footer.php
+│   │   functions.php
+└── /admin
+    │   usuarios.php
