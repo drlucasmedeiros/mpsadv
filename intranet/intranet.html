@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPS Advogados - Intranet</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2C5545;
+            --primary-light: #3a6b5a;
+            --secondary-color: #f5f5f5;
+            --accent-color: #e0e0e0;
+            --text-dark: #333;
+            --text-light: #fff;
+            --warning-color: #d32f2f;
+            --success-color: #388e3c;
+            --info-color: #1976d2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-dark);
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        
+        .search-bar {
+            width: 40%;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: none;
+            background-color: var(--primary-light);
+            color: var(--text-light);
+        }
+        
+        .search-bar .material-icons {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            font-size: 20px;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-menu .material-icons {
+            margin-left: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 20px;
+            display: flex;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-right: 20px;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 100px;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .nav-item .material-icons {
+            margin-right: 10px;
+        }
+        
+        /* Dashboard */
+        .dashboard {
+            flex: 1;
+        }
+        
+        .welcome-banner {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .welcome-banner h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .welcome-banner .date-time {
+            text-align: right;
+        }
+        
+        .welcome-banner .time {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .card-header h3 {
+            color: var(--primary-color);
+        }
+        
+        .card-header .material-icons {
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .deadline-item, .meeting-item, .task-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        
+        .deadline-item:last-child, .meeting-item:last-child, .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .deadline-item .material-icons {
+            color: var(--warning-color);
+            margin-right: 10px;
+        }
+        
+        .meeting-item .material-icons {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        .task-item .material-icons {
+            color: #757575;
+            margin-right: 10px;
+        }
+        
+        .deadline-info, .meeting-info, .task-info {
+            flex: 1;
+        }
+        
+        .deadline-title, .meeting-title, .task-title {
+            font-weight: 500;
+        }
+        
+        .deadline-time, .meeting-time, .task-time {
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        .urgent {
+            color: var(--warning-color);
+            font-weight: 500;
+        }
+        
+        .kpi-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .kpi-item {
+            text-align: center;
+            padding: 10px;
+            flex: 1;
+        }
+        
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .kpi-label {
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .quick-action-btn:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .quick-action-btn .material-icons {
+            margin-right: 5px;
+        }
+        
+        /* Announcements */
+        .announcement-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+        
+        .announcement-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .announcement-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        .announcement-confirm {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        
+        /* Process Areas */
+        .process-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .process-area {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        /* Document Status */
+        .document-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+        }
+        
+        /* Team Availability */
+        .team-availability {
+            margin-top: 15px;
+        }
+        
+        .team-member {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .team-member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .team-member-info {
+            flex: 1;
+        }
+        
+        .team-member-name {
+            font-weight: 500;
+        }
+        
+        .team-member-status {
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        .status-online {
+            color: var(--success-color);
+        }
+        
+        .status-offline {
+            color: #757575;
+        }
+        
+        .status-busy {
+            color: var(--warning-color);
+        }
+        
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .sidebar,
+        body.dark-mode .card,
+        body.dark-mode .welcome-banner {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .card {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        body.dark-mode .deadline-time,
+        body.dark-mode .meeting-time,
+        body.dark-mode .task-time,
+        body.dark-mode .kpi-label,
+        body.dark-mode .announcement-meta {
+            color: #9e9e9e;
+        }
+        
+        body.dark-mode .nav-item:hover {
+            background-color: #333;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body.dark-mode .modal-content {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+                position: static;
+            }
+            
+            .nav-items {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                flex: 1 0 45%;
+                margin: 5px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo-container {
+                margin-bottom: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .user-menu {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .user-menu .material-icons {
+                margin-left: 0;
+            }
+            
+            main {
+                margin-top: 140px;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <span class="material-icons">gavel</span>
+            <span class="logo">MPS Advogados</span>
+        </div>
+        
+        <div class="search-bar">
+            <span class="material-icons">search</span>
+            <input type="text" placeholder="Buscar processos, documentos, colegas..." id="globalSearch">
+        </div>
+        
+        <div class="user-menu">
+            <span class="material-icons" id="darkModeToggle">dark_mode</span>
+            <span class="material-icons" id="notificationsBtn">notifications<span class="notification-badge">3</span></span>
+            <span class="material-icons" id="messagesBtn">email<span class="notification-badge">1</span></span>
+            <span class="material-icons" id="helpBtn">help</span>
+            <div class="user-avatar" id="userMenuBtn">
+                <span class="material-icons">account_circle</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item active" data-section="dashboard">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" data-section="documents">
+                <span class="material-icons">folder</span>
+                <span>Documentos</span>
+            </div>
+            <div class="nav-item" data-section="templates">
+                <span class="material-icons">description</span>
+                <span>Modelos</span>
+            </div>
+            <div class="nav-item" data-section="calendar">
+                <span class="material-icons">calendar_today</span>
+                <span>Calendário</span>
+            </div>
+            <div class="nav-item" data-section="team">
+                <span class="material-icons">groups</span>
+                <span>Equipe</span>
+            </div>
+            <div class="nav-item" data-section="reports">
+                <span class="material-icons">assessment</span>
+                <span>Relatórios</span>
+            </div>
+            <div class="nav-item" data-section="trainings">
+                <span class="material-icons">school</span>
+                <span>Treinamentos</span>
+            </div>
+            <div class="nav-item" data-section="settings">
+                <span class="material-icons">settings</span>
+                <span>Configurações</span>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <div class="nav-item" id="quickPetitionBtn">
+                    <span class="material-icons">note_add</span>
+                    <span>Petição Rápida</span>
+                </div>
+                <div class="nav-item" id="processConsultBtn">
+                    <span class="material-icons">find_in_page</span>
+                    <span>Consultar Processo</span>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboardSection">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div>
+                    <h1>Bem-vindo(a), Dr. Carlos Silva</h1>
+                    <p id="currentDate">Segunda-feira, 5 de maio de 2025</p>
+                </div>
+                <div class="date-time">
+                    <div class="time" id="currentTime">10:45 AM</div>
+                    <div>Último acesso: Hoje, 08:30</div>
+                </div>
+            </div>
+            
+            <!-- Cards Container -->
+            <div class="cards-container">
+                <!-- Deadlines Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Próximos Prazos</h3>
+                        <span class="material-icons" id="deadlinesMenu">more_vert</span>
+                    </div>
+                    
+                    <div class="deadline-item" data-process="2025.001.1234">
+                        <span class="material-icons">warning</span>
+                        <div class="deadline-info">
+                            <div class="deadline-title urgent">Recurso - Processo 2025.001.1234</div>
+                            <div class="deadline-time">Hoje, 16:00 - Cliente: Indústrias ABC</div>
+                        </div>
+                    </div>
+                    
+                    <div class="deadline-item" data-process="2025.002.5678">
+                        <span class="material-icons">warning</span>
+                        <div class="deadline-info">
+                            <div class="deadline-title">Contestação - Processo 2025.002.5678</div>
+                            <div class="deadline-time">Amanhã, 12:00 - Cliente: Comércio XYZ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="deadline-item" data-process="2025.003.9012">
+                        <span class="material-icons">warning</span>
+                        <div class="deadline-info">
+                            <div class="deadline-title">Audiência - Processo 2025.003.9012</div>
+                            <div class="deadline-time">10/05/2025, 09:30 - TJSP</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Meetings Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Reuniões Agendadas</h3>
+                        <span class="material-icons" id="meetingsMenu">more_vert</span>
+                    </div>
+                    
+                    <div class="meeting-item" data-meeting="abc123">
+                        <span class="material-icons">videocam</span>
+                        <div class="meeting-info">
+                            <div class="meeting-title">Alinhamento Caso Indústrias ABC</div>
+                            <div class="meeting-time">11:00 - 12:00 (Teams)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="meeting-item" data-meeting="work123">
+                        <span class="material-icons">groups</span>
+                        <div class="meeting-info">
+                            <div class="meeting-title">Reunião de Área Trabalhista</div>
+                            <div class="meeting-time">14:30 - 16:00 (Sala 3)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="meeting-item" data-meeting="newclient456">
+                        <span class="material-icons">videocam</span>
+                        <div class="meeting-info">
+                            <div class="meeting-title">Apresentação para Novo Cliente</div>
+                            <div class="meeting-time">17/05/2025, 10:00 (Zoom)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tasks Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Tarefas Pendentes</h3>
+                        <span class="material-icons" id="tasksMenu">more_vert</span>
+                    </div>
+                    
+                    <div class="task-item" data-task="contract-review">
+                        <span class="material-icons toggle-task">check_box_outline_blank</span>
+                        <div class="task-info">
+                            <div class="task-title">Revisar contrato de parceria</div>
+                            <div class="task-time">Cliente: Tech Solutions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item" data-task="doc-signature">
+                        <span class="material-icons toggle-task">check_box_outline_blank</span>
+                        <div class="task-info">
+                            <div class="task-title">Enviar documentos para assinatura</div>
+                            <div class="task-time">Processo: 2025.004.3456</div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item" data-task="hours-update">
+                        <span class="material-icons toggle-task">check_box_outline_blank</span>
+                        <div class="task-info">
+                            <div class="task-title">Atualizar planilha de horas</div>
+                            <div class="task-time">Mês de abril/2025</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KPIs Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Métricas Chave</h3>
+                        <span class="material-icons" id="kpisMenu">more_vert</span>
+                    </div>
+                    
+                    <div class="kpi-container">
+                        <div class="kpi-item">
+                            <div class="kpi-value">42</div>
+                            <div class="kpi-label">Processos Ativos</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">128</div>
+                            <div class="kpi-label">Horas Faturadas</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">3</div>
+                            <div class="kpi-label">Pendências</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="processesChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Announcements Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mural de Avisos</h3>
+                        <span class="material-icons" id="announcementsMenu">more_vert</span>
+                    </div>
+                    
+                    <div class="announcement-item" data-announcement="regimento">
+                        <div class="announcement-title">Atualização do Regimento Interno</div>
+                        <p>Prezados, conforme combinado na última reunião, o regimento interno foi atualizado.</p>
+                        <div class="announcement-meta">
+                            <span>Diretoria - 03/05/2025</span>
+                            <span class="announcement-confirm">Confirmar leitura</span>
+                        </div>
+                    </div>
+                    
+                    <div class="announcement-item" data-announcement="lgpd">
+                        <div class="announcement-title">Treinamento LGPD - Nova Turma</div>
+                        <p>Inscrições abertas para o treinamento sobre proteção de dados. Vagas limitadas.</p>
+                        <div class="announcement-meta">
+                            <span>RH - 02/05/2025</span>
+                            <span class="announcement-confirm">Confirmar leitura</span>
+                        </div>
+                    </div>
+                    
+                    <div class="announcement-item" data-announcement="maintenance">
+                        <div class="announcement-title">Manutenção Programada do Sistema</div>
+                        <p>No próximo sábado (10/05) haverá manutenção no sistema entre 00:00 e 06:00.</p>
+                        <div class="announcement-meta">
+                            <span>TI - 30/04/2025</span>
+                            <span>Lido em 01/05/2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Risk Alerts Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Alertas de Risco</h3>
+                        <span class="material-icons">notifications_active</span>
+                    </div>
+                    
+                    <div class="announcement-item" data-alert="deadline-1234">
+                        <div class="announcement-title urgent">Prazo em 24h - Processo 2025.001.1234</div>
+                        <p>Recurso trabalhista vence amanhã às 16:00. Cliente: Indústrias ABC.</p>
+                        <div class="announcement-meta">
+                            <span>Sistema - 04/05/2025 18:30</span>
+                        </div>
+                    </div>
+                    
+                    <div class="announcement-item" data-alert="unsigned-doc">
+                        <div class="announcement-title">Documento não assinado</div>
+                        <p>Contrato de prestação de serviços aguarda assinatura desde 28/04.</p>
+                        <div class="announcement-meta">
+                            <span>Sistema - 03/05/2025 09:15</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Process Areas Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Áreas de Atuação</h3>
+                        <span class="material-icons">category</span>
+                    </div>
+                    
+                    <div class="process-areas">
+                        <span class="process-area">Trabalhista (15)</span>
+                        <span class="process-area">Societário (8)</span>
+                        <span class="process-area">Tributário (6)</span>
+                        <span class="process-area">Cível (7)</span>
+                        <span class="process-area">Digital (3)</span>
+                        <span class="process-area">Contratual (3)</span>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="areasChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Documents Status Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Status de Documentos</h3>
+                        <span class="material-icons">description</span>
+                    </div>
+                    
+                    <div class="document-status">
+                        <div class="status-item">
+                            <div class="status-circle">
+                                <span class="material-icons">check</span>
+                            </div>
+                            <div>Finalizados</div>
+                            <div>24</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-circle">
+                                <span class="material-icons">edit</span>
+                            </div>
+                            <div>Em Revisão</div>
+                            <div>5</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-circle">
+                                <span class="material-icons">schedule</span>
+                            </div>
+                            <div>Pendentes</div>
+                            <div>8</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Availability Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Disponibilidade da Equipe</h3>
+                        <span class="material-icons">group</span>
+                    </div>
+                    
+                    <div class="team-availability">
+                        <div class="team-member">
+                            <div class="team-member-avatar">AM</div>
+                            <div class="team-member-info">
+                                <div class="team-member-name">Ana Mendes</div>
+                                <div class="team-member-status status-online">Online - Societário</div>
+                            </div>
+                            <span class="material-icons">videocam</span>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="team-member-avatar">CS</div>
+                            <div class="team-member-info">
+                                <div class="team-member-name">Carlos Silva</div>
+                                <div class="team-member-status status-online">Online - Trabalhista</div>
+                            </div>
+                            <span class="material-icons">videocam</span>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="team-member-avatar">PR</div>
+                            <div class="team-member-info">
+                                <div class="team-member-name">Patrícia Rocha</div>
+                                <div class="team-member-status status-busy">Em reunião - Tributário</div>
+                            </div>
+                            <span class="material-icons">schedule</span>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="team-member-avatar">LF</div>
+                            <div class="team-member-info">
+                                <div class="team-member-name">Luiz Fernandes</div>
+                                <div class="team-member-status status-offline">Offline - Cível</div>
+                            </div>
+                            <span class="material-icons">email</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Other Sections (Hidden by default) -->
+        <div class="dashboard" id="documentsSection" style="display: none;">
+            <!-- Documents content would go here -->
+        </div>
+        
+        <div class="dashboard" id="templatesSection" style="display: none;">
+            <!-- Templates content would go here -->
+        </div>
+        
+        <div class="dashboard" id="calendarSection" style="display: none;">
+            <!-- Calendar content would go here -->
+        </div>
+        
+        <div class="dashboard" id="teamSection" style="display: none;">
+            <!-- Team content would go here -->
+        </div>
+        
+        <div class="dashboard" id="reportsSection" style="display: none;">
+            <!-- Reports content would go here -->
+        </div>
+        
+        <div class="dashboard" id="trainingsSection" style="display: none;">
+            <!-- Trainings content would go here -->
+        </div>
+        
+        <div class="dashboard" id="settingsSection" style="display: none;">
+            <!-- Settings content would go here -->
+        </div>
+    </main>
+    
+    <!-- Modals -->
+    <div class="modal" id="deadlineModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeDeadlineModal">close</span>
+            <h2>Detalhes do Prazo</h2>
+            <div id="deadlineModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="meetingModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeMeetingModal">close</span>
+            <h2>Detalhes da Reunião</h2>
+            <div id="meetingModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeTaskModal">close</span>
+            <h2>Detalhes da Tarefa</h2>
+            <div id="taskModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="announcementModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeAnnouncementModal">close</span>
+            <h2>Detalhes do Comunicado</h2>
+            <div id="announcementModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="alertModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeAlertModal">close</span>
+            <h2>Detalhes do Alerta</h2>
+            <div id="alertModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="quickPetitionModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeQuickPetitionModal">close</span>
+            <h2>Criar Petição Rápida</h2>
+            <div id="quickPetitionModalContent">
+                <form id="petitionForm">
+                    <div style="margin-bottom: 15px;">
+                        <label for="petitionType">Tipo de Petição:</label>
+                        <select id="petitionType" class="form-control" style="width: 100%; padding: 8px; margin-top: 5px;">
+                            <option value="">Selecione...</option>
+                            <option value="recurso">Recurso</option>
+                            <option value="contestacao">Contestação</option>
+                            <option value="inicial">Petição Inicial</option>
+                            <option value="impugnacao">Impugnação</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label for="processNumber">Número do Processo:</label>
+                        <input type="text" id="processNumber" class="form-control" placeholder="Ex: 2025.001.1234" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label for="clientName">Cliente:</label>
+                        <input type="text" id="clientName" class="form-control" placeholder="Nome do cliente" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label for="petitionDeadline">Prazo:</label>
+                        <input type="datetime-local" id="petitionDeadline" class="form-control" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <button type="submit" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Criar Petição</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="processConsultModal">
+        <div class="modal-content">
+            <span class="material-icons close-modal" id="closeProcessConsultModal">close</span>
+            <h2>Consultar Processo</h2>
+            <div id="processConsultModalContent">
+                <form id="processConsultForm">
+                    <div style="margin-bottom: 15px;">
+                        <label for="searchProcess">Número do Processo ou Nome do Cliente:</label>
+                        <input type="text" id="searchProcess" class="form-control" placeholder="Digite para buscar..." style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label for="processArea">Área Jurídica:</label>
+                        <select id="processArea" class="form-control" style="width: 100%; padding: 8px; margin-top: 5px;">
+                            <option value="">Todas as áreas</option>
+                            <option value="trabalhista">Trabalhista</option>
+                            <option value="societario">Societário</option>
+                            <option value="tributario">Tributário</option>
+                            <option value="civil">Cível</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Buscar</button>
+                </form>
+                
+                <div id="processConsultResults" style="margin-top: 20px;">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.dashboard');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const currentDateElement = document.getElementById('currentDate');
+        const currentTimeElement = document.getElementById('currentTime');
+        const deadlineItems = document.querySelectorAll('.deadline-item');
+        const meetingItems = document.querySelectorAll('.meeting-item');
+        const taskItems = document.querySelectorAll('.task-item');
+        const announcementItems = document.querySelectorAll('.announcement-item');
+        const alertItems = document.querySelectorAll('.announcement-item[data-alert]');
+        const toggleTasks = document.querySelectorAll('.toggle-task');
+        const confirmReadBtns = document.querySelectorAll('.announcement-confirm');
+        const quickPetitionBtn = document.getElementById('quickPetitionBtn');
+        const processConsultBtn = document.getElementById('processConsultBtn');
+        
+        // Modal Elements
+        const modals = document.querySelectorAll('.modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        
+        // Initialize Charts
+        function initCharts() {
+            // Processes Chart
+            const processesCtx = document.getElementById('processesChart').getContext('2d');
+            const processesChart = new Chart(processesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Processos Ativos',
+                        data: [32, 35, 38, 40, 42, 45],
+                        borderColor: '#2C5545',
+                        backgroundColor: 'rgba(44, 85, 69, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+            
+            // Areas Chart
+            const areasCtx = document.getElementById('areasChart').getContext('2d');
+            const areasChart = new Chart(areasCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Trabalhista', 'Societário', 'Tributário', 'Cível', 'Digital', 'Contratual'],
+                    datasets: [{
+                        data: [15, 8, 6, 7, 3, 3],
+                        backgroundColor: [
+                            '#2C5545',
+                            '#3a6b5a',
+                            '#4a7c6a',
+                            '#5a8d7a',
+                            '#6a9e8a',
+                            '#7aaf9a'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update Date and Time
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('pt-BR', options);
+            currentDateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            
+            // Format time
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            currentTimeElement.textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            darkModeToggle.textContent = isDarkMode ? 'light_mode' : 'dark_mode';
+        }
+        
+        // Show Section
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Update active nav item
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-section') === sectionId.replace('Section', '')) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        // Show Modal
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close all modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize charts
+            initCharts();
+            
+            // Update date and time immediately and then every minute
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.textContent = 'light_mode';
+            }
+            
+            // Nav items click
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.getAttribute('data-section');
+                    showSection(`${section}Section`);
+                });
+            });
+            
+            // Dark mode toggle
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Deadline items click
+            deadlineItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const processId = item.getAttribute('data-process');
+                    // In a real app, you would fetch this data from an API
+                    document.getElementById('deadlineModalContent').innerHTML = `
+                        <h3>Processo ${processId}</h3>
+                        <p><strong>Cliente:</strong> ${item.querySelector('.deadline-title').textContent.split(' - ')[1]}</p>
+                        <p><strong>Prazo:</strong> ${item.querySelector('.deadline-time').textContent.split(' - ')[0]}</p>
+                        <p><strong>Tipo:</strong> ${item.querySelector('.deadline-title').textContent.split(' - ')[0]}</p>
+                        <p><strong>Descrição:</strong> Detalhes sobre o prazo processual que precisa ser cumprido.</p>
+                        <div style="margin-top: 20px;">
+                            <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                                <span class="material-icons" style="vertical-align: middle;">description</span> Abrir Processo
+                            </button>
+                            <button style="background-color: var(--info-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                                <span class="material-icons" style="vertical-align: middle;">calendar_today</span> Adicionar ao Calendário
+                            </button>
+                        </div>
+                    `;
+                    showModal('deadlineModal');
+                });
+            });
+            
+            // Meeting items click
+            meetingItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const meetingId = item.getAttribute('data-meeting');
+                    // In a real app, you would fetch this data from an API
+                    document.getElementById('meetingModalContent').innerHTML = `
+                        <h3>${item.querySelector('.meeting-title').textContent}</h3>
+                        <p><strong>Horário:</strong> ${item.querySelector('.meeting-time').textContent}</p>
+                        <p><strong>Local:</strong> ${item.querySelector('.meeting-time').textContent.includes('(') ? 
+                            item.querySelector('.meeting-time').textContent.split('(')[1].replace(')', '') : 'Sala de Reuniões'}</p>
+                        <p><strong>Participantes:</strong> Dr. Carlos Silva, Dra. Ana Mendes, Cliente</p>
+                        <p><strong>Descrição:</strong> Detalhes sobre o que será discutido nesta reunião.</p>
+                        <div style="margin-top: 20px;">
+                            <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                                <span class="material-icons" style="vertical-align: middle;">videocam</span> Entrar na Reunião
+                            </button>
+                            <button style="background-color: var(--info-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                                <span class="material-icons" style="vertical-align: middle;">edit</span> Editar Reunião
+                            </button>
+                        </div>
+                    `;
+                    showModal('meetingModal');
+                });
+            });
+            
+            // Task items click
+            taskItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const taskId = item.getAttribute('data-task');
+                    // In a real app, you would fetch this data from an API
+                    document.getElementById('taskModalContent').innerHTML = `
+                        <h3>${item.querySelector('.task-title').textContent}</h3>
+                        <p><strong>Relacionado a:</strong> ${item.querySelector('.task-time').textContent}</p>
+                        <p><strong>Prioridade:</strong> Média</p>
+                        <p><strong>Responsável:</strong> Dr. Carlos Silva</p>
+                        <p><strong>Descrição:</strong> Detalhes sobre o que precisa ser feito nesta tarefa.</p>
+                        <div style="margin-top: 20px;">
+                            <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                                <span class="material-icons" style="vertical-align: middle;">check</span> Marcar como Concluída
+                            </button>
+                            <button style="background-color: var(--info-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                                <span class="material-icons" style="vertical-align: middle;">edit</span> Editar Tarefa
+                            </button>
+                        </div>
+                    `;
+                    showModal('taskModal');
+                });
+            });
+            
+            // Toggle task completion
+            toggleTasks.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (toggle.textContent === 'check_box_outline_blank') {
+                        toggle.textContent = 'check_box';
+                        toggle.style.color = var(--success-color);
+                    } else {
+                        toggle.textContent = 'check_box_outline_blank';
+                        toggle.style.color = '#757575';
+                    }
+                });
+            });
+            
+            // Announcement items click
+            announcementItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const announcementId = item.getAttribute('data-announcement');
+                    // In a real app, you would fetch this data from an API
+                    document.getElementById('announcementModalContent').innerHTML = `
+                        <h3>${item.querySelector('.announcement-title').textContent}</h3>
+                        <p><strong>Autor:</strong> ${item.querySelector('.announcement-meta span:first-child').textContent.split(' - ')[0]}</p>
+                        <p><strong>Data:</strong> ${item.querySelector('.announcement-meta span:first-child').textContent.split(' - ')[1]}</p>
+                        <div style="margin: 15px 0; padding: 15px; background-color: ${document.body.classList.contains('dark-mode') ? '#2a2a2a' : '#f5f5f5'}; border-radius: 5px;">
+                            ${item.querySelector('p').textContent}
+                        </div>
+                        <p><strong>Status:</strong> ${item.querySelector('.announcement-confirm') ? 'Não lido' : 'Lido em ' + item.querySelector('.announcement-meta span:last-child').textContent}</p>
+                        <div style="margin-top: 20px;">
+                            <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                                <span class="material-icons" style="vertical-align: middle;">thumb_up</span> Confirmar Leitura
+                            </button>
+                        </div>
+                    `;
+                    showModal('announcementModal');
+                });
+            });
+            
+            // Alert items click
+            alertItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const alertId = item.getAttribute('data-alert');
+                    // In a real app, you would fetch this data from an API
+                    document.getElementById('alertModalContent').innerHTML = `
+                        <h3>${item.querySelector('.announcement-title').textContent}</h3>
+                        <p><strong>Data do Alerta:</strong> ${item.querySelector('.announcement-meta span').textContent}</p>
+                        <div style="margin: 15px 0; padding: 15px; background-color: ${document.body.classList.contains('dark-mode') ? '#2a2a2a' : '#f5f5f5'}; border-radius: 5px;">
+                            ${item.querySelector('p').textContent}
+                        </div>
+                        <p><strong>Prioridade:</strong> <span style="color: var(--warning-color);">Alta</span></p>
+                        <div style="margin-top: 20px;">
+                            <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                                <span class="material-icons" style="vertical-align: middle;">description</span> Abrir Processo
+                            </button>
+                            <button style="background-color: var(--info-color); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                                <span class="material-icons" style="vertical-align: middle;">notifications_off</span> Desativar Alerta
+                            </button>
+                        </div>
+                    `;
+                    showModal('alertModal');
+                });
+            });
+            
+            // Confirm announcement read
+            confirmReadBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    btn.textContent = 'Lido';
+                    btn.style.color = var(--success-color);
+                    btn.style.textDecoration = 'none';
+                    const date = new Date();
+                    const formattedDate = date.toLocaleDateString('pt-BR');
+                    btn.parentElement.innerHTML = `
+                        <span>${btn.parentElement.querySelector('span:first-child').textContent}</span>
+                        <span>Lido em ${formattedDate}</span>
+                    `;
+                });
+            });
+            
+            // Quick petition button
+            quickPetitionBtn.addEventListener('click', () => {
+                showModal('quickPetitionModal');
+            });
+            
+            // Process consult button
+            processConsultBtn.addEventListener('click', () => {
+                showModal('processConsultModal');
+            });
+            
+            // Close modal buttons
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const modalId = btn.id.replace('close', '').replace('Modal', '');
+                    closeModal(`${modalId}Modal`);
+                });
+            });
+            
+            // Form submissions
+            document.getElementById('petitionForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Petição criada com sucesso!');
+                closeModal('quickPetitionModal');
+            });
+            
+            document.getElementById('processConsultForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const searchTerm = document.getElementById('searchProcess').value;
+                const area = document.getElementById('processArea').value;
+                
+                // Simulate search results
+                document.getElementById('processConsultResults').innerHTML = `
+                    <h3>Resultados da Busca</h3>
+                    <div style="margin-top: 10px; padding: 10px; background-color: ${document.body.classList.contains('dark-mode') ? '#2a2a2a' : '#f5f5f5'}; border-radius: 5px;">
+                        <p><strong>Processo:</strong> 2025.001.1234</p>
+                        <p><strong>Cliente:</strong> Indústrias ABC</p>
+                        <p><strong>Área:</strong> Trabalhista</p>
+                        <p><strong>Status:</strong> Em andamento</p>
+                        <button style="background-color: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                            <span class="material-icons" style="vertical-align: middle;">visibility</span> Visualizar
+                        </button>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
