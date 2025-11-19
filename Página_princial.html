@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medeiros, Paiva & Soares - Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+   <style>
+        /* Importação das fontes locais */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+        }
+        
+        /* Header com Big River */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-light);
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        nav ul li a.active {
+            color: var(--accent);
+        }
+        
+        nav ul li a.active:after {
+            width: 100%;
+        }
+        
+        /* Hero Section Principal */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 26, 26, 0.9), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            padding: 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(201, 167, 105, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-content h1 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 4.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+        
+        .hero-content p {
+            font-weight: 400;
+            font-size: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            padding: 1.2rem 3rem;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            transition: var(--transition);
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            color: var(--primary-dark);
+        }
+        
+        .btn:hover:before {
+            left: 0;
+        }
+        
+        /* Seções Gerais */
+        section {
+            padding: 8rem 3rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        
+        .section-title h2 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 3rem;
+            letter-spacing: 1.5px;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 2px;
+            background-color: var(--accent);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title p {
+            font-weight: 400;
+            max-width: 700px;
+            margin: 2.5rem auto 0;
+            color: var(--text-medium);
+            font-size: 1.3rem;
+            line-height: 1.7;
+        }
+        
+        /* Áreas de Atuação */
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .area-card {
+            background-color: var(--white);
+            padding: 3.5rem 2.5rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+        
+        .area-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+        
+        .area-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .area-card:hover:before {
+            transform: scaleX(1);
+        }
+        
+        .area-card i {
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .area-card:hover i {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+        
+        .area-card h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            font-size: 1.7rem;
+        }
+        
+        .area-card p {
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+        
+        /* Sobre Nós */
+        .about {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            position: relative;
+        }
+        
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+        
+        .about-text h2 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 3rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+        
+        .about-text p {
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .about-image {
+            background: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 550px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-image:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 26, 26, 0.2) 0%, transparent 70%);
+        }
+        
+        /* Equipe */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .team-member {
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-8px);
+        }
+        
+        .member-photo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .member-photo i {
+            font-size: 4rem;
+            color: var(--white);
+        }
+        
+        .team-member h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: var(--primary-dark);
+            font-size: 1.6rem;
+        }
+        
+        .team-member p {
+            font-weight: 400;
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+        
+        /* Blog Preview */
+        .blog-preview {
+            background-color: var(--gray-light);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .blog-post {
+            background-color: var(--white);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-image {
+            height: 220px;
+            background-color: var(--primary-dark);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .post-image:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 26, 26, 0.7) 0%, transparent 100%);
+        }
+        
+        .post-content {
+            padding: 2.5rem;
+        }
+        
+        .post-category {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .post-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.6rem;
+            line-height: 1.3;
+            margin-bottom: 1.2rem;
+            color: var(--primary-dark);
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .post-type {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .post-date {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .view-all {
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        /* Contato */
+        .contact {
+            background-color: var(--white);
+        }
+        
+        .contact-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+        }
+        
+        .contact-info h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            color: var(--primary-dark);
+            font-size: 1.7rem;
+        }
+        
+        .contact-info p {
+            font-weight: 400;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            color: var(--text-medium);
+        }
+        
+        .contact-info i {
+            margin-right: 1.5rem;
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            width: 25px;
+            text-align: center;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            font-weight: 400;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            background-color: var(--white);
+        }
+        
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(201, 167, 105, 0.1);
+        }
+        
+        .contact-form textarea {
+            height: 180px;
+            resize: vertical;
+        }
+        
+        /* Footer com Big River */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* WhatsApp Flutuante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+        
+        /* Efeitos de partículas no hero */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(201, 167, 105, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .hero-content h1 {
+                font-size: 4rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.7rem;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+            
+            .about-image {
+                height: 450px;
+                order: -1;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 2rem;
+                flex-direction: column;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            .header-logo {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 1.2rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            
+            section {
+                padding: 6rem 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .areas-grid,
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .area-card {
+                padding: 3rem 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+            
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .area-card {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .member-photo {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header com Logo no Topo -->
+    <header>
+        <div class="header-logo">
+            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="active">Início</a></li>
+                <li><a href="#areas">Áreas</a></li>
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#team">Equipe</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>EXCELÊNCIA JURÍDICA</h1>
+            <p>Soluções jurídicas personalizadas com comprometimento e ética.</p>
+            <a href="#contact" class="btn">Entre em Contato</a>
+        </div>
+    </section>
+
+    <!-- Áreas de Atuação -->
+    <section id="areas">
+        <div class="section-title">
+            <h2>ÁREAS DE ATUAÇÃO</h2>
+            <p>Atuação especializada nas principais áreas do direito.</p>
+        </div>
+        <div class="areas-grid">
+            <div class="area-card">
+                <i class="fas fa-balance-scale"></i>
+                <h3>Direito Civil</h3>
+                <p>Direitos e obrigações de ordem privada, contratos, responsabilidade civil e família.</p>
+            </div>
+            <div class="area-card">
+                <i class="fas fa-building"></i>
+                <h3>Direito Empresarial</h3>
+                <p>Assessoria jurídica empresarial completa, societário, contratos e compliance.</p>
+            </div>
+            <div class="area-card">
+                <i class="fas fa-briefcase"></i>
+                <h3>Direito Trabalhista</h3>
+                <p>Consultoria e representação em questões trabalhistas para empregadores e empregados.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Nós -->
+    <section id="about" class="about">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>SOBRE NÓS</h2>
+                <p>Fundado em Cuiabá-MT, o escritório Medeiros, Paiva & Soares se destaca pela excelência e inovação na prestação de serviços jurídicos.</p>
+                <p>Nossa equipe é composta por profissionais altamente qualificados, com vasta experiência nas mais diversas áreas do direito.</p>
+                <a href="#team" class="btn">Conheça Nossa Equipe</a>
+            </div>
+            <div class="about-image"></div>
+        </div>
+    </section>
+
+    <!-- Equipe -->
+    <section id="team">
+        <div class="section-title">
+            <h2>NOSSA EQUIPE</h2>
+            <p>Profissionais qualificados que garantem a excelência em nossos serviços.</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-photo">
+                    <!-- Imagem do sócio 1 -->
+                </div>
+                <h3>Dr. João Medeiros</h3>
+                <p>Sócio Fundador</p>
+            </div>
+            <div class="team-member">
+                <div class="member-photo">
+                    <!-- Imagem do sócio 2 -->
+                </div>
+                <h3>Dra. Maria Paiva</h3>
+                <p>Sócia</p>
+            </div>
+            <div class="team-member">
+                <div class="member-photo">
+                    <!-- Imagem do sócio 3 -->
+                </div>
+                <h3>Dr. Carlos Soares</h3>
+                <p>Sócio</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog -->
+    <section id="blog" class="blog">
+        <div class="section-title">
+            <h2>NOTÍCIAS E ARTIGOS</h2>
+            <p>Fique por dentro das últimas novidades jurídicas e artigos do nosso escritório.</p>
+        </div>
+        <div class="blog-grid">
+            <div class="blog-post">
+                <div class="post-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="post-content">
+                    <div class="post-category">Direito Empresarial</div>
+                    <h3 class="post-title">Novas regulamentações para empresas de tecnologia em 2023</h3>
+                    <div class="post-meta">
+                        <span class="post-type">Artigo</span>
+                        <span class="post-date">15 Nov 2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="blog-post">
+                <div class="post-image" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="post-content">
+                    <div class="post-category">Direito Trabalhista</div>
+                    <h3 class="post-title">Impactos da reforma trabalhista nos contratos de teletrabalho</h3>
+                    <div class="post-meta">
+                        <span class="post-type">Análise</span>
+                        <span class="post-date">8 Nov 2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="blog-post">
+                <div class="post-image" style="background-image: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="post-content">
+                    <div class="post-category">Direito Civil</div>
+                    <h3 class="post-title">Mudanças no direito de família: o que você precisa saber</h3>
+                    <div class="post-meta">
+                        <span class="post-type">Artigo</span>
+                        <span class="post-date">1 Nov 2023</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="view-all">
+            <a href="#" class="btn">Ver Todas as Notícias</a>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contact" class="contact">
+        <div class="section-title">
+            <h2>ENTRE EM CONTATO</h2>
+            <p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
+        </div>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>INFORMAÇÕES</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+                <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
+            </div>
+            <div class="contact-form">
+                <form>
+                    <input type="text" placeholder="Seu Nome" required>
+                    <input type="email" placeholder="Seu E-mail" required>
+                    <input type="tel" placeholder="Seu Telefone">
+                    <textarea placeholder="Sua Mensagem" required></textarea>
+                    <button type="submit" class="btn">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">MEDEIROS, PAIVA & SOARES</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#areas">Áreas</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#team">Equipe</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling para links de navegação
+        document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Adicionar classe ativa ao link de navegação quando a seção estiver visível
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (scrollY >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Header scroll effect
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Inicializar header
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+    </script>
+</body>
+</html>

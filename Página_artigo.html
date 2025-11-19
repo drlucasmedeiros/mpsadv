@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novas Regulamentações para Empresas de Tecnologia - Medeiros, Paiva & Soares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <style>
+         <style>
+        /* Importação das fontes locais */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+        }
+        
+        /* Header com Big River */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-light);
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        nav ul li a.active {
+            color: var(--accent);
+        }
+        
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            background-color: var(--gray-light);
+            padding: 1.5rem 3rem;
+            margin-top: 80px;
+        }
+        
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumb a {
+            color: var(--text-medium);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+        
+        .breadcrumb span {
+            margin: 0 0.5rem;
+            color: var(--text-medium);
+        }
+        
+        /* Article Hero */
+        .article-hero {
+            background: linear-gradient(rgba(0, 26, 26, 0.9), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-light);
+            padding: 5rem 3rem;
+            position: relative;
+        }
+        
+        .article-hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .article-category {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .article-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 3.5rem;
+            letter-spacing: 1.5px;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .article-date {
+            font-weight: 400;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-right: 2rem;
+        }
+        
+        .article-type {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--white);
+            background-color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .article-subtitle {
+            font-weight: 400;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+        }
+        
+        /* Article Content */
+        .article-content {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 3rem;
+        }
+        
+        .article-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+        
+        .article-body h2 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 2.2rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .article-body h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.2rem;
+            color: var(--primary-dark);
+        }
+        
+        .article-body p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-body blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 2rem;
+            margin: 2.5rem 0;
+            font-style: italic;
+            color: var(--text-medium);
+            font-size: 1.2rem;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .article-body blockquote:before {
+            content: """;
+            font-family: 'Hatton', serif;
+            font-size: 4rem;
+            color: var(--accent);
+            position: absolute;
+            left: -10px;
+            top: -20px;
+            opacity: 0.3;
+        }
+        
+        .article-body ul, .article-body ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .article-body li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .article-body ul li:before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .article-image {
+            width: 100%;
+            margin: 3rem 0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .article-image:hover img {
+            transform: scale(1.02);
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            margin-top: 0.8rem;
+            font-style: italic;
+        }
+        
+        /* Author Section */
+        .author-section {
+            background: linear-gradient(135deg, var(--gray-light) 0%, var(--white) 100%);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: flex-start;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .author-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .author-photo:before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background-color: var(--white);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .author-photo i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: var(--primary-dark);
+            z-index: 2;
+        }
+        
+        .author-details h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .author-title {
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .author-bio {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-medium);
+        }
+        
+        /* Social Share */
+        .social-share {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--gray-medium);
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .share-text {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-right: 1.5rem;
+            color: var(--primary-dark);
+            align-self: center;
+        }
+        
+        .share-icons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .share-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .share-icon:hover {
+            background-color: var(--accent);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+        
+        /* Related Articles */
+        .related-articles {
+            max-width: 1200px;
+            margin: 5rem auto;
+            padding: 0 3rem;
+        }
+        
+        .related-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            color: var(--primary-dark);
+            text-align: center;
+            position: relative;
+        }
+        
+        .related-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .related-post {
+            background-color: var(--white);
+            transition: var(--transition);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .related-post:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .related-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .related-image:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 26, 26, 0.2) 0%, transparent 100%);
+        }
+        
+        .related-content {
+            padding: 1.8rem;
+        }
+        
+        .related-category {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .related-post-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.4rem;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+        
+        .related-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .related-type {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .related-date {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+        
+        /* Back to Blog */
+        .back-to-blog {
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            transition: var(--transition);
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            color: var(--primary-dark);
+        }
+        
+        .btn:hover:before {
+            left: 0;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.7rem;
+            letter-spacing: 1.2px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .article-title {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .article-title {
+                font-size: 2.5rem;
+            }
+            
+            .article-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .article-body h2 {
+                font-size: 1.8rem;
+            }
+            
+            .article-body h3 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 2rem;
+                flex-direction: column;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            .header-logo {
+                margin-bottom: 1rem;
+            }
+            
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 1.2rem;
+            }
+            
+            .breadcrumb {
+                padding: 1rem 2rem;
+            }
+            
+            .article-hero {
+                padding: 3rem 2rem;
+            }
+            
+            .article-content {
+                padding: 0 2rem;
+            }
+            
+            .author-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .author-photo {
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+            
+            .social-share {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .share-text {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .related-articles {
+                padding: 0 2rem;
+            }
+            
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .article-date {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-logo">
+            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#areas">Áreas</a></li>
+                <li><a href="index.html#about">Sobre</a></li>
+                <li><a href="index.html#team">Equipe</a></li>
+                <li><a href="index.html#blog" class="active">Blog</a></li>
+                <li><a href="index.html#contact">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="index.html">Início</a> <span>></span>
+            <a href="index.html#blog">Blog</a> <span>></span>
+            <span>Novas Regulamentações para Empresas de Tecnologia</span>
+        </div>
+    </div>
+
+    <!-- Article Hero -->
+    <section class="article-hero">
+        <div class="article-hero-content">
+            <div class="article-category">Direito Empresarial</div>
+            <h1 class="article-title">Novas Regulamentações para Empresas de Tecnologia em 2023</h1>
+            <div class="article-meta">
+                <div class="article-date">15 de Novembro de 2023</div>
+                <div class="article-type">Artigo</div>
+            </div>
+            <p class="article-subtitle">Análise completa sobre as mudanças legislativas que impactam o setor de tecnologia e as estratégias jurídicas para adaptação.</p>
+        </div>
+    </section>
+
+    <!-- Article Content -->
+    <article class="article-content">
+        <div class="article-body">
+            <p>O ano de 2023 trouxe significativas mudanças no cenário regulatório brasileiro para empresas de tecnologia. Com a entrada em vigor de novas leis e a atualização de normas existentes, as empresas do setor precisam se adaptar rapidamente para manter a conformidade legal e evitar penalidades.</p>
+            
+            <p>Neste artigo, analisamos as principais alterações legislativas e suas implicações práticas para negócios digitais, startups e empresas estabelecidas no mercado de tecnologia.</p>
+            
+            <h2>Lei Geral de Proteção de Dados: Novas Exigências</h2>
+            
+            <p>A LGPD continua a evoluir, com a Autoridade Nacional de Proteção de Dados (ANPD) publicando novas resoluções que detalham obrigações específicas para empresas de tecnologia. Entre as principais mudanças:</p>
+            
+            <ul>
+                <li>Exigência de relatórios de impacto à proteção de dados para operações consideradas de alto risco</li>
+                <li>Regulamentação específica para uso de dados em sistemas de inteligência artificial</li>
+                <li>Obrigatoriedade de notificação de incidentes em prazo mais curto</li>
+                <li>Novas diretrizes para transferência internacional de dados</li>
+            </ul>
+            
+            <div class="article-image">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Proteção de Dados e Tecnologia">
+                <div class="image-caption">A LGPD exige adaptações constantes das empresas de tecnologia</div>
+            </div>
+            
+            <h2>Marco Legal das Startups: Oportunidades e Desafios</h2>
+            
+            <p>O Marco Legal das Startups, instituído pela Lei Complementar nº 182/2021, trouxe importantes avanços, mas também criou novas obrigações. As empresas que se enquadram nesse regime precisam atentar para:</p>
+            
+            <blockquote>
+                "A adequação ao Marco Legal das Startups requer análise cuidadosa dos requisitos e benefícios, considerando as particularidades de cada modelo de negócio. A orientação jurídica especializada é fundamental para maximizar os benefícios e evitar armadilhas regulatórias."
+            </blockquote>
+            
+            <p>Entre os aspectos mais relevantes estão as regras para investimento-anjo, sociedades simples e o novo regime de tributação para empresas inovadoras.</p>
+            
+            <h3>Regulamentação de Criptoativos</h3>
+            
+            <p>O Brasil deu um passo importante na regulamentação do mercado de criptoativos com a edição da Lei 14.478/2022. As empresas que atuam com criptomoedas e ativos digitais agora devem:</p>
+            
+            <ol>
+                <li>Registrar-se junto aos órgãos competentes</li>
+                <li>Implementar políticas de compliance específicas</li>
+                <li>Adotar procedimentos de prevenção à lavagem de dinheiro</li>
+                <li>Garantir a segurança dos sistemas e ativos dos clientes</li>
+                <li>Fornecer informações transparentes aos usuários</li>
+            </ol>
+            
+            <h2>Implicações Práticas e Estratégias</h2>
+            
+            <p>Diante desse cenário regulatório em transformação, as empresas de tecnologia precisam adotar uma postura proativa. Recomendamos:</p>
+            
+            <ul>
+                <li>Realizar auditoria completa dos processos e sistemas</li>
+                <li>Desenvolver programas de compliance específicos para o setor</li>
+                <li>Estabelecer parcerias com especialistas jurídicos especializados</li>
+                <li>Manter-se atualizado sobre as mudanças legislativas</li>
+                <li>Implementar treinamentos regulares para a equipe</li>
+            </ul>
+            
+            <p>A adaptação às novas regulamentações não é apenas uma questão de conformidade legal, mas também uma oportunidade para fortalecer a governança corporativa e aumentar a confiança dos stakeholders.</p>
+        </div>
+        
+        <!-- Social Share -->
+        <div class="social-share">
+            <div class="share-text">Compartilhe este artigo:</div>
+            <div class="share-icons">
+                <a href="#" class="share-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="share-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="share-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="share-icon"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        
+        <!-- Author Section -->
+        <div class="author-section">
+            <div class="author-info">
+                <div class="author-photo">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="author-details">
+                    <h3>Dr. João Medeiros</h3>
+                    <div class="author-title">Sócio Fundador - Especialista em Direito Empresarial e Tecnologia</div>
+                    <p class="author-bio">Dr. João Medeiros é especialista em direito empresarial com mais de 15 anos de experiência em assessoria jurídica para empresas de tecnologia. Mestre em Direito Comercial pela Universidade de São Paulo (USP), atua como consultor para diversas startups e empresas estabelecidas no setor de tecnologia. É palestrante frequente em eventos do setor e autor de diversos artigos sobre regulamentação tecnológica.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Related Articles -->
+    <section class="related-articles">
+        <h2 class="related-title">Artigos Relacionados</h2>
+        <div class="related-grid">
+            <div class="related-post">
+                <div class="related-image" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="related-content">
+                    <div class="related-category">Direito Trabalhista</div>
+                    <h3 class="related-post-title">Impactos da Reforma Trabalhista nos Contratos de Teletrabalho</h3>
+                    <div class="related-meta">
+                        <span class="related-type">Análise</span>
+                        <span class="related-date">8 Nov 2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="related-post">
+                <div class="related-image" style="background-image: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="related-content">
+                    <div class="related-category">Direito Civil</div>
+                    <h3 class="related-post-title">Mudanças no Direito de Família: O Que Você Precisa Saber</h3>
+                    <div class="related-meta">
+                        <span class="related-type">Artigo</span>
+                        <span class="related-date">1 Nov 2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="related-post">
+                <div class="related-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="related-content">
+                    <div class="related-category">Direito Empresarial</div>
+                    <h3 class="related-post-title">Compliance Digital: Estratégias para Empresas em Transformação</h3>
+                    <div class="related-meta">
+                        <span class="related-type">Guia</span>
+                        <span class="related-date">25 Out 2023</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Blog -->
+    <div class="back-to-blog">
+        <a href="index.html#blog" class="btn">Voltar para o Blog</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">MEDEIROS, PAIVA & SOARES</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#areas">Áreas</a></li>
+                    <li><a href="index.html#about">Sobre</a></li>
+                    <li><a href="index.html#team">Equipe</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Inicializar header
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+    </script>
+</body>
+</html>

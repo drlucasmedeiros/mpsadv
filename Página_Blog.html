@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Medeiros, Paiva & Soares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <style>
+        /* Importação das fontes locais */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+        }
+        
+        /* Header com Big River */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-light);
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        nav ul li a.active {
+            color: var(--accent);
+        }
+        
+        nav ul li a.active:after {
+            width: 100%;
+        }
+        
+        /* Hero Blog */
+        .blog-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 26, 26, 0.9), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            padding: 0 3rem;
+            margin-top: 80px;
+            position: relative;
+        }
+        
+        .blog-hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .blog-hero h1 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .blog-hero p {
+            font-weight: 400;
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Blog Content */
+        .blog-content {
+            max-width: 1200px;
+            margin: 5rem auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+        
+        /* Artigos Principais */
+        .featured-article {
+            margin-bottom: 4rem;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+        
+        .featured-article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .featured-image {
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .featured-image:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 26, 26, 0.7) 0%, transparent 100%);
+        }
+        
+        .featured-content {
+            padding: 3rem;
+        }
+        
+        .article-category {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .article-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 2.2rem;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .article-excerpt {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-medium);
+            margin-bottom: 2rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .article-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+        }
+        
+        .author-info h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info span {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        /* Grid de Artigos */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .article-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .article-image:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 26, 26, 0.5) 0%, transparent 100%);
+        }
+        
+        .article-card-content {
+            padding: 2rem;
+        }
+        
+        .article-card-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.4rem;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+        
+        .article-card-excerpt {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 3rem;
+        }
+        
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sidebar-title {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            position: relative;
+        }
+        
+        .sidebar-title:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+            bottom: -8px;
+            left: 0;
+        }
+        
+        .categories-list {
+            list-style: none;
+        }
+        
+        .categories-list li {
+            margin-bottom: 1rem;
+        }
+        
+        .categories-list a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-medium);
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+        }
+        
+        .categories-list a:hover {
+            color: var(--accent);
+        }
+        
+        .category-count {
+            background: var(--gray-light);
+            color: var(--primary-dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .recent-posts {
+            list-style: none;
+        }
+        
+        .recent-post {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .recent-post:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .recent-post-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .recent-post-content h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            margin-bottom: 0.3rem;
+        }
+        
+        .recent-post-content span {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .newsletter-form input {
+            padding: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(201, 167, 105, 0.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            transition: var(--transition);
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            color: var(--primary-dark);
+        }
+        
+        .btn:hover:before {
+            left: 0;
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        /* Paginação */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0;
+            gap: 1rem;
+        }
+        
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .page-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .page-number:hover, .page-number.active {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+        }
+        
+        /* Footer com Big River */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* WhatsApp Flutuante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .blog-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .blog-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 2rem;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 1.2rem;
+            }
+            
+            .blog-hero {
+                height: 50vh;
+                margin-top: 70px;
+            }
+            
+            .blog-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .blog-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .blog-content {
+                padding: 0 2rem;
+            }
+            
+            .featured-content {
+                padding: 2rem;
+            }
+            
+            .article-title {
+                font-size: 1.8rem;
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+            
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .blog-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .featured-image {
+                height: 250px;
+            }
+            
+            .article-card-content {
+                padding: 1.5rem;
+            }
+            
+            .sidebar {
+                padding: 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-logo">
+            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <div class="logo-text">Medeiros, Paiva & Soares</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="areas.html">Áreas</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="equipe.html">Equipe</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Blog -->
+    <section class="blog-hero">
+        <div class="blog-hero-content">
+            <h1>BLOG JURÍDICO</h1>
+            <p>Artigos, análises e insights sobre as principais questões do direito contemporâneo</p>
+        </div>
+    </section>
+
+    <!-- Blog Content -->
+    <main class="blog-content">
+        <div class="articles-main">
+            <!-- Artigo em Destaque -->
+            <article class="featured-article">
+                <div class="featured-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="featured-content">
+                    <div class="article-category">Direito Empresarial</div>
+                    <h2 class="article-title">Novas Regulamentações para Empresas de Tecnologia em 2023</h2>
+                    <p class="article-excerpt">Análise completa sobre as mudanças legislativas que impactam o setor de tecnologia e as estratégias jurídicas para adaptação às novas exigências regulatórias.</p>
+                    <div class="article-meta">
+                        <div class="article-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4>Dr. João Medeiros</h4>
+                                <span>Sócio Fundador</span>
+                            </div>
+                        </div>
+                        <div class="article-date">15 de Novembro de 2023</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Grid de Artigos -->
+            <div class="articles-grid">
+                <!-- Artigo 1 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Direito Trabalhista</div>
+                        <h3 class="article-card-title">Impactos da Reforma Trabalhista nos Contratos de Teletrabalho</h3>
+                        <p class="article-card-excerpt">Análise das mudanças legislativas e suas implicações práticas para empresas e trabalhadores em regime de home office.</p>
+                        <div class="article-card-meta">
+                            <span>Dra. Maria Paiva</span>
+                            <span>8 Nov 2023</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Artigo 2 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Direito Civil</div>
+                        <h3 class="article-card-title">Mudanças no Direito de Família: O Que Você Precisa Saber</h3>
+                        <p class="article-card-excerpt">Atualizações legislativas recentes e seus impactos nos processos de divórcio, guarda de filhos e partilha de bens.</p>
+                        <div class="article-card-meta">
+                            <span>Dr. Carlos Soares</span>
+                            <span>1 Nov 2023</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Artigo 3 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Compliance</div>
+                        <h3 class="article-card-title">LGPD: Novas Exigências para Empresas em 2023</h3>
+                        <p class="article-card-excerpt">Guia prático sobre as atualizações na Lei Geral de Proteção de Dados e como adequar sua empresa.</p>
+                        <div class="article-card-meta">
+                            <span>Dr. João Medeiros</span>
+                            <span>25 Out 2023</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Artigo 4 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Direito Tributário</div>
+                        <h3 class="article-card-title">Reforma Tributária: Impactos nos Negócios</h3>
+                        <p class="article-card-excerpt">Análise detalhada da reforma tributária e estratégias para otimização fiscal empresarial.</p>
+                        <div class="article-card-meta">
+                            <span>Dra. Maria Paiva</span>
+                            <span>18 Out 2023</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Artigo 5 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Direito Contratual</div>
+                        <h3 class="article-card-title">Contratos Inteligentes e Blockchain</h3>
+                        <p class="article-card-excerpt">A revolução dos smart contracts e suas implicações jurídicas no direito contratual brasileiro.</p>
+                        <div class="article-card-meta">
+                            <span>Dr. Carlos Soares</span>
+                            <span>12 Out 2023</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Artigo 6 -->
+                <article class="article-card">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                    <div class="article-card-content">
+                        <div class="article-category">Direito Digital</div>
+                        <h3 class="article-card-title">Regulamentação de Criptoativos no Brasil</h3>
+                        <p class="article-card-excerpt">Panorama atual e perspectivas futuras para o mercado de criptomoedas e ativos digitais.</p>
+                        <div class="article-card-meta">
+                            <span>Dr. João Medeiros</span>
+                            <span>5 Out 2023</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Paginação -->
+            <div class="pagination">
+                <a href="#" class="page-number active">1</a>
+                <a href="#" class="page-number">2</a>
+                <a href="#" class="page-number">3</a>
+                <a href="#" class="page-number">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Categorias -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Categorias</h3>
+                <ul class="categories-list">
+                    <li>
+                        <a href="#">
+                            Direito Empresarial
+                            <span class="category-count">12</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Direito Trabalhista
+                            <span class="category-count">8</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Direito Civil
+                            <span class="category-count">6</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Compliance
+                            <span class="category-count">5</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Direito Digital
+                            <span class="category-count">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Direito Tributário
+                            <span class="category-count">3</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Posts Recentes -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Posts Recentes</h3>
+                <ul class="recent-posts">
+                    <li class="recent-post">
+                        <div class="recent-post-image" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80')"></div>
+                        <div class="recent-post-content">
+                            <h4>Impactos da Reforma Trabalhista</h4>
+                            <span>8 Nov 2023</span>
+                        </div>
+                    </li>
+                    <li class="recent-post">
+                        <div class="recent-post-image" style="background-image: url('https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80')"></div>
+                        <div class="recent-post-content">
+                            <h4>Mudanças no Direito de Família</h4>
+                            <span>1 Nov 2023</span>
+                        </div>
+                    </li>
+                    <li class="recent-post">
+                        <div class="recent-post-image" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80')"></div>
+                        <div class="recent-post-content">
+                            <h4>LGPD: Novas Exigências</h4>
+                            <span>25 Out 2023</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Newsletter</h3>
+                <p style="color: var(--text-medium); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    Receba nossos artigos e atualizações jurídicas diretamente no seu email.
+                </p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Seu melhor email" required>
+                    <button type="submit" class="btn btn-full">Assinar</button>
+                </form>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">Medeiros, Paiva & Soares</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/mps.adv" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="social-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" target="_blank">
+                        <i class="fas fa-cloud"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@mpsadv" class="social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="areas.html">Áreas</a></li>
+                    <li><a href="sobre.html">Sobre</a></li>
+                    <li><a href="equipe.html">Equipe</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contato.html">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Flutuante -->
+    <a href="https://wa.me/5565993331869" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Inicializar header
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+    </script>
+</body>
+</html>
