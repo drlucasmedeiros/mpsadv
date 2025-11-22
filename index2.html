@@ -6,7 +6,6 @@
     <title>Medeiros, Paiva & Soares - Advogados</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
    <style>
         /* Importação das fontes locais */
         @font-face {
@@ -1007,7 +1006,53 @@
                 margin-right: 0;
                 margin-bottom: 0.5rem;
             }
-        }
+        /* Estilos para o FormSubmit */
+.contact-form form {
+    position: relative;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: var(--white);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(201, 167, 105, 0.1);
+}
+
+.contact-form textarea {
+    height: 150px;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.contact-form .btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    padding: 1.3rem 2rem;
+    background-color: var(--accent);
+    color: var(--primary-dark);
+    border: none;
+}
+
+.contact-form .btn:hover {
+    background-color: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(201, 167, 105, 0.3);
+}
     </style>
 </head>
 <body>
@@ -1216,25 +1261,31 @@
             <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
         </div>
         <div class="contact-form">
-            <form id="email-form" onsubmit="sendEmail(event)">
-                <input type="text" id="name" name="name" placeholder="Seu Nome" required>
-                <input type="email" id="email" name="email" placeholder="Seu E-mail" required>
-                <input type="tel" id="phone" name="phone" placeholder="Seu Telefone">
-                <textarea id="message" name="message" placeholder="Sua Mensagem" required></textarea>
-                <button type="submit" class="btn">Abrir E-mail para Envio</button>
-                <div id="form-status" style="margin-top: 15px; display: none;"></div>
+            <!-- FORMSUBMIT - FUNCIONA DE VERDADE -->
+            <form action="https://formsubmit.co/atendimento@mpsadv.com.br" method="POST">
+                <!-- Campos do formulário -->
+                <input type="text" name="name" placeholder="Seu Nome" required>
+                <input type="email" name="email" placeholder="Seu E-mail" required>
+                <input type="tel" name="phone" placeholder="Seu Telefone">
+                <textarea name="message" placeholder="Sua Mensagem" required></textarea>
+                
+                <!-- Configurações do FormSubmit -->
+                <input type="hidden" name="_subject" value="Novo contato do site MPS Advogados">
+                <input type="hidden" name="_autoresponse" value="Obrigado pelo seu contato! Retornaremos em breve.">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://mpsadv.com.br/obrigado.html">
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                </button>
             </form>
             
-            <!-- Botão direto como alternativa -->
-            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px;">
-                <p style="margin-bottom: 1rem; color: var(--text-medium); font-size: 1.1rem;">
-                    <strong>Opção mais rápida:</strong> Clique abaixo para enviar e-mail diretamente
+            <!-- Aviso de confirmação -->
+            <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <p style="color: var(--text-medium); font-size: 0.9rem; margin: 0;">
+                    📧 Você receberá uma confirmação por e-mail
                 </p>
-                <a href="mailto:atendimento@mpsadv.com.br?subject=Contato do Site MPS Advogados&body=Olá! Gostaria de mais informações sobre seus serviços jurídicos." 
-                   class="btn" 
-                   style="background-color: var(--accent); color: var(--primary-dark); border: none; font-size: 1.1rem;">
-                   <i class="fas fa-paper-plane"></i> Enviar E-mail Direto
-                </a>
             </div>
         </div>
     </div>
@@ -1401,112 +1452,6 @@
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
-       
-	   <script>
-    // Função para enviar e-mail via mailto:
-    function sendEmail(event) {
-        event.preventDefault();
-        
-        const form = document.getElementById('email-form');
-        const formStatus = document.getElementById('form-status');
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalText = submitButton.textContent;
-        
-        // Coletar dados
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const message = document.getElementById('message').value;
-        
-        // Mostrar loading
-        submitButton.textContent = 'Preparando e-mail...';
-        submitButton.disabled = true;
-        
-        // Criar assunto e corpo do e-mail
-        const subject = `Contato do Site MPS Advogados - ${name}`;
-        const body = `
-Nome: ${name}
-E-mail: ${email}
-Telefone: ${phone}
-
-Mensagem:
-${message}
-
----
-Enviado através do site mpsadv.com.br
-        `.trim();
-        
-        // Codificar para URL
-        const encodedSubject = encodeURIComponent(subject);
-        const encodedBody = encodeURIComponent(body);
-        
-        // Criar link mailto
-        const mailtoLink = `mailto:atendimento@mpsadv.com.br?subject=${encodedSubject}&body=${encodedBody}`;
-        
-        // Abrir cliente de e-mail
-        window.location.href = mailtoLink;
-        
-        // Feedback para o usuário
-        formStatus.textContent = 'Cliente de e-mail aberto! Complete o envio clicando em "Enviar".';
-        formStatus.style.color = 'green';
-        formStatus.style.display = 'block';
-        
-        // Restaurar botão e limpar formulário após 2 segundos
-        setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-            form.reset();
-        }, 2000);
-        
-        // Esconder mensagem após 8 segundos
-        setTimeout(() => {
-            formStatus.style.display = 'none';
-        }, 8000);
-    }
-
-    // Seu JavaScript existente para navegação suave
-    document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-    
-    // Header scroll effect
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-        
-        // Ativar links de navegação
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('nav a');
-        let current = '';
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (scrollY >= (sectionTop - 100)) {
-                current = section.getAttribute('id');
-            }
-        });
-        
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').substring(1) === current) {
-                link.classList.add('active');
-            }
-        });
-    });
     </script>
 
 </body>
