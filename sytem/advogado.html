@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Advogado - MPS Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    
+    <!-- Incluir os arquivos JavaScript -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="leads.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --accent: #C9A769;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --success: #4CAF50;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .login-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .login-header h1 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .login-form {
+            padding: 2.5rem 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 26, 26, 0.3);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .security-notice {
+            background: rgba(201, 167, 105, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent);
+            text-align: center;
+        }
+        
+        .security-notice p {
+            color: var(--text-medium);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        .form-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .form-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+            display: none;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-content {
+            padding: 2rem;
+        }
+        
+        .lead-form {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .lead-form h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .submit-lead-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--success) 0%, #45a049 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .submit-lead-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+        
+        .recent-activity {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .recent-activity h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background: #d1edff;
+            color: #004085;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-header">
+            <div class="logo">MPS</div>
+            <h1>Área do Advogado</h1>
+            <p>Acesso exclusivo para parceiros credenciados</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="username"><i class="fas fa-user"></i> Usuário</label>
+                <input type="text" id="username" name="username" placeholder="Seu usuário" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Senha</label>
+                <input type="password" id="password" name="password" placeholder="Sua senha" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Acessar Sistema
+            </button>
+            
+            <div id="loginMessage" class="form-message"></div>
+            
+            <div class="security-notice">
+                <p><i class="fas fa-shield-alt"></i> Área restrita. Todas as atividades são monitoradas.</p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div>
+                    <h2 id="userGreeting">Advogado Credenciado</h2>
+                    <p id="userStatus">Status: Ativo</p>
+                    <small id="sessionTime">Sessão: 0 min</small>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="leadsToday">0</div>
+                    <div class="stat-label">Leads Hoje</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="leadsRemaining">10</div>
+                    <div class="stat-label">Disponíveis</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="authSystem.logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="lead-form">
+                <h2><i class="fas fa-plus-circle"></i> Nova Indicação</h2>
+                
+                <form action="https://formsubmit.co/leads@mpsadv.com.br" method="POST" id="leadForm">
+                    <input type="hidden" name="_subject" value="🎯 NOVA LEAD - Advogado Credenciado">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_autoresponse" value="Lead registrada com sucesso! Acompanharemos o contato e atualizaremos em breve.">
+                    <input type="hidden" name="_next" value="https://mpsadv.com.br/lead-sucesso.html">
+                    <input type="hidden" name="advogado" id="advogadoName" value="">
+                    <input type="hidden" name="advogado_email" id="advogadoEmail" value="">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientName">Nome do Cliente *</label>
+                            <input type="text" id="clientName" name="clientName" placeholder="Nome completo" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientPhone">Telefone/WhatsApp *</label>
+                            <input type="tel" id="clientPhone" name="clientPhone" placeholder="(65) 99999-9999" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientEmail">E-mail (opcional)</label>
+                            <input type="email" id="clientEmail" name="clientEmail" placeholder="cliente@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="caseType">Tipo de Caso *</label>
+                            <select id="caseType" name="caseType" required>
+                                <option value="">Selecione...</option>
+                                <option value="civil">Direito Civil</option>
+                                <option value="trabalhista">Direito Trabalhista</option>
+                                <option value="empresarial">Direito Empresarial</option>
+                                <option value="familia">Direito de Família</option>
+                                <option value="inventario">Inventário</option>
+                                <option value="previdenciario">Previdenciário</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseDescription">Descrição do Caso *</label>
+                        <textarea id="caseDescription" name="caseDescription" placeholder="Descreva brevemente a situação do cliente..." rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgency">Nível de Urgência</label>
+                        <select id="urgency" name="urgency">
+                            <option value="normal">Normal</option>
+                            <option value="alta">Alta Urgência</option>
+                            <option value="imediata">Atendimento Imediato</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observations">Observações Adicionais</label>
+                        <textarea id="observations" name="observations" placeholder="Informações relevantes sobre o cliente..." rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-lead-btn" id="submitLeadBtn">
+                        <i class="fas fa-paper-plane"></i> Enviar Indicação
+                    </button>
+                    
+                    <div id="leadMessage" class="form-message"></div>
+                </form>
+            </div>
+            
+            <div class="recent-activity">
+                <h3><i class="fas fa-history"></i> Suas Indicações Recentes</h3>
+                <ul class="activity-list" id="activityList">
+                    <!-- Preenchido dinamicamente via JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const loginContainer = document.getElementById('loginContainer');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const userGreeting = document.getElementById('userGreeting');
+        const userStatus = document.getElementById('userStatus');
+        const sessionTime = document.getElementById('sessionTime');
+        const leadsToday = document.getElementById('leadsToday');
+        const leadsRemaining = document.getElementById('leadsRemaining');
+        const advogadoName = document.getElementById('advogadoName');
+        const advogadoEmail = document.getElementById('advogadoEmail');
+        const leadForm = document.getElementById('leadForm');
+        const leadMessage = document.getElementById('leadMessage');
+        const activityList = document.getElementById('activityList');
+        const submitLeadBtn = document.getElementById('submitLeadBtn');
+
+        // Verificar sessão ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authSystem.isLoggedIn()) {
+                showDashboard();
+            } else {
+                showLogin();
+                document.getElementById('username').focus();
+            }
+            
+            // Atualizar tempo de sessão a cada minuto
+            setInterval(updateSessionTime, 60000);
+        });
+
+        // Login
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFICANDO...';
+            loginBtn.disabled = true;
+            
+            try {
+                const result = await authSystem.login(username, password);
+                showDashboard();
+            } catch (error) {
+                loginMessage.textContent = `❌ ${error.message}`;
+                loginMessage.className = 'form-message error';
+                loginMessage.style.display = 'block';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acessar Sistema';
+                loginBtn.disabled = false;
+            }
+        });
+
+        function showDashboard() {
+            const user = authSystem.getUser();
+            const stats = leadsSystem.getLeadStats(user.username);
+            
+            // Atualizar interface
+            userGreeting.textContent = `Olá, ${user.name}`;
+            userStatus.textContent = `Especialidade: ${user.specialty}`;
+            advogadoName.value = user.name;
+            advogadoEmail.value = user.email;
+            
+            // Atualizar estatísticas
+            updateStats();
+            
+            // Atualizar lista de atividades
+            updateActivityList();
+            
+            // Mostrar dashboard
+            loginContainer.style.display = 'none';
+            dashboardContainer.style.display = 'block';
+        }
+
+        function showLogin() {
+            loginContainer.style.display = 'block';
+            dashboardContainer.style.display = 'none';
+            loginForm.reset();
+        }
+
+        function updateStats() {
+            const user = authSystem.getUser();
+            if (!user) return;
+            
+            const stats = leadsSystem.getLeadStats(user.username);
+            leadsToday.textContent = stats.totalToday;
+            leadsRemaining.textContent = stats.remaining;
+            
+            // Desabilitar botão se atingiu o limite
+            submitLeadBtn.disabled = stats.remaining <= 0;
+            if (stats.remaining <= 0) {
+                submitLeadBtn.innerHTML = '<i class="fas fa-ban"></i> Limite Atingido';
+            }
+        }
+
+        function updateSessionTime() {
+            if (authSystem.isLoggedIn()) {
+                sessionTime.textContent = `Sessão: ${authSystem.getSessionTime()}`;
+            }
+        }
+
+        function updateActivityList() {
+            const user = authSystem.getUser();
+            if (!user) return;
+            
+            const userLeads = leadsSystem.getUserLeads(user.username);
+            
+            if (userLeads.length === 0) {
+                activityList.innerHTML = '<li class="activity-item">Nenhuma indicação hoje</li>';
+                return;
+            }
+            
+            activityList.innerHTML = userLeads.map(lead => `
+                <li class="activity-item">
+                    <div>
+                        <strong>${lead.clientName}</strong>
+                        <div>${this.getCaseTypeLabel(lead.caseType)}</div>
+                        <small>${this.formatDate(lead.timestamp)}</small>
+                    </div>
+                    <span class="activity-status status-pending">Pendente</span>
+                </li>
+            `).join('');
+        }
+
+        function getCaseTypeLabel(caseType) {
+            const labels = {
+                'civil': 'Direito Civil',
+                'trabalhista': 'Direito Trabalhista',
+                'empresarial': 'Direito Empresarial',
+                'familia': 'Direito de Família',
+                'inventario': 'Inventário',
+                'previdenciario': 'Previdenciário',
+                'outros': 'Outros'
+            };
+            return labels[caseType] || caseType;
+        }
+
+        function formatDate(isoString) {
+            return new Date(isoString).toLocaleString('pt-BR');
+        }
+
+        // Formatação de telefone
+        document.getElementById('clientPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 11) {
+                if (value.length <= 2) {
+                    value = value;
+                } else if (value.length <= 6) {
+                    value = value.replace(/^(\d{2})(\d{0,4})/, '($1) $2');
+                } else if (value.length <= 10) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                } else {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+                }
+                
+                e.target.value = value;
+            }
+        });
+
+        // Envio de lead
+        leadForm.addEventListener('submit', function(e) {
+            if (!authSystem.isLoggedIn()) {
+                e.preventDefault();
+                alert('Sessão expirada. Faça login novamente.');
+                authSystem.logout();
+                return;
+            }
+
+            const user = authSystem.getUser();
+            const phone = document.getElementById('clientPhone').value;
+            
+            // Verificar limite
+            if (!leadsSystem.canSubmitLead(user.username)) {
+                e.preventDefault();
+                leadMessage.textContent = '❌ Limite diário de indicações atingido!';
+                leadMessage.className = 'form-message error';
+                leadMessage.style.display = 'block';
+                return;
+            }
+
+            // Validar telefone
+            const phoneDigits = phone.replace(/\D/g, '');
+            if (phoneDigits.length < 10) {
+                e.preventDefault();
+                leadMessage.textContent = '❌ Digite um telefone válido com DDD!';
+                leadMessage.className = 'form-message error';
+                leadMessage.style.display = 'block';
+                return;
+            }
+
+            // Registrar lead localmente
+            const leadData = {
+                advogado: user.username,
+                clientName: document.getElementById('clientName').value,
+                clientPhone: phone,
+                caseType: document.getElementById('caseType').value,
+                urgency: document.getElementById('urgency').value
+            };
+            
+            leadsSystem.addLead(leadData);
+            updateStats();
+            updateActivityList();
+
+            // Feedback de envio
+            leadMessage.textContent = '✅ Enviando indicação...';
+            leadMessage.className = 'form-message success';
+            leadMessage.style.display = 'block';
+            
+            submitLeadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENVIANDO...';
+            submitLeadBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

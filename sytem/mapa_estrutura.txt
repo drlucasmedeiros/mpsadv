@@ -1,0 +1,7 @@
+mps-advogados/
+├── index.html              (Página principal)
+├── config.js              (Configurações)
+├── auth.js                (Sistema de autenticação)
+├── leads.js               (Sistema de leads)
+├── lead-sucesso.html      (Página de confirmação)
+└── estilo.css            (Opcional - se separar CSS)
