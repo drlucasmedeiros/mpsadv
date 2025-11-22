@@ -1351,48 +1351,7 @@ END:VCARD`;
         }
     });
 </script>
-Principais melhorias para compatibilidade com iPhone:
-1. Foto em Base64
-Convertemos a imagem para Base64 usando canvas
 
-Usamos encoding B (Base64) que é mais compatível
-
-Formato JPEG para melhor suporte cross-platform
-
-2. Estrutura V-Card otimizada
-Campo N formatado corretamente: N:Medeiros;Lukas;;Dr.
-
-Encoding explícito da foto: PHOTO;ENCODING=B;TYPE=JPEG
-
-Versão 3.0 do V-Card (mais compatível)
-
-3. Método específico para iPhone
-Função iPhoneSaveContact otimizada para iOS
-
-Abre o V-Card em nova aba para trigger automático do app Contatos
-
-Feedback claro sobre como proceder
-
-4. Fallbacks robustos
-Tenta usar imagem já carregada na página primeiro
-
-Fallback para URL padrão se necessário
-
-V-Card funciona mesmo sem foto em caso de erro
-
-5. Web Share API
-Usa navigator.share() quando disponível
-
-Suporte a compartilhamento de arquivos no iOS
-
-Feedback visual adequado
-
-Agora o V-Card será totalmente compatível com iPhone, salvando a foto do contato profissional junto com todos os dados quando o usuário importar para a agenda.
-
-não funcionou, quero garantir que a foto apareça
-Vou corrigir o problema da foto no V-Card. O issue principal é que precisamos garantir que a imagem seja acessível e convertida corretamente. Aqui está a solução completa:
-
-html
 <script>
     // Elementos do DOM
     const vcardBtn = document.getElementById('vcard-btn');
