@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obrigado pelo Contato - Medeiros, Paiva & Soares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .thank-you-container {
+            background: var(--white);
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thank-you-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--primary-dark));
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: bounce 1s ease-in-out;
+        }
+        
+        .success-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        h1 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-medium);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .message {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .message p {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-info {
+            background: rgba(201, 167, 105, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(201, 167, 105, 0.2);
+        }
+        
+        .contact-info h3 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-medium);
+        }
+        
+        .contact-info i {
+            color: var(--accent);
+            width: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: var(--primary-dark);
+            padding: 1.2rem 2.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: var(--transition);
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(201, 167, 105, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(201, 167, 105, 0.4);
+            background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: var(--white) !important;
+            margin-left: 1rem;
+        }
+        
+        .whatsapp-btn:hover {
+            background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .footer-note {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .thank-you-container {
+                padding: 3rem 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+            
+            .whatsapp-btn {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .thank-you-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .success-icon i {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-container">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1>Mensagem Enviada com Sucesso!</h1>
+        
+        <p class="subtitle">Obrigado por entrar em contato com o escritório Medeiros, Paiva & Soares</p>
+        
+        <div class="message">
+            <p><strong>✅ Recebemos sua mensagem</strong></p>
+            <p>Nossa equipe já foi notificada e entrará em contato em até 24 horas úteis.</p>
+            <p>Enviaremos uma resposta para o e-mail informado no formulário.</p>
+        </div>
+        
+        <div class="contact-info">
+            <h3>Precisa de atendimento urgente?</h3>
+            <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+            <p><i class="fas fa-envelope"></i> atendimento@mpsadv.com.br</p>
+            <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
+        </div>
+        
+        <div class="button-group">
+            <a href="https://mpsadv.com.br" class="btn">
+                <i class="fas fa-home"></i> Voltar ao Site Principal
+            </a>
+            <a href="https://wa.me/5565993331869?text=Olá! Gostaria de mais informações sobre os serviços jurídicos." 
+               class="btn whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+            </a>
+        </div>
+        
+        <div class="footer-note">
+            <p><strong>Medeiros, Paiva & Soares - Advogados</strong><br>
+            Excelência e inovação em serviços jurídicos</p>
+        </div>
+    </div>
+
+    <script>
+        // Redirecionamento automático após 30 segundos
+        setTimeout(function() {
+            window.location.href = 'https://mpsadv.com.br';
+        }, 30000); // 30 segundos
+        
+        // Contador regressivo opcional
+        let seconds = 30;
+        const countdownElement = document.createElement('div');
+        countdownElement.style.marginTop = '1rem';
+        countdownElement.style.color = 'var(--text-medium)';
+        countdownElement.style.fontSize = '0.9rem';
+        document.querySelector('.footer-note').appendChild(countdownElement);
+        
+        const countdown = setInterval(function() {
+            seconds--;
+            countdownElement.innerHTML = `Você será redirecionado automaticamente em ${seconds} segundos...`;
+            
+            if (seconds <= 0) {
+                clearInterval(countdown);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
