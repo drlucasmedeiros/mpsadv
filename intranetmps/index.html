@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet - MPS Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --info: #2196F3;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            background: var(--gray-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Big River', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-form {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-dark);
+            color: var(--white);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        .form-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        /* Layout Intranet */
+        .intranet-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-user {
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .header {
+            height: var(--header-height);
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Hatton', serif;
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+
+        /* Cards e Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Tabelas */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .data-table th {
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .data-table tr:hover {
+            background: var(--gray-light);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #E8F5E8; color: var(--success); }
+        .status-pending { background: #FFF3CD; color: var(--warning); }
+        .status-inactive { background: #F8D7DA; color: var(--danger); }
+        .status-completed { background: #E3F2FD; color: var(--info); }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-medium);
+            color: var(--text-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        /* Prazos específicos */
+        .prazo-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prazo-item:last-child {
+            border-bottom: none;
+        }
+
+        .prazo-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .prazo-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .prazo-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dias-restantes {
+            font-weight: bold;
+        }
+
+        .dias-urgente { color: var(--danger); }
+        .dias-atencao { color: var(--warning); }
+        .dias-normal { color: var(--success); }
+
+        /* Leads específicos */
+        .lead-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .lead-item:last-child {
+            border-bottom: none;
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .lead-client {
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .lead-date {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .lead-details {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Página de Login -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">MPS</div>
+                <h2>Intranet</h2>
+                <p>MPS Advogados</p>
+            </div>
+            <div class="login-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Usuário</label>
+                        <input type="text" class="form-control" id="username" placeholder="Seu usuário" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="password" placeholder="Sua senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Acessar Sistema
+                    </button>
+                    <div id="loginMessage" class="form-message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intranet -->
+    <div id="intranetPage" class="intranet-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">MPS</div>
+                <div class="sidebar-user">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 id="userName">Usuário</h3>
+                    <p id="userRole">Advogado</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav">
+                <a class="nav-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                
+                <a class="nav-item" onclick="showSection('leads')">
+                    <i class="fas fa-bullhorn"></i>
+                    Indicações
+                    <span class="nav-badge" id="leadsBadge">0</span>
+                </a>
+                
+                <a class="nav-item" onclick="showSection('prazos')">
+                    <i class="fas fa-calendar-alt"></i>
+                    Controle de Prazos
+                    <span class="nav-badge" id="prazosBadge">0</span>
+                </a>
+                
+                <a class="nav-item" onclick="showSection('processos')">
+                    <i class="fas fa-gavel"></i>
+                    Processos
+                    <span class="nav-badge" id="processosBadge">0</span>
+                </a>
+                
+                <a class="nav-item" onclick="showSection('documentos')">
+                    <i class="fas fa-file-alt"></i>
+                    Documentos
+                    <span class="nav-badge" id="documentosBadge">0</span>
+                </a>
+                
+                <a class="nav-item" id="adminNav" style="display: none;" onclick="showSection('advogados')">
+                    <i class="fas fa-users"></i>
+                    Advogados
+                </a>
+                
+                <a class="nav-item" onclick="showSection('relatorios')">
+                    <i class="fas fa-chart-bar"></i>
+                    Relatórios
+                </a>
+                
+                <a class="nav-item" onclick="showSection('configuracoes')">
+                    <i class="fas fa-cog"></i>
+                    Configurações
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="authSystem.logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Dashboard Section -->
+                <section id="dashboardSection" class="page-section active">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Visão geral das atividades</p>
+                    </div>
+
+                    <div class="dashboard-grid" id="dashboardStats">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Prazos Urgentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="urgentPrazosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-bullhorn"></i> Últimas Indicações</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentLeadsList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Leads Section -->
+                <section id="leadsSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-bullhorn"></i> Indicações</h1>
+                        <p class="page-subtitle">Gestão de novas oportunidades</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Nova Indicação</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="leadForm" action="https://formsubmit.co/leads@mpsadv.com.br" method="POST">
+                                <input type="hidden" name="_subject" value="🎯 NOVA LEAD - Intranet MPS">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_next" value="https://mpsadv.com.br/lead-sucesso.html">
+                                <input type="hidden" name="advogado" id="leadAdvogado">
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nome do Cliente *</label>
+                                        <input type="text" class="form-control" name="clientName" placeholder="Nome completo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Telefone/WhatsApp *</label>
+                                        <input type="tel" class="form-control" name="clientPhone" placeholder="(65) 99999-9999" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="email" class="form-control" name="clientEmail" placeholder="cliente@email.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo de Caso *</label>
+                                        <select class="form-control" name="caseType" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="civil">Direito Civil</option>
+                                            <option value="trabalhista">Direito Trabalhista</option>
+                                            <option value="empresarial">Direito Empresarial</option>
+                                            <option value="familia">Direito de Família</option>
+                                            <option value="inventario">Inventário</option>
+                                            <option value="previdenciario">Previdenciário</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição do Caso *</label>
+                                    <textarea class="form-control" name="caseDescription" placeholder="Descreva brevemente a situação do cliente..." rows="4" required></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Enviar Indicação
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-history"></i> Indicações Recentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="leadsHistoryList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Prazos Section -->
+                <section id="prazosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-calendar-alt"></i> Controle de Prazos</h1>
+                        <p class="page-subtitle">Gestão de prazos e audiências</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Novo Prazo/Audiência</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="prazoForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nº do Processo *</label>
+                                        <input type="text" class="form-control" id="prazoProcesso" placeholder="0000000-00.0000.0.00.0000" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cliente *</label>
+                                        <input type="text" class="form-control" id="prazoCliente" placeholder="Nome do cliente" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo *</label>
+                                        <select class="form-control" id="prazoTipo" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="audiência">Audiência</option>
+                                            <option value="prazo">Prazo Processual</option>
+                                            <option value="protocolo">Protocolo</option>
+                                            <option value="sentença">Sentença</option>
+                                            <option value="recurso">Recurso</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Data *</label>
+                                        <input type="datetime-local" class="form-control" id="prazoData" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição *</label>
+                                    <textarea class="form-control" id="prazoDescricao" placeholder="Descreva o prazo ou audiência..." rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Prioridade</label>
+                                        <select class="form-control" id="prazoPrioridade">
+                                            <option value="normal">Normal</option>
+                                            <option value="alta">Alta</option>
+                                            <option value="urgente">Urgente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Salvar Prazo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Meus Prazos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="prazosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Processos Section -->
+                <section id="processosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-gavel"></i> Processos</h1>
+                        <p class="page-subtitle">Gestão de processos jurídicos</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-gavel fa-3x mb-3" style="color: var(--accent);"></i>
+                                <h3>Módulo em Desenvolvimento</h3>
+                                <p class="text-muted">Em breve - Sistema completo de gestão processual</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Documentos Section -->
+                <section id="documentosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-file-alt"></i> Documentos</h1>
+                        <p class="page-subtitle">Gestão de documentos dos processos</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-file-alt fa-3x mb-3" style="color: var(--accent);"></i>
+                                <h3>Módulo em Desenvolvimento</h3>
+                                <p class="text-muted">Em breve - Sistema completo de gestão documental</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Advogados Section (Admin) -->
+                <section id="advogadosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-users"></i> Advogados</h1>
+                        <p class="page-subtitle">Gestão de usuários do sistema</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-users fa-3x mb-3" style="color: var(--accent);"></i>
+                                <h3>Painel Administrativo</h3>
+                                <p class="text-muted">Gestão completa de advogados e permissões</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Relatórios Section -->
+                <section id="relatoriosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-chart-bar"></i> Relatórios</h1>
+                        <p class="page-subtitle">Relatórios e estatísticas</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-chart-bar fa-3x mb-3" style="color: var(--accent);"></i>
+                                <h3>Relatórios em Desenvolvimento</h3>
+                                <p class="text-muted">Em breve - Relatórios completos e dashboards analíticos</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configurações Section -->
+                <section id="configuracoesSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-cog"></i> Configurações</h1>
+                        <p class="page-subtitle">Configurações do sistema</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-cog fa-3x mb-3" style="color: var(--accent);"></i>
+                                <h3>Configurações do Sistema</h3>
+                                <p class="text-muted">Personalize as configurações do sistema</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="intranet.js"></script>
+</body>
+</html>

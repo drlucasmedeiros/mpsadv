@@ -1,0 +1,6 @@
+ADMIN:
+Usuário: admin | Senha: admin123
+
+ADVOGADOS:
+Usuário: adv01 | Senha: mps2024
+Usuário: adv02 | Senha: mps2024
