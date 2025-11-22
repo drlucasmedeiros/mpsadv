@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet - MPS Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --info: #2196F3;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            background: var(--gray-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Big River', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-form {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-dark);
+            color: var(--white);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        .form-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        /* Layout Intranet */
+        .intranet-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-user {
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .header {
+            height: var(--header-height);
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-medium);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Hatton', serif;
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+
+        /* Cards e Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Tabelas */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .data-table th {
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .data-table tr:hover {
+            background: var(--gray-light);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #E8F5E8; color: var(--success); }
+        .status-pending { background: #FFF3CD; color: var(--warning); }
+        .status-inactive { background: #F8D7DA; color: var(--danger); }
+        .status-completed { background: #E3F2FD; color: var(--info); }
+        .status-nova { background: #E3F2FD; color: var(--info); }
+        .status-contatada { background: #FFF3CD; color: var(--warning); }
+        .status-em_andamento { background: #E8F5E8; color: var(--success); }
+        .status-convertida { background: #4CAF50; color: white; }
+        .status-perdida { background: #F8D7DA; color: var(--danger); }
+        .status-arquivado { background: #6c757d; color: white; }
+        .status-suspenso { background: #FF9800; color: white; }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-medium);
+            color: var(--text-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Alertas */
+        .alert-container {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 2000;
+            max-width: 400px;
+        }
+
+        .alert {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--info);
+            animation: slideInRight 0.3s ease;
+        }
+
+        .alert-success { border-left-color: var(--success); }
+        .alert-error { border-left-color: var(--danger); }
+        .alert-warning { border-left-color: var(--warning); }
+        .alert-info { border-left-color: var(--info); }
+
+        .alert-content {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: var(--text-medium);
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Prazos específicos */
+        .prazo-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .prazo-item:last-child {
+            border-bottom: none;
+        }
+
+        .prazo-info {
+            flex: 1;
+        }
+
+        .prazo-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .prazo-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .prazo-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dias-restantes {
+            font-weight: bold;
+        }
+
+        .dias-urgente { color: var(--danger); }
+        .dias-atencao { color: var(--warning); }
+        .dias-normal { color: var(--success); }
+
+        .advogado-tag {
+            background: var(--accent-light);
+            color: var(--primary-dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Leads específicos */
+        .lead-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .lead-item:last-child {
+            border-bottom: none;
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .lead-client {
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .lead-date {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .lead-details {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .lead-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        /* Processos específicos */
+        .processo-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+        }
+
+        .processo-item:hover {
+            background: var(--gray-light);
+        }
+
+        .processo-item:last-child {
+            border-bottom: none;
+        }
+
+        .processo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .processo-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .processo-cliente {
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        .processo-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .processo-data {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .processo-details {
+            margin-bottom: 1rem;
+        }
+
+        .processo-detail {
+            margin-bottom: 0.5rem;
+            color: var(--text-medium);
+        }
+
+        .processo-descricao {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 8px;
+            color: var(--text-dark);
+        }
+
+        .processo-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Documentos específicos */
+        .documento-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .documento-item:last-child {
+            border-bottom: none;
+        }
+
+        .documento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .documento-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .documento-tipo {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .documento-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .documento-data {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .documento-details {
+            margin-bottom: 1rem;
+        }
+
+        .documento-detail {
+            margin-bottom: 0.5rem;
+            color: var(--text-medium);
+        }
+
+        .documento-descricao {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 8px;
+            color: var(--text-dark);
+        }
+
+        .documento-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Advogados específicos */
+        .advogado-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .advogado-item:last-child {
+            border-bottom: none;
+        }
+
+        .advogado-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .advogado-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .advogado-especialidade {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .advogado-details {
+            margin-bottom: 1rem;
+        }
+
+        .advogado-detail {
+            margin-bottom: 0.5rem;
+            color: var(--text-medium);
+        }
+
+        .advogado-permissoes {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 8px;
+            color: var(--text-dark);
+        }
+
+        .advogado-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Atividades */
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-desc {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .activity-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .activity-user {
+            font-weight: 500;
+        }
+
+        /* Relatórios */
+        .relatorios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        /* Configurações */
+        .config-section {
+            margin-bottom: 2rem;
+        }
+
+        .config-info {
+            background: var(--gray-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .prazo-item,
+            .lead-item,
+            .processo-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .prazo-actions,
+            .lead-actions,
+            .processo-actions {
+                align-self: stretch;
+                justify-content: flex-start;
+            }
+        }
+
+        /* Tooltips */
+        .custom-tooltip {
+            position: fixed;
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 10000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Página de Login -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">MPS</div>
+                <h2>Intranet</h2>
+                <p>MPS Advogados</p>
+            </div>
+            <div class="login-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Usuário</label>
+                        <input type="text" class="form-control" id="username" placeholder="Seu usuário" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="password" placeholder="Sua senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Acessar Sistema
+                    </button>
+                    <div id="loginMessage" class="form-message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intranet -->
+    <div id="intranetPage" class="intranet-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">MPS</div>
+                <div class="sidebar-user">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 id="userName">Usuário</h3>
+                    <p id="userRole">Advogado</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav">
+                <a class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                
+                <a class="nav-item" data-section="leads" onclick="showSection('leads')">
+                    <i class="fas fa-bullhorn"></i>
+                    Indicações
+                    <span class="nav-badge" id="leadsBadge">0</span>
+                </a>
+                
+                <a class="nav-item" data-section="prazos" onclick="showSection('prazos')">
+                    <i class="fas fa-calendar-alt"></i>
+                    Controle de Prazos
+                    <span class="nav-badge" id="prazosBadge">0</span>
+                </a>
+                
+                <a class="nav-item" data-section="processos" onclick="showSection('processos')">
+                    <i class="fas fa-gavel"></i>
+                    Processos
+                    <span class="nav-badge" id="processosBadge">0</span>
+                </a>
+                
+                <a class="nav-item" data-section="documentos" onclick="showSection('documentos')">
+                    <i class="fas fa-file-alt"></i>
+                    Documentos
+                </a>
+                
+                <a class="nav-item" id="adminNav" style="display: none;" data-section="advogados" onclick="showSection('advogados')">
+                    <i class="fas fa-users"></i>
+                    Advogados
+                </a>
+                
+                <a class="nav-item" id="relatoriosNav" style="display: none;" data-section="relatorios" onclick="showSection('relatorios')">
+                    <i class="fas fa-chart-bar"></i>
+                    Relatórios
+                </a>
+                
+                <a class="nav-item" data-section="configuracoes" onclick="showSection('configuracoes')">
+                    <i class="fas fa-cog"></i>
+                    Configurações
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="globalSearch" placeholder="Buscar...">
+                    </div>
+                    
+                    <button class="btn btn-outline" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Dashboard Section -->
+                <section id="dashboardSection" class="page-section active">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Visão geral das atividades</p>
+                    </div>
+
+                    <div class="dashboard-grid" id="dashboardStats">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Prazos Urgentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="urgentPrazosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-bullhorn"></i> Últimas Indicações</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentLeadsList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-history"></i> Atividades Recentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentActivitiesList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Leads Section -->
+                <section id="leadsSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-bullhorn"></i> Indicações</h1>
+                        <p class="page-subtitle">Gestão de novas oportunidades</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Nova Indicação</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="leadForm" action="https://formsubmit.co/leads@mpsadv.com.br" method="POST">
+                                <input type="hidden" name="_subject" value="🎯 NOVA LEAD - Intranet MPS">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_next" value="https://mpsadv.com.br/lead-sucesso.html">
+                                <input type="hidden" name="advogado" id="leadAdvogado">
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nome do Cliente *</label>
+                                        <input type="text" class="form-control" name="clientName" placeholder="Nome completo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Telefone/WhatsApp *</label>
+                                        <input type="tel" class="form-control" name="clientPhone" placeholder="(65) 99999-9999" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="email" class="form-control" name="clientEmail" placeholder="cliente@email.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo de Caso *</label>
+                                        <select class="form-control" name="caseType" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="civil">Direito Civil</option>
+                                            <option value="trabalhista">Direito Trabalhista</option>
+                                            <option value="empresarial">Direito Empresarial</option>
+                                            <option value="familia">Direito de Família</option>
+                                            <option value="inventario">Inventário</option>
+                                            <option value="previdenciario">Previdenciário</option>
+                                            <option value="penal">Direito Penal</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição do Caso *</label>
+                                    <textarea class="form-control" name="caseDescription" placeholder="Descreva brevemente a situação do cliente..." rows="4" required></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Enviar Indicação
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-history"></i> Indicações Recentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="leadsHistoryList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Prazos Section -->
+                <section id="prazosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-calendar-alt"></i> Controle de Prazos</h1>
+                        <p class="page-subtitle">Gestão de prazos e audiências</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Novo Prazo/Audiência</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="prazoForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nº do Processo *</label>
+                                        <input type="text" class="form-control" id="prazoProcesso" placeholder="0000000-00.0000.0.00.0000" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cliente *</label>
+                                        <input type="text" class="form-control" id="prazoCliente" placeholder="Nome do cliente" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo *</label>
+                                        <select class="form-control" id="prazoTipo" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="audiência">Audiência</option>
+                                            <option value="prazo">Prazo Processual</option>
+                                            <option value="protocolo">Protocolo</option>
+                                            <option value="sentença">Sentença</option>
+                                            <option value="recurso">Recurso</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Data *</label>
+                                        <input type="datetime-local" class="form-control" id="prazoData" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição *</label>
+                                    <textarea class="form-control" id="prazoDescricao" placeholder="Descreva o prazo ou audiência..." rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Prioridade</label>
+                                        <select class="form-control" id="prazoPrioridade">
+                                            <option value="normal">Normal</option>
+                                            <option value="alta">Alta</option>
+                                            <option value="urgente">Urgente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Salvar Prazo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Meus Prazos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="prazosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Processos Section -->
+                <section id="processosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-gavel"></i> Processos</h1>
+                        <p class="page-subtitle">Gestão completa de processos jurídicos</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Novo Processo</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="processoForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Número do Processo *</label>
+                                        <input type="text" class="form-control" id="processoNumero" placeholder="0000000-00.0000.0.00.0000" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cliente *</label>
+                                        <input type="text" class="form-control" id="processoCliente" placeholder="Nome do cliente" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Advogado Responsável *</label>
+                                        <select class="form-control" id="processoAdvogado" required>
+                                            <option value="">Selecione...</option>
+                                            <!-- Preenchido via JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Área Jurídica *</label>
+                                        <select class="form-control" id="processoArea" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="civil">Direito Civil</option>
+                                            <option value="trabalhista">Direito Trabalhista</option>
+                                            <option value="empresarial">Direito Empresarial</option>
+                                            <option value="familia">Direito de Família</option>
+                                            <option value="inventario">Inventário</option>
+                                            <option value="previdenciario">Previdenciário</option>
+                                            <option value="penal">Direito Penal</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Tribunal/Órgão *</label>
+                                        <input type="text" class="form-control" id="processoTribunal" placeholder="Ex: TJMT, TRT, etc." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Valor da Causa (R$)</label>
+                                        <input type="number" class="form-control" id="processoValor" placeholder="0,00" step="0.01">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição do Caso *</label>
+                                    <textarea class="form-control" id="processoDescricao" placeholder="Descreva detalhes importantes do processo..." rows="4" required></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-control" id="processoStatus">
+                                            <option value="ativo">Ativo</option>
+                                            <option value="arquivado">Arquivado</option>
+                                            <option value="suspenso">Suspenso</option>
+                                            <option value="concluido">Concluído</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Data de Abertura</label>
+                                        <input type="date" class="form-control" id="processoDataAbertura" value="">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Cadastrar Processo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Meus Processos</h3>
+                            <div class="header-actions">
+                                <button class="btn btn-outline" onclick="filtrarProcessos('ativos')">
+                                    <i class="fas fa-filter"></i> Ativos
+                                </button>
+                                <button class="btn btn-outline" onclick="filtrarProcessos('todos')">
+                                    <i class="fas fa-list"></i> Todos
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="processosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Documentos Section -->
+                <section id="documentosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-file-alt"></i> Documentos</h1>
+                        <p class="page-subtitle">Gestão de documentos dos processos</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Novo Documento</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="documentoForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nome do Documento *</label>
+                                        <input type="text" class="form-control" name="documentoNome" placeholder="Nome do documento" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo de Documento *</label>
+                                        <select class="form-control" name="documentoTipo" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="peticao">Petição</option>
+                                            <option value="contestacao">Contestação</option>
+                                            <option value="recurso">Recurso</option>
+                                            <option value="decisao">Decisão</option>
+                                            <option value="sentenca">Sentença</option>
+                                            <option value="outros">Outros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Número do Processo</label>
+                                        <input type="text" class="form-control" name="documentoProcessoNumero" placeholder="0000000-00.0000.0.00.0000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Arquivo</label>
+                                        <input type="file" class="form-control" name="documentoArquivo" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                        <small class="text-muted">Formatos aceitos: PDF, DOC, DOCX, JPG, PNG</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Descrição</label>
+                                    <textarea class="form-control" name="documentoDescricao" placeholder="Descrição do documento..." rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload"></i> Upload Documento
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Meus Documentos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="documentosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Advogados Section (Admin) -->
+                <section id="advogadosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-users"></i> Advogados</h1>
+                        <p class="page-subtitle">Gestão de usuários do sistema</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Novo Advogado</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="advogadoForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Nome Completo *</label>
+                                        <input type="text" class="form-control" name="advogadoNome" placeholder="Nome completo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Usuário *</label>
+                                        <input type="text" class="form-control" name="advogadoUsername" placeholder="Nome de usuário" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">E-mail *</label>
+                                        <input type="email" class="form-control" name="advogadoEmail" placeholder="email@exemplo.com" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Telefone</label>
+                                        <input type="tel" class="form-control" name="advogadoTelefone" placeholder="(65) 99999-9999">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Especialidade *</label>
+                                        <input type="text" class="form-control" name="advogadoEspecialidade" placeholder="Especialidade jurídica" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Senha *</label>
+                                        <input type="password" class="form-control" name="advogadoPassword" placeholder="Senha" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Permissões</label>
+                                    <div class="permissoes-grid">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="permissoes" value="leads" checked> Leads
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="permissoes" value="prazos" checked> Prazos
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="permissoes" value="processos" checked> Processos
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="permissoes" value="documentos" checked> Documentos
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="permissoes" value="admin"> Administrador
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Cadastrar Advogado
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Advogados Cadastrados</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="advogadosList">
+                                <!-- Preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Relatórios Section -->
+                <section id="relatoriosSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-chart-bar"></i> Relatórios</h1>
+                        <p class="page-subtitle">Relatórios e estatísticas do sistema</p>
+                    </div>
+
+                    <div id="relatoriosContent">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Configurações Section -->
+                <section id="configuracoesSection" class="page-section">
+                    <div class="page-header">
+                        <h1 class="page-title"><i class="fas fa-cog"></i> Configurações</h1>
+                        <p class="page-subtitle">Configurações do sistema e perfil</p>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-user"></i> Informações do Perfil</h3>
+                        <div class="config-info">
+                            <div class="info-row">
+                                <span>Usuário:</span>
+                                <strong id="configUsuario">-</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>E-mail:</span>
+                                <strong id="configEmail">-</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>Especialidade:</span>
+                                <strong id="configEspecialidade">-</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>Telefone:</span>
+                                <strong id="configTelefone">-</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>Tempo de Sessão:</span>
+                                <strong id="configSessionTime">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-key"></i> Segurança</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Altere sua senha para manter sua conta segura.</p>
+                                <div class="form-actions">
+                                    <button class="btn btn-primary" id="changePasswordBtn">
+                                        <i class="fas fa-key"></i> Alterar Senha
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-database"></i> Dados</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Faça backup ou restore dos dados do sistema.</p>
+                                <div class="form-actions">
+                                    <button class="btn btn-primary" onclick="exportarDados()">
+                                        <i class="fas fa-file-export"></i> Exportar Backup
+                                    </button>
+                                    <button class="btn btn-outline" onclick="importarDados()">
+                                        <i class="fas fa-file-import"></i> Importar Backup
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="intranet.js"></script>
+</body>
+</html>

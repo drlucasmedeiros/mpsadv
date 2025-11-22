@@ -1,0 +1,55 @@
+=== SISTEMA INTRANET MPS ADVOGADOS ===
+
+CREDENCIAIS DE ACESSO:
+
+ADMINISTRADOR:
+Usuário: admin
+Senha: admin123
+Permissões: Acesso total ao sistema
+
+ADVOGADOS:
+Usuário: adv01
+Senha: mps2024
+Especialidade: Direito Civil
+
+Usuário: adv02  
+Senha: mps2024
+Especialidade: Direito Trabalhista
+
+CARACTERÍSTICAS DO SISTEMA:
+
+✅ PERFIL ADMIN:
+- Visualiza todos os dados do sistema
+- Gerencia advogados e permissões
+- Acessa relatórios completos
+- Exporta/importa backups
+
+✅ INTEGRAÇÃO COMPLETA:
+- Dados persistentes com IndexedDB
+- Atividades em tempo real
+- Busca global integrada
+- Sistema de notificações
+
+✅ MÓDULOS IMPLEMENTADOS:
+- Dashboard com estatísticas
+- Gestão de Leads/Indicações
+- Controle de Prazos
+- Gestão de Processos
+- Documentos (base)
+- Relatórios (admin)
+- Configurações
+
+✅ FUNCIONALIDADES AVANÇADAS:
+- Sessão com timeout
+- Backup/restore automático
+- Busca global
+- Atividades do sistema
+- Interface responsiva
+- Tooltips informativos
+
+INSTRUÇÕES:
+1. Faça login com as credenciais acima
+2. O admin tem acesso completo
+3. Advogados veem apenas seus dados
+4. Use o menu para navegar entre módulos
+5. Faça backup regularmente
