@@ -311,33 +311,8 @@
         </div>
     </div>
 
-    <script>
-    // FORMATAÇÃO CORRIGIDA PARA TELEFONES BRASILEIROS
-    document.querySelector('.phone-input').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        
-        // Formatação flexível para números brasileiros
-        if (value.length <= 11) {
-            // DDD + 8 dígitos (celular antigo) ou DDD + 9 dígitos (celular novo)
-            if (value.length <= 2) {
-                // Apenas DDD - deixa como está
-                value = value;
-            } else if (value.length <= 6) {
-                // DDD + 4 primeiros dígitos
-                value = value.replace(/^(\d{2})(\d{0,4})/, '$1 $2');
-            } else if (value.length <= 10) {
-                // DDD + 8 dígitos (celular antigo)
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '$1 $2-$3');
-            } else {
-                // DDD + 9 dígitos (celular novo)
-                value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '$1 $3-$4');
-            }
-            
-            e.target.value = value;
-        }
-    });
-
-    // VALIDAÇÃO CORRIGIDA - Mais flexível
+   <script>
+    // VERSÃO SIMPLES - sem formatação, só validação
     document.querySelector('form').addEventListener('submit', function(e) {
         const phone = document.querySelector('.phone-input').value;
         const message = document.getElementById('formMessage');
@@ -346,49 +321,33 @@
         // Remove tudo que não é número
         const phoneDigits = phone.replace(/\D/g, '');
         
-        console.log('Telefone digitado:', phone);
-        console.log('Apenas números:', phoneDigits);
-        console.log('Tamanho:', phoneDigits.length);
-        
-        // Validação FLEXÍVEL - aceita 10 ou 11 dígitos
-        if (phoneDigits.length < 10) {
+        // Validação FLEXÍVEL
+        if (phoneDigits.length < 10 || phoneDigits.length > 11) {
             e.preventDefault();
-            message.textContent = '❌ Digite um número completo com DDD + 8 ou 9 dígitos!';
+            message.textContent = '❌ Digite um número válido com DDD + 8 ou 9 dígitos';
             message.className = 'form-message error';
             message.style.display = 'block';
             return;
         }
         
-        // Aceita números entre 10 e 11 dígitos
-        if (phoneDigits.length > 11) {
-            e.preventDefault();
-            message.textContent = '❌ Número muito longo! Digite DDD + 8 ou 9 dígitos.';
-            message.className = 'form-message error';
-            message.style.display = 'block';
-            return;
-        }
-        
-        // SUCCESS - mostrar mensagem
-        message.textContent = '✅ Perfeito! Estamos discando seu número...';
+        // SUCESSO
+        message.textContent = '✅ Perfeito! Ligamos em até 15 minutos!';
         message.className = 'form-message success';
         message.style.display = 'block';
         
-        // Desabilitar botão
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AGUARDE...';
         
-        // Redirecionar após 2 segundos
         setTimeout(() => {
             window.location.href = 'https://mpsadv.com.br/obrigado-telefone.html';
         }, 2000);
     });
 
-    // Foco automático no input
+    // Foco automático
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            document.querySelector('.phone-input').focus();
-        }, 500);
+        document.querySelector('.phone-input').focus();
     });
 </script>
+
 </body>
 </html>
