@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Advogado - MPS Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    
+    <!-- Incluir os arquivos JavaScript -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="leads.js"></script>
+    <script src="prazos.js"></script>
+    
+    <style>
+           * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --accent: #C9A769;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --success: #4CAF50;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .login-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .login-header h1 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .login-form {
+            padding: 2.5rem 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 26, 26, 0.3);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .security-notice {
+            background: rgba(201, 167, 105, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent);
+            text-align: center;
+        }
+        
+        .security-notice p {
+            color: var(--text-medium);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        .form-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .form-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+            display: none;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-content {
+            padding: 2rem;
+        }
+        
+        .lead-form {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .lead-form h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .submit-lead-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--success) 0%, #45a049 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .submit-lead-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+        
+        .recent-activity {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .recent-activity h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background: #d1edff;
+            color: #004085;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+        
+        /* NOVOS ESTILOS PARA CONTROLE DE PRAZOS */
+        .dashboard-tabs {
+            display: flex;
+            background: var(--gray-light);
+            border-radius: 10px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+        
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        .stat-card.urgente { border-left-color: #F44336; }
+        .stat-card.atencao { border-left-color: #FF9800; }
+        .stat-card.normal { border-left-color: #4CAF50; }
+        
+        .prazos-list {
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+        
+        .prazo-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: var(--transition);
+        }
+        
+        .prazo-item:hover {
+            background: var(--gray-light);
+        }
+        
+        .prazo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .prazo-info {
+            flex: 1;
+        }
+        
+        .prazo-processo {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .prazo-cliente {
+            color: var(--text-medium);
+            margin-bottom: 0.5rem;
+        }
+        
+        .prazo-descricao {
+            margin-bottom: 0.5rem;
+        }
+        
+        .prazo-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .prazo-tipo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--gray-light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .prazo-prioridade {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .prazo-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+        
+        .btn-concluir {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-editar {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-excluir {
+            background: #F44336;
+            color: white;
+        }
+        
+        .dias-restantes {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .dias-urgente { color: #F44336; }
+        .dias-atencao { color: #FF9800; }
+        .dias-normal { color: #4CAF50; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-medium);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .prazo-form {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .prazo-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .prazo-actions {
+                align-self: flex-end;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container (mantido igual) -->
+    <div class="login-container" id="loginContainer">
+        <!-- ... conteúdo do login anterior ... -->
+    </div>
+
+    <!-- Dashboard Container Atualizado -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div>
+                    <h2 id="userGreeting">Advogado Credenciado</h2>
+                    <p id="userStatus">Status: Ativo</p>
+                    <small id="sessionTime">Sessão: 0 min</small>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="leadsToday">0</div>
+                    <div class="stat-label">Leads Hoje</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="leadsRemaining">10</div>
+                    <div class="stat-label">Disponíveis</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="authSystem.logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Abas de Navegação -->
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="openTab('tab-leads')">
+                    <i class="fas fa-bullhorn"></i> Indicações
+                </button>
+                <button class="tab-btn" onclick="openTab('tab-prazos')">
+                    <i class="fas fa-calendar-alt"></i> Controle de Prazos
+                </button>
+                <button class="tab-btn" onclick="openTab('tab-processos')">
+                    <i class="fas fa-gavel"></i> Meus Processos
+                </button>
+            </div>
+            
+            <!-- Tab de Indicações (mantida igual) -->
+            <div id="tab-leads" class="tab-content active">
+                <!-- ... conteúdo anterior de leads ... -->
+            </div>
+            
+            <!-- NOVA Tab de Controle de Prazos -->
+            <div id="tab-prazos" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPrazos">0</div>
+                        <div class="stat-label">Total de Prazos</div>
+                    </div>
+                    <div class="stat-card atencao">
+                        <div class="stat-number" id="prazosProximos">0</div>
+                        <div class="stat-label">Próximos 7 Dias</div>
+                    </div>
+                    <div class="stat-card urgente">
+                        <div class="stat-number" id="prazosAtrasados">0</div>
+                        <div class="stat-label">Atrasados</div>
+                    </div>
+                    <div class="stat-card normal">
+                        <div class="stat-number" id="prazosConcluidos">0</div>
+                        <div class="stat-label">Concluídos</div>
+                    </div>
+                </div>
+                
+                <div class="prazo-form">
+                    <div class="form-header">
+                        <h3><i class="fas fa-plus-circle"></i> Novo Prazo/Audiência</h3>
+                    </div>
+                    <form id="prazoForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prazoProcesso">Nº do Processo *</label>
+                                <input type="text" id="prazoProcesso" name="processo" placeholder="0000000-00.0000.0.00.0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prazoCliente">Cliente *</label>
+                                <input type="text" id="prazoCliente" name="cliente" placeholder="Nome do cliente" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prazoTipo">Tipo *</label>
+                                <select id="prazoTipo" name="tipo" required>
+                                    <option value="">Selecione o tipo...</option>
+                                    <option value="audiência">Audiência</option>
+                                    <option value="prazo">Prazo Processual</option>
+                                    <option value="protocolo">Protocolo</option>
+                                    <option value="sentença">Sentença</option>
+                                    <option value="recurso">Recurso</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="prazoData">Data *</label>
+                                <input type="datetime-local" id="prazoData" name="data" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="prazoDescricao">Descrição *</label>
+                            <textarea id="prazoDescricao" name="descricao" placeholder="Descreva o prazo ou audiência..." rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prazoPrioridade">Prioridade</label>
+                                <select id="prazoPrioridade" name="prioridade">
+                                    <option value="normal">Normal</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="urgente">Urgente</option>
+                                    <option value="baixa">Baixa</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="prazoAdvogado">Advogado Responsável</label>
+                                <input type="text" id="prazoAdvogado" name="advogado" readonly>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-lead-btn">
+                            <i class="fas fa-save"></i> Salvar Prazo
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="prazos-list" id="prazosList">
+                    <!-- Lista de prazos será preenchida via JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Tab de Processos -->
+            <div id="tab-processos" class="tab-content">
+                <div class="empty-state">
+                    <i class="fas fa-gavel"></i>
+                    <h3>Controle de Processos</h3>
+                    <p>Em breve - Sistema completo de gestão processual</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... código anterior mantido ...
+
+        // NOVAS FUNÇÕES PARA CONTROLE DE PRAZOS
+        function openTab(tabName) {
+            // Esconder todas as tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remover active de todos os botões
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar tab selecionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Atualizar dados da tab se for a de prazos
+            if (tabName === 'tab-prazos') {
+                updatePrazosDashboard();
+            }
+        }
+
+        function updatePrazosDashboard() {
+            const user = authSystem.getUser();
+            if (!user) return;
+            
+            const estatisticas = prazosSystem.getEstatisticas(user.username);
+            const prazos = prazosSystem.getPrazosPorAdvogado(user.username);
+            
+            // Atualizar estatísticas
+            document.getElementById('totalPrazos').textContent = estatisticas.total;
+            document.getElementById('prazosProximos').textContent = estatisticas.proximos;
+            document.getElementById('prazosAtrasados').textContent = estatisticas.atrasados;
+            document.getElementById('prazosConcluidos').textContent = estatisticas.concluidos;
+            
+            // Preencher lista de prazos
+            const prazosList = document.getElementById('prazosList');
+            
+            if (prazos.length === 0) {
+                prazosList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Nenhum prazo cadastrado</h3>
+                        <p>Adicione seu primeiro prazo ou audiência usando o formulário acima.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            prazosList.innerHTML = prazos.map(prazo => `
+                <div class="prazo-item ${prazo.status === 'concluido' ? 'concluido' : ''}">
+                    <div class="prazo-info">
+                        <div class="prazo-processo">${prazo.processo}</div>
+                        <div class="prazo-cliente">Cliente: ${prazo.cliente}</div>
+                        <div class="prazo-descricao">${prazo.descricao}</div>
+                        <div class="prazo-meta">
+                            <span class="prazo-tipo">
+                                <i class="${prazosSystem.getTipoIcon(prazo.tipo)}"></i>
+                                ${prazo.tipo}
+                            </span>
+                            <span>Data: ${formatarData(prazo.data)}</span>
+                            ${prazo.status === 'pendente' ? `
+                                <span class="dias-restantes ${getClasseDiasRestantes(prazo.data)}">
+                                    ${getTextoDiasRestantes(prazo.data)}
+                                </span>
+                            ` : '<span class="dias-restantes dias-normal">Concluído</span>'}
+                        </div>
+                    </div>
+                    <div class="prazo-actions">
+                        ${prazo.status === 'pendente' ? `
+                            <button class="action-btn btn-concluir" onclick="concluirPrazo(${prazo.id})" title="Marcar como concluído">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn btn-editar" onclick="editarPrazo(${prazo.id})" title="Editar prazo">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        ` : ''}
+                        <button class="action-btn btn-excluir" onclick="excluirPrazo(${prazo.id})" title="Excluir prazo">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatarData(dataISO) {
+            return new Date(dataISO).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getClasseDiasRestantes(dataPrazo) {
+            const dias = prazosSystem.calcularDiasRestantes(dataPrazo);
+            if (dias < 0) return 'dias-urgente';
+            if (dias <= 3) return 'dias-atencao';
+            return 'dias-normal';
+        }
+
+        function getTextoDiasRestantes(dataPrazo) {
+            const dias = prazosSystem.calcularDiasRestantes(dataPrazo);
+            if (dias < 0) return `${Math.abs(dias)} dias atrasado`;
+            if (dias === 0) return 'Vence hoje';
+            if (dias === 1) return '1 dia restante';
+            return `${dias} dias restantes`;
+        }
+
+        function concluirPrazo(prazoId) {
+            if (confirm('Deseja marcar este prazo como concluído?')) {
+                if (prazosSystem.marcarConcluido(prazoId)) {
+                    updatePrazosDashboard();
+                    showNotification('Prazo marcado como concluído!', 'success');
+                }
+            }
+        }
+
+        function excluirPrazo(prazoId) {
+            if (confirm('Tem certeza que deseja excluir este prazo?')) {
+                if (prazosSystem.excluirPrazo(prazoId)) {
+                    updatePrazosDashboard();
+                    showNotification('Prazo excluído com sucesso!', 'success');
+                }
+            }
+        }
+
+        function editarPrazo(prazoId) {
+            // Implementar edição (pode ser um modal)
+            alert('Funcionalidade de edição em desenvolvimento!');
+        }
+
+        // Formulário de novo prazo
+        document.getElementById('prazoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = authSystem.getUser();
+            if (!user) return;
+            
+            const formData = new FormData(this);
+            const prazoData = {
+                processo: formData.get('processo'),
+                cliente: formData.get('cliente'),
+                tipo: formData.get('tipo'),
+                descricao: formData.get('descricao'),
+                data: formData.get('data'),
+                prioridade: formData.get('prioridade'),
+                advogado: user.username
+            };
+            
+            prazosSystem.adicionarPrazo(prazoData);
+            this.reset();
+            updatePrazosDashboard();
+            showNotification('Prazo adicionado com sucesso!', 'success');
+        });
+
+        // Preencher nome do advogado no formulário
+        function showDashboard() {
+            const user = authSystem.getUser();
+            // ... código anterior ...
+            
+            // Preencher campo do advogado no formulário de prazos
+            document.getElementById('prazoAdvogado').value = user.name;
+            
+            // ... resto do código ...
+        }
+
+        function showNotification(mensagem, tipo) {
+            // Criar notificação simples
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 2rem;
+                background: ${tipo === 'success' ? '#4CAF50' : '#F44336'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+            `;
+            notification.textContent = mensagem;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ... resto do código anterior ...
+    </script>
+</body>
+</html>
