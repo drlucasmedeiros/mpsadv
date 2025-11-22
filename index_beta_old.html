@@ -1006,53 +1006,7 @@
                 margin-right: 0;
                 margin-bottom: 0.5rem;
             }
-        /* Estilos para o FormSubmit */
-.contact-form form {
-    position: relative;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 1.2rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
-    font-size: 1rem;
-    transition: var(--transition);
-    background-color: var(--white);
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(201, 167, 105, 0.1);
-}
-
-.contact-form textarea {
-    height: 150px;
-    resize: vertical;
-    min-height: 120px;
-}
-
-.contact-form .btn {
-    width: 100%;
-    text-align: center;
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-    padding: 1.3rem 2rem;
-    background-color: var(--accent);
-    color: var(--primary-dark);
-    border: none;
-}
-
-.contact-form .btn:hover {
-    background-color: var(--accent-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(201, 167, 105, 0.3);
-}
+        }
     </style>
 </head>
 <body>
@@ -1244,52 +1198,32 @@
             <a href="#" class="btn">Ver Todas as Notícias</a>
         </div>
     </section>
-    
- 
- <!-- Contato -->
-<section id="contact" class="contact">
-    <div class="section-title">
-        <h2>ENTRE EM CONTATO</h2>
-        <p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
-    </div>
-    <div class="contact-content">
-        <div class="contact-info">
-            <h3>INFORMAÇÕES</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
-            <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
-            <p><i class="fas fa-envelope"></i> atendimento@mpsadv.com.br</p>
-            <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
+
+    <!-- Contato -->
+    <section id="contact" class="contact">
+        <div class="section-title">
+            <h2>ENTRE EM CONTATO</h2>
+            <p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
         </div>
-        <div class="contact-form">
-            <!-- FORMSUBMIT - FUNCIONA DE VERDADE -->
-            <form action="https://formsubmit.co/atendimento@mpsadv.com.br" method="POST">
-                <!-- Campos do formulário -->
-                <input type="text" name="name" placeholder="Seu Nome" required>
-                <input type="email" name="email" placeholder="Seu E-mail" required>
-                <input type="tel" name="phone" placeholder="Seu Telefone">
-                <textarea name="message" placeholder="Sua Mensagem" required></textarea>
-                
-                <!-- Configurações do FormSubmit -->
-                <input type="hidden" name="_subject" value="Novo contato do site MPS Advogados">
-                <input type="hidden" name="_autoresponse" value="Obrigado pelo seu contato! Retornaremos em breve.">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://mpsadv.com.br/obrigado.html">
-                
-                <button type="submit" class="btn">
-                    <i class="fas fa-paper-plane"></i> Enviar Mensagem
-                </button>
-            </form>
-            
-            <!-- Aviso de confirmação -->
-            <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                <p style="color: var(--text-medium); font-size: 0.9rem; margin: 0;">
-                    📧 Você receberá uma confirmação por e-mail
-                </p>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>INFORMAÇÕES</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+                <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
+            </div>
+            <div class="contact-form">
+                <form>
+                    <input type="text" placeholder="Seu Nome" required>
+                    <input type="email" placeholder="Seu E-mail" required>
+                    <input type="tel" placeholder="Seu Telefone">
+                    <textarea placeholder="Sua Mensagem" required></textarea>
+                    <button type="submit" class="btn">Enviar Mensagem</button>
+                </form>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Footer -->
     <footer>
@@ -1297,24 +1231,7 @@
             <div class="footer-about">
                 <img src="img/logo.fw.png" width="200" height="84">
 <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
-            <div class="social-links">
-                    <a href="https://www.instagram.com/mps.adv" class="social-link" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="social-link" target="_blank">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-link" target="_blank">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="social-link" target="_blank">
-                        <i class="fas fa-cloud"></i>
-                    </a>
-                    <a href="https://www.tiktok.com/@mpsadv" class="social-link" target="_blank">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                </div>
-</div>
+            </div>
             <div class="footer-links">
                 <h4>LINKS</h4>
                 <ul>
@@ -1452,7 +1369,11 @@
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
+        }
     </script>
-
+</body>
+</html>
+    
+    
 </body>
 </html>
