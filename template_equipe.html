@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Lukas Medeiros - Medeiros, Paiva & Soares - Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        <style>
+        /* Importação das fontes */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+        
+    body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header com Big River */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-light);
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        nav ul li a.active {
+            color: var(--accent);
+        }
+        
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            margin-top: 100px;
+            padding: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        /* Perfil do Advogado */
+        .lawyer-profile {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            margin-bottom: 5rem;
+            align-items: start;
+        }
+        
+        .lawyer-photo-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .lawyer-photo-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .lawyer-photo {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .lawyer-photo i {
+            font-size: 6rem;
+            color: var(--white);
+            opacity: 0.9;
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: var(--white);
+            font-family: 'Hatton', serif;
+            font-size: 1.2rem;
+        }
+        
+        .lawyer-info {
+            padding-top: 1rem;
+        }
+        
+        .lawyer-name {
+            font-family: 'Hatton', serif;
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .lawyer-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        .lawyer-contact {
+            margin-bottom: 2.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem;
+            background: var(--gray-light);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .contact-item:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+        
+        .contact-item i {
+            margin-right: 1rem;
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+        
+        .contact-item a {
+            color: var(--text-medium);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .contact-item a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Ações */
+        .actions {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 26, 26, 0.2);
+        }
+        
+        .action-btn i {
+            margin-right: 0.7rem;
+            font-size: 1.1rem;
+        }
+        
+        .action-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(201, 167, 105, 0.3);
+        }
+        
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--primary-dark);
+            border: 1px solid var(--gray-medium);
+            box-shadow: none;
+        }
+        
+        .action-btn.secondary:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+            border-color: var(--primary-dark);
+        }
+
+        /* Separador */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 4rem 0;
+            opacity: 0.5;
+        }
+
+        /* Conteúdo da Página */
+        .page-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            margin-bottom: 5rem;
+        }
+        
+        .page-main h2 {
+            font-family: 'Hatton', serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+        
+        .page-main p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .highlight-box h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .highlight-box p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+        }
+
+        /* Sidebar */
+        .page-sidebar {
+            padding-top: 0;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2.5rem;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .sidebar-section h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .expertise-list, .industries-list {
+            list-style: none;
+        }
+        
+        .expertise-list li, .industries-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .expertise-list li:hover, .industries-list li:hover {
+            transform: translateX(5px);
+        }
+        
+        .expertise-list li:before, .industries-list li:before {
+            content: "•";
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Modal de V-Card */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalFadeIn 0.4s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+        
+        .modal h2 {
+            font-family: 'Hatton', serif;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Estilos de Impressão */
+        @media print {
+            header, footer, .actions, .breadcrumb {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-top: 0;
+                padding: 0;
+            }
+            
+            .lawyer-profile {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .lawyer-photo-container {
+                height: 300px;
+                max-width: 250px;
+                margin: 0 auto;
+            }
+            
+            .page-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar-section {
+                box-shadow: none;
+                border: 1px solid var(--gray-medium);
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            h1, h2, h3 {
+                color: #000 !important;
+            }
+            
+            .highlight-box {
+                background: #f5f5f5 !important;
+                color: #000 !important;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .lawyer-profile {
+                grid-template-columns: 1fr 1.5fr;
+            }
+            
+            .page-content {
+                grid-template-columns: 1fr 250px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .lawyer-profile {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .page-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .lawyer-photo {
+                height: 350px;
+            }
+            
+            .lawyer-contact {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 2rem;
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 1.2rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                margin-top: 140px;
+            }
+            
+            .lawyer-name {
+                font-size: 2.5rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .lawyer-name {
+                font-size: 2rem;
+            }
+            
+            .lawyer-photo {
+                height: 280px;
+            }
+            
+            .lawyer-photo i {
+                font-size: 4rem;
+            }
+            
+            footer {
+                padding: 3rem 1.5rem 1.5rem;
+            }
+        }
+     	header.scrolled {
+ 	   padding: 0.8rem 3rem;
+  	  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  	  /* Mantém o gradiente verde mesmo quando scrolled */
+   	 background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+	}
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-logo">
+            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#areas">Áreas</a></li>
+                <li><a href="index.html#about">Sobre</a></li>
+                <li><a href="equipe.html" class="active">Equipe</a></li>
+                <li><a href="index.html#blog">Blog</a></li>
+                <li><a href="index.html#contact">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Início</a> / <a href="equipe.html">Equipe</a> / Dr. Lukas Medeiros
+        </div>
+        
+        <!-- Perfil do Advogado -->
+        <div class="lawyer-profile">
+            <div class="lawyer-photo-container">
+             <div class="lawyer-photo" style="background-image: url('img/equipe/lucas.jpg'); background-size: cover; background-position: center;">
+    <div class="photo-overlay">Dr. Lukas Medeiros</div>
+</div>
+            </div>
+            <div class="lawyer-info">
+                <h1 class="lawyer-name">Dr. Lukas Medeiros</h1>
+                <p class="lawyer-title">SÓCIO FUNDADOR</p>
+                
+                <div class="lawyer-contact">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:lukas.medeiros@mpsadv.com.br">lukas.medeiros@mpsadv.com.br</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+556533215000">+55 65 3321-5000</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Cuiabá, MT</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-globe"></i>
+                        <a href="https://mpsadv.com.br">mpsadv.com.br</a>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="action-btn" id="vcard-btn">
+                        <i class="fas fa-address-card"></i> V-CARD
+                    </button>
+                    <button class="action-btn secondary" id="print-btn">
+                        <i class="fas fa-print"></i> IMPRIMIR
+                    </button>
+                    <button class="action-btn secondary" id="share-btn">
+                        <i class="fas fa-share-alt"></i> COMPARTILHAR
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <!-- Conteúdo da Página -->
+        <div class="page-content">
+            <div class="page-main">
+                <h2>EXPERIÊNCIA</h2>
+                <p>Dr. Lukas Medeiros é um especialista em direito empresarial com mais de 15 anos de experiência. Ele atua na assessoria jurídica de empresas de diversos portes e setores, com foco em contratos empresariais, societário e compliance.</p>
+                
+                <p>Representa empresas nacionais e internacionais em operações de fusões e aquisições, reestruturações societárias e contratos comerciais complexos. Seus clientes valorizam sua abordagem pragmática e orientada para resultados, oferecendo soluções jurídicas alinhadas aos objetivos de negócio.</p>
+                
+                <div class="highlight-box">
+                    <h3>DESTAQUE PROFISSIONAL</h3>
+                    <p>Liderou a equipe jurídica em uma das maiores operações de fusão do setor agroindustrial no Centro-Oeste, resultando em uma integração bem-sucedida de empresas com mais de 1.000 funcionários.</p>
+                </div>
+                
+                <p>Com vasta experiência em direito societário, Lukas atua na constituição, reestruturação e dissolução de sociedades, além de assessorar assembleias gerais e administradores em questões de governança corporativa.</p>
+                
+                <h2>FORMAÇÃO E QUALIFICAÇÕES</h2>
+                <p>Mestre em Direito Empresarial pela Universidade de São Paulo (USP), com especialização em Direito Societário e Compliance pela Fundação Getúlio Vargas (FGV). Graduado em Direito pela Universidade Federal de Mato Grosso (UFMT).</p>
+                
+                <p>Membro da Comissão de Direito Empresarial da OAB/MT e autor de diversos artigos publicados em revistas especializadas em direito empresarial e societário.</p>
+            </div>
+            
+            <div class="page-sidebar">
+                <div class="sidebar-section">
+                    <h3>ESPECIALIDADES</h3>
+                    <ul class="expertise-list">
+                        <li>Direito Empresarial</li>
+                        <li>Direito Societário</li>
+                        <li>Fusões e Aquisições</li>
+                        <li>Contratos Empresariais</li>
+                        <li>Governança Corporativa</li>
+                        <li>Compliance</li>
+                        <li>Consultoria para Startups</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>SETORES</h3>
+                    <ul class="industries-list">
+                        <li>Tecnologia e Inovação</li>
+                        <li>Agronegócio</li>
+                        <li>Varejo</li>
+                        <li>Serviços</li>
+                        <li>Indústria</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>IDIOMAS</h3>
+                    <ul class="expertise-list">
+                        <li>Português (Nativo)</li>
+                        <li>Inglês (Fluente)</li>
+                        <li>Espanhol (Intermediário)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">MEDEIROS, PAIVA & SOARES</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+                <div class="footer-social-links">
+                    <a href="https://www.instagram.com/mps.adv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="footer-social-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fas fa-cloud"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@mpsadv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#areas">Áreas</a></li>
+                    <li><a href="index.html#about">Sobre</a></li>
+                    <li><a href="equipe.html">Equipe</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal de V-Card -->
+    <div class="modal" id="vcard-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>V-Card do Dr. Lukas Medeiros</h2>
+            <p>Escolha como deseja gerenciar o cartão de contato:</p>
+            <div class="modal-actions">
+                <button class="action-btn" id="download-vcard">
+                    <i class="fas fa-download"></i> Baixar V-Card
+                </button>
+                <button class="action-btn secondary" id="save-contact">
+                    <i class="fas fa-user-plus"></i> Salvar nos Contatos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const vcardBtn = document.getElementById('vcard-btn');
+        const printBtn = document.getElementById('print-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const vcardModal = document.getElementById('vcard-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const downloadVcard = document.getElementById('download-vcard');
+        const saveContact = document.getElementById('save-contact');
+        
+        // Abrir modal de V-Card
+        vcardBtn.addEventListener('click', function() {
+            vcardModal.style.display = 'flex';
+        });
+        
+        // Fechar modal
+        closeModal.addEventListener('click', function() {
+            vcardModal.style.display = 'none';
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(e) {
+            if (e.target === vcardModal) {
+                vcardModal.style.display = 'none';
+            }
+        });
+        
+        // Gerar e baixar V-Card
+        downloadVcard.addEventListener('click', function() {
+            // Criar conteúdo do V-Card com foto
+            const vcardContent = `BEGIN:VCARD
+VERSION:3.0
+FN:Dr. Lukas Medeiros
+ORG:Medeiros, Paiva & Soares - Advogados
+TITLE:Sócio Fundador
+TEL;TYPE=WORK,VOICE:+556533215000
+EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
+ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
+URL:https://mpsadv.com.br
+NOTE:Especialista em Direito Empresarial e Societário
+END:VCARD`;
+            
+            // Criar blob e link para download
+            const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            // Criar elemento de link para download
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'lukas-medeiros.vcf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Liberar objeto URL
+            URL.revokeObjectURL(url);
+            
+            // Fechar modal
+            vcardModal.style.display = 'none';
+            
+            // Feedback visual
+            showNotification('V-Card baixado com sucesso!', 'success');
+        });
+        
+        // Salvar nos contatos (simulação)
+        saveContact.addEventListener('click', function() {
+            // Em um ambiente real, isso seria integrado com APIs específicas
+            // Para demonstração, vamos simular o processo
+            
+            // Criar V-Card para salvar
+            const vcardContent = `BEGIN:VCARD
+VERSION:3.0
+FN:Dr. Lukas Medeiros
+ORG:Medeiros, Paiva & Soares - Advogados
+TITLE:Sócio Fundador
+TEL;TYPE=WORK,VOICE:+556533215000
+EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
+ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
+URL:https://mpsadv.com.br
+NOTE:Especialista em Direito Empresarial e Societário
+PHOTO;ENCODING=b;TYPE=JPEG:[dados binários da imagem]
+END:VCARD`;
+            
+            // Criar blob e URL
+            const blob = new Blob([vcardContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            
+            // Criar link para abrir no aplicativo de contatos
+            const link = document.createElement('a');
+            link.href = url;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            
+            // Tentar abrir no aplicativo de contatos
+            try {
+                link.click();
+                showNotification('Abrindo no aplicativo de contatos...', 'info');
+            } catch (e) {
+                // Fallback: baixar o V-Card
+                link.download = 'lukas-medeiros.vcf';
+                link.click();
+                showNotification('V-Card baixado. Importe manualmente para seus contatos.', 'info');
+            }
+            
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            // Fechar modal
+            vcardModal.style.display = 'none';
+        });
+        
+        // Imprimir página
+        printBtn.addEventListener('click', function() {
+            // Aplicar estilos de impressão
+            document.body.classList.add('printing');
+            
+            // Aguardar um momento para garantir que os estilos sejam aplicados
+            setTimeout(() => {
+                window.print();
+                
+                // Remover estilos de impressão após a impressão
+                setTimeout(() => {
+                    document.body.classList.remove('printing');
+                }, 500);
+            }, 100);
+        });
+        
+        // Compartilhar
+        shareBtn.addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dr. Lukas Medeiros - Medeiros, Paiva & Soares',
+                    text: 'Conheça o perfil do Dr. Lukas Medeiros, Sócio Fundador da MPS Advocacia',
+                    url: window.location.href
+                })
+                .then(() => console.log('Conteúdo compartilhado com sucesso'))
+                .catch((error) => {
+                    console.log('Erro ao compartilhar:', error);
+                    fallbackShare();
+                });
+            } else {
+                fallbackShare();
+            }
+        });
+        
+        // Fallback para compartilhamento
+        function fallbackShare() {
+            const shareText = `Dr. Lukas Medeiros - Sócio Fundador da MPS Advocacia\n\n${window.location.href}`;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareText)
+                    .then(() => {
+                        showNotification('Link copiado para a área de transferência!', 'success');
+                    })
+                    .catch(err => {
+                        console.error('Erro ao copiar link: ', err);
+                        manualCopy(shareText);
+                    });
+            } else {
+                manualCopy(shareText);
+            }
+        }
+        
+        // Cópia manual para área de transferência
+        function manualCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Link copiado para a área de transferência!', 'success');
+            } catch (err) {
+                console.error('Erro ao copiar: ', err);
+                showNotification('Não foi possível copiar o link. Copie manualmente: ' + text, 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // Mostrar notificação
+        function showNotification(message, type) {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '1rem 1.5rem';
+            notification.style.borderRadius = '8px';
+            notification.style.color = 'white';
+            notification.style.fontWeight = '500';
+            notification.style.zIndex = '3000';
+            notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            notification.style.transition = 'all 0.3s ease';
+            notification.style.transform = 'translateY(100px)';
+            notification.style.opacity = '0';
+            
+            // Definir cor baseada no tipo
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, var(--primary-dark), var(--primary-medium))';
+            }
+            
+            // Adicionar ao DOM
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Efeito de scroll no header - CORRIGIDO
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+        
+        // Inicializar tooltips
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                // Em um ambiente real, você poderia adicionar tooltips aqui
+            });
+        });
+    </script>
+</body>
+</html>
