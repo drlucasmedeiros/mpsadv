@@ -1200,30 +1200,31 @@
     </section>
 
     <!-- Contato -->
-    <section id="contact" class="contact">
-        <div class="section-title">
-            <h2>ENTRE EM CONTATO</h2>
-            <p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
+<section id="contact" class="contact">
+    <div class="section-title">
+        <h2>ENTRE EM CONTATO</h2>
+        <p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
+    </div>
+    <div class="contact-content">
+        <div class="contact-info">
+            <h3>INFORMAÇÕES</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+            <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+            <p><i class="fas fa-envelope"></i> atendimento@mpsadv.com.br</p>
+            <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
         </div>
-        <div class="contact-content">
-            <div class="contact-info">
-                <h3>INFORMAÇÕES</h3>
-                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
-                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
-                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
-                <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h às 18h</p>
-            </div>
-            <div class="contact-form">
-                <form>
-                    <input type="text" placeholder="Seu Nome" required>
-                    <input type="email" placeholder="Seu E-mail" required>
-                    <input type="tel" placeholder="Seu Telefone">
-                    <textarea placeholder="Sua Mensagem" required></textarea>
-                    <button type="submit" class="btn">Enviar Mensagem</button>
-                </form>
-            </div>
+        <div class="contact-form">
+            <form id="contact-form">
+                <input type="text" id="name" name="name" placeholder="Seu Nome" required>
+                <input type="email" id="email" name="email" placeholder="Seu E-mail" required>
+                <input type="tel" id="phone" name="phone" placeholder="Seu Telefone">
+                <textarea id="message" name="message" placeholder="Sua Mensagem" required></textarea>
+                <button type="submit" class="btn">Enviar Mensagem</button>
+                <div id="form-status" style="margin-top: 15px; display: none;"></div>
+            </form>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Footer -->
     <footer>
@@ -1231,7 +1232,24 @@
             <div class="footer-about">
                 <img src="img/logo.fw.png" width="200" height="84">
 <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
-            </div>
+            <div class="social-links">
+                    <a href="https://www.instagram.com/mps.adv" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="social-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" target="_blank">
+                        <i class="fas fa-cloud"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@mpsadv" class="social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+</div>
             <div class="footer-links">
                 <h4>LINKS</h4>
                 <ul>
@@ -1309,5 +1327,172 @@
             header.classList.add('scrolled');
         }
     </script>
+    
+        <!-- WhatsApp Flutuante -->
+    <a href="https://wa.me/5565993331869?text=Olá! Gostaria de mais informações sobre os serviços jurídicos." 
+       class="whatsapp-float" 
+       target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // Smooth scrolling para links de navegação
+        document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Adicionar classe ativa ao link de navegação quando a seção estiver visível
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (scrollY >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Header scroll effect
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Inicializar header
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+		
+		
+		<script>
+    // Formulário de contato simples com mailto
+    const form = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        // Coletar dados do formulário
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const message = document.getElementById('message').value;
+        
+        // Mostrar loading
+        submitButton.textContent = 'Abrindo E-mail...';
+        submitButton.disabled = true;
+        
+        // Criar assunto e corpo do e-mail
+        const subject = `Contato do Site - ${name}`;
+        const body = `Nome: ${name}%0AEmail: ${email}%0ATelefone: ${phone}%0A%0AMensagem:%0A${message}`;
+        
+        // Criar link mailto
+        const mailtoLink = `mailto:atendimento@mpsadv.com.br?subject=${encodeURIComponent(subject)}&body=${body}`;
+        
+        // Abrir cliente de e-mail
+        window.location.href = mailtoLink;
+        
+        // Feedback para o usuário
+        formStatus.textContent = 'Cliente de e-mail aberto! Preencha e envie sua mensagem.';
+        formStatus.style.color = 'green';
+        formStatus.style.display = 'block';
+        
+        // Restaurar botão após 2 segundos
+        setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            form.reset();
+        }, 2000);
+        
+        // Esconder mensagem após 5 segundos
+        setTimeout(() => {
+            formStatus.style.display = 'none';
+        }, 5000);
+    });
+
+    // Smooth scrolling para links de navegação
+    document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Adicionar classe ativa ao link de navegação quando a seção estiver visível
+    window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+        
+        let current = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (scrollY >= (sectionTop - 100)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Header scroll effect
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+    
+    // Inicializar header
+    const header = document.querySelector('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    }
+	
+    </script>
+  
 </body>
 </html>
