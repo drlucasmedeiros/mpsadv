@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ligação Confirmada! - MPS Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --success: #4CAF50;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #002B2B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .container {
+            background: var(--white);
+            color: #333;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+            animation: ring 2s infinite;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+        }
+        
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .countdown {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--success);
+            margin: 2rem 0;
+            font-family: monospace;
+        }
+        
+        .info {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--success);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <i class="fas fa-phone"></i>
+        </div>
+        
+        <h1>📞 Ligação Confirmada!</h1>
+        
+        <p><strong>Vamos ligar para você em:</strong></p>
+        <div class="countdown" id="countdown">15:00</div>
+        
+        <div class="info">
+            <p>✅ <strong>Fique de olho no seu telefone!</strong></p>
+            <p>Nossa ligação virá do número: <strong>(65) 3321-5000</strong></p>
+        </div>
+        
+        <div>
+            <a href="https://mpsadv.com.br" class="btn">
+                <i class="fas fa-home"></i> Voltar ao Site
+            </a>
+            <a href="https://wa.me/5565993331869" class="btn whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+        
+        <p style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+            Se não receber nossa ligação em 15 minutos, entre em contato pelo WhatsApp!
+        </p>
+    </div>
+
+    <script>
+        // Contador regressivo de 15 minutos
+        let minutes = 15;
+        let seconds = 0;
+        
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            seconds--;
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+            }
+            
+            countdownElement.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+            if (minutes === 0 && seconds === 0) {
+                clearInterval(timer);
+                countdownElement.innerHTML = '⏰<br><small>Ligue para nós:<br>(65) 3321-5000</small>';
+                countdownElement.style.fontSize = '1.5rem';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
