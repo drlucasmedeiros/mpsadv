@@ -1302,7 +1302,7 @@
                 <!-- Campos do formulário -->
                 <input type="text" name="name" id="nome" placeholder="Seu Nome" required>
                 <input type="email" name="email" id="email" placeholder="Seu E-mail" required>
-                <input type="tel" name="phone" placeholder="Seu Telefone">
+                <input type="tel" name="phone" id="telefone" placeholder="Seu Telefone (com DDD)" pattern="[0-9]{10,11}" title="Digite apenas números com DDD (10 ou 11 dígitos)" required>
                 <textarea name="message" id="mensagem" placeholder="Sua Mensagem" required></textarea>
                 
                 <!-- Configurações do FormSubmit -->
@@ -1489,7 +1489,7 @@
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
 
-   // Validação do formulário de contato
+    // Validação do formulário de contato
     function validarFormulario() {
         const nome = document.getElementById("nome").value;
         const email = document.getElementById("email").value;
@@ -1504,9 +1504,10 @@
             alert("Informe um e-mail válido.");
             return false;
         }
-        // Validação simples do telefone (apenas se preenchido)
-        if (telefone && telefone.length < 10) {
-            alert("Por favor, insira um telefone válido com DDD.");
+        // Validação do telefone (agora obrigatório)
+        const telefoneLimpo = telefone.replace(/\D/g, '');
+        if (telefoneLimpo.length < 10 || telefoneLimpo.length > 11) {
+            alert("Por favor, insira um telefone válido com DDD (10 ou 11 dígitos).");
             return false;
         }
         if (mensagem.length < 10) {
@@ -1515,6 +1516,7 @@
         }
         return true;
     }
+
     </script>
 
 </body>
