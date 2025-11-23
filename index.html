@@ -1298,12 +1298,12 @@
         </div>
         <div class="contact-form">
             <!-- FORMSUBMIT - FUNCIONA DE VERDADE -->
-            <form action="https://formsubmit.co/atendimento@mpsadv.com.br" method="POST">
+            <form action="https://formsubmit.co/atendimento@mpsadv.com.br" method="POST" onsubmit="return validarFormulario()">
                 <!-- Campos do formulário -->
-                <input type="text" name="name" placeholder="Seu Nome" required>
-                <input type="email" name="email" placeholder="Seu E-mail" required>
+                <input type="text" name="name" id="nome" placeholder="Seu Nome" required>
+                <input type="email" name="email" id="email" placeholder="Seu E-mail" required>
                 <input type="tel" name="phone" placeholder="Seu Telefone">
-                <textarea name="message" placeholder="Sua Mensagem" required></textarea>
+                <textarea name="message" id="mensagem" placeholder="Sua Mensagem" required></textarea>
                 
                 <!-- Configurações do FormSubmit -->
                 <input type="hidden" name="_subject" value="Novo contato do site MPS Advogados">
@@ -1488,6 +1488,33 @@
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
+
+   // Validação do formulário de contato
+    function validarFormulario() {
+        const nome = document.getElementById("nome").value;
+        const email = document.getElementById("email").value;
+        const telefone = document.getElementById("telefone").value;
+        const mensagem = document.getElementById("mensagem").value;
+
+        if (nome.length < 3) {
+            alert("Por favor, insira um nome válido.");
+            return false;
+        }
+        if (email.indexOf("@") === -1 || email.length < 10) {
+            alert("Informe um e-mail válido.");
+            return false;
+        }
+        // Validação simples do telefone (apenas se preenchido)
+        if (telefone && telefone.length < 10) {
+            alert("Por favor, insira um telefone válido com DDD.");
+            return false;
+        }
+        if (mensagem.length < 10) {
+            alert("Digite uma mensagem mais detalhada.");
+            return false;
+        }
+        return true;
+    }
     </script>
 
 </body>
