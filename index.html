@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
    <style>
+    
         /* Importação das fontes locais */
         @font-face {
             font-family: 'Big River';
@@ -190,7 +191,78 @@
         nav ul li a.active:after {
             width: 100%;
         }
-        
+        /* Estilos para o menu hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--white);
+    margin: 3px 0;
+    transition: 0.4s;
+    border-radius: 2px;
+}
+
+/* Quando o menu estiver ativo, transformar o hamburger em um X */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Media query para telas menores (mobile) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    #nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background: var(--primary-dark);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 80px;
+        transition: 0.5s;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #nav-links.active {
+        right: 0;
+    }
+
+    #nav-links li {
+        margin: 1.5rem 0;
+    }
+
+    #nav-links li a {
+        font-size: 1.2rem;
+    }
+
+    /* Ajuste no header para mobile */
+    header {
+        padding: 1rem 2rem;
+    }
+
+    header.scrolled {
+        padding: 0.8rem 2rem;
+    }
+}
         /* Hero Section Principal */
         .hero {
             height: 100vh;
@@ -1109,16 +1181,21 @@
             </a>
             <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="#home" class="active">Início</a></li>
-                <li><a href="#areas">Áreas</a></li>
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="#team">Equipe</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contato</a></li>
-            </ul>
-        </nav>
+         <nav>
+        <ul id="nav-links">
+            <li><a href="#home" class="active">Início</a></li>
+            <li><a href="#areas">Áreas</a></li>
+            <li><a href="#about">Sobre</a></li>
+            <li><a href="#team">Equipe</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contato</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
     </header>
 
     <!-- Hero Section -->
@@ -1476,6 +1553,40 @@
     </a>
 
     <script>
+        // Menu mobile
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+// Fechar o menu ao clicar em um link
+document.querySelectorAll('#nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
+Além disso, ajuste o smooth scrolling para levar em conta o menu fechado em mobile:
+
+javascript
+// Smooth scrolling para links de navegação
+document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+        });
+    });
+});
+
         // Smooth scrolling para links de navegação
         document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
