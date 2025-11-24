@@ -143,60 +143,103 @@
             color: var(--white);
             text-transform: uppercase;
         }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 2.5rem;
-            position: relative;
-        }
-        
-        nav ul li a {
-            text-decoration: none;
-            color: var(--white);
-            font-weight: 500;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-            transition: var(--transition);
-            position: relative;
-            padding: 5px 0;
-        }
-        
-        nav ul li a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--accent);
-            transition: var(--transition);
-        }
-        
-        nav ul li a:hover {
-            color: var(--accent-light);
-        }
-        
-        nav ul li a:hover:after {
-            width: 100%;
-        }
-        
-        nav ul li a.active {
-            color: var(--accent);
-        }
-        
-        nav ul li a.active:after {
-            width: 100%;
-        }
-        /* Estilos para o menu hamburger */
+        @media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    
+    nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+        padding: 80px 30px 30px;
+        transition: var(--transition);
+        z-index: 1000;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    nav.active {
+        right: 0;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    nav ul li {
+        margin: 0;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    
+    nav ul li a {
+        font-size: 1.2rem;
+        padding: 12px 0;
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    nav ul li a:after {
+        display: none;
+    }
+    
+    nav ul li a:hover {
+        color: var(--accent-light);
+        background-color: rgba(255, 255, 255, 0.05);
+        padding-left: 10px;
+    }
+    
+    nav ul li a.active {
+        color: var(--accent);
+        background-color: rgba(201, 167, 105, 0.1);
+        padding-left: 15px;
+        border-left: 3px solid var(--accent);
+    }
+    
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+    }
+    
+    .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    header {
+        padding: 1rem 2rem;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    header.scrolled {
+        padding: 0.8rem 2rem;
+    }
+    
+    .header-logo {
+        margin-bottom: 0;
+    }
+
+  //* Estilos do Menu Hamburger */
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
     padding: 5px;
+    z-index: 1001;
 }
 
 .hamburger span {
@@ -204,11 +247,11 @@
     height: 3px;
     background-color: var(--white);
     margin: 3px 0;
-    transition: 0.4s;
+    transition: var(--transition);
     border-radius: 2px;
 }
 
-/* Quando o menu estiver ativo, transformar o hamburger em um X */
+/* Animação do Hamburger quando ativo */
 .hamburger.active span:nth-child(1) {
     transform: rotate(-45deg) translate(-5px, 6px);
 }
@@ -220,7 +263,18 @@
 .hamburger.active span:nth-child(3) {
     transform: rotate(45deg) translate(-5px, -6px);
 }
+/* Animação do Hamburger quando ativo */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
 
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
 /* Media query para telas menores (mobile) */
 @media (max-width: 768px) {
     .hamburger {
@@ -1549,38 +1603,50 @@
        target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
-    
-    // Menu mobile
+
+    // Menu Mobile
 const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('nav-links');
+const navMenu = document.getElementById('nav-menu');
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navLinks.classList.toggle('active');
+// Criar overlay
+const navOverlay = document.createElement('div');
+navOverlay.className = 'nav-overlay';
+document.body.appendChild(navOverlay);
+
+// Abrir/fechar menu
+hamburger.addEventListener('click', function() {
+    this.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    navOverlay.classList.toggle('active');
+    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
 });
 
-// Fechar o menu ao clicar em um link
-document.querySelectorAll('#nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
+// Fechar menu ao clicar no overlay
+navOverlay.addEventListener('click', function() {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    this.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// Fechar menu ao clicar em um link
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function() {
         hamburger.classList.remove('active');
-        navLinks.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        document.body.style.overflow = '';
     });
 });
 
-javascript
-// Smooth scrolling para links de navegação
-document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-        });
-    });
+// Fechar menu ao redimensionar a tela para desktop
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 });
 
         // Smooth scrolling para links de navegação
