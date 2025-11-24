@@ -1074,7 +1074,30 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(201, 167, 105, 0.3);
 }
-    </style>
+ /* Estilos para os links dos membros da equipe */
+    .member-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: var(--transition);
+    }
+    
+    .member-link:hover {
+        transform: translateY(-8px);
+    }
+    
+    .team-member:hover .member-photo img {
+        transform: scale(1.05);
+    }
+    
+    .member-link h3 {
+        transition: var(--transition);
+    }
+    
+    .member-link:hover h3 {
+        color: var(--accent);
+    }
+</style>
 </head>
 <body>
     <!-- Header com Logo no Topo -->
@@ -1174,63 +1197,75 @@
         </div>
     </div>
 </section>
-
-  <section id="team">
-        <div class="section-title">
-            <h2>NOSSA EQUIPE</h2>
-            <p>Profissionais qualificados que garantem a excelência em nossos serviços.</p>
-        </div>
-        <div class="team-grid">
-            <div class="team-member">
+/*AREA DA EQUIPE */
+<section id="team">
+    <div class="section-title">
+        <h2>NOSSA EQUIPE</h2>
+        <p>Profissionais qualificados que garantem a excelência em nossos serviços.</p>
+    </div>
+    <div class="team-grid">
+        <div class="team-member">
+            <a href="lukas-medeiros.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real do Dr. Lukas Medeiros -->
                     <img src="img/equipe/lucas.jpg" alt="Dr. Lukas Medeiros">
                 </div>
                 <h3>Dr. Lukas Medeiros</h3>
                 <p>Sócio Fundador</p>
-            </div>
-            <div class="team-member">
+            </a>
+        </div>
+        <div class="team-member">
+            <a href="losainny-silva.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real da Dra. Losainny Silva -->
-                    <img src="img/equipe/loh.jpg" alt="Dra. Losainny Silva">
+                    <img src="img/equipe/lossainy.jpg" alt="Dra. Losainny Silva">
                 </div>
                 <h3>Dra. Losainny Silva</h3>
                 <p>Sócia</p>
-            </div>
-            <div class="team-member">
+            </a>
+        </div>
+        <div class="team-member">
+            <a href="luiggi-paiva.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real do Luiggi Paiva -->
                     <img src="img/equipe/luiggi.jpg" alt="Luiggi Paiva">
                 </div>
                 <h3>Luiggi Paiva</h3>
                 <p>Diretor Executivo</p>
-            </div>
-            <div class="team-member">
+            </a>
+        </div>
+        <div class="team-member">
+            <a href="taiza-barros.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real da Taiza Barros -->
                     <img src="img/equipe/taiza.jpg" alt="Taiza Barros">
                 </div>
                 <h3>Taiza Barros</h3>
                 <p>Chefe do Setor de Litígio</p>
-            </div>
-            <div class="team-member">
+            </a>
+        </div>
+        <div class="team-member">
+            <a href="marvilei-soares.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real do Marvilei Soares -->
                     <img src="img/equipe/marvi.jpg" alt="Marvilei Soares">
                 </div>
                 <h3>Marvilei Soares</h3>
                 <p>Chefe do Setor Trabalhista</p>
-            </div>
-            <div class="team-member">
+            </a>
+        </div>
+        <div class="team-member">
+            <a href="paula-kirche.html" class="member-link">
                 <div class="member-photo">
                     <!-- Substitua o caminho da imagem pela foto real da Paula Kirche -->
                     <img src="img/equipe/paula.jpeg" alt="Paula Kirche">
                 </div>
                 <h3>Paula Kirche</h3>
                 <p>Medicina Legal</p>
-            </div>
+            </a>
         </div>
-    </section>
+    </div>
+</section>
 
     </div>
 </section>
