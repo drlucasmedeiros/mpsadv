@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        <style>
         /* Importação das fontes */
         @font-face {
             font-family: 'Big River';
@@ -33,7 +32,7 @@
             font-display: swap;
         }
 
-        /* Reset e estilos base */
+        /* Reset e estilos base - IGUAL AO INDEX */
         * {
             margin: 0;
             padding: 0;
@@ -57,11 +56,11 @@
         
         html {
             scroll-behavior: smooth;
-            font-size: 18px;
+            font-size: 18px; /* Mesma base do index */
         }
         
-    body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.7;
             color: var(--text-dark);
             background-color: var(--white);
@@ -81,7 +80,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Header com Big River */
+        /* Header IGUAL AO INDEX */
         header {
             position: fixed;
             top: 0;
@@ -101,6 +100,7 @@
         header.scrolled {
             padding: 0.8rem 3rem;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
         }
         
         .header-logo {
@@ -127,28 +127,33 @@
             text-transform: uppercase;
         }
         
-        nav ul {
+        /* Navegação IGUAL AO INDEX */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
             display: flex;
             list-style: none;
         }
         
-        nav ul li {
+        #nav-links li {
             margin-left: 2.5rem;
-            position: relative;
         }
         
-        nav ul li a {
+        #nav-links li a {
+            color: var(--text-light);
             text-decoration: none;
-            color: var(--white);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
             transition: var(--transition);
             position: relative;
-            padding: 5px 0;
+            padding: 0.5rem 0;
         }
         
-        nav ul li a:after {
+        #nav-links li a:after {
             content: '';
             position: absolute;
             width: 0;
@@ -159,23 +164,67 @@
             transition: var(--transition);
         }
         
-        nav ul li a:hover {
-            color: var(--accent-light);
-        }
-        
-        nav ul li a:hover:after {
-            width: 100%;
-        }
-        
-        nav ul li a.active {
+        #nav-links li a:hover,
+        #nav-links li a.active {
             color: var(--accent);
         }
         
-        nav ul li a.active:after {
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
             width: 100%;
         }
-
-        /* Conteúdo Principal */
+        
+        /* Estilos do Menu Hamburger IGUAL AO INDEX */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        /* Animação do Hamburger quando ativo */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile IGUAL AO INDEX */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Conteúdo Principal - AJUSTADO PARA PÁGINA DE EQUIPE */
         .main-content {
             margin-top: 100px;
             padding: 3rem;
@@ -201,7 +250,7 @@
             color: var(--accent);
         }
 
-        /* Perfil do Advogado */
+        /* Perfil do Advogado - MANTIDO COM ESTILOS ORIGINAIS */
         .lawyer-profile {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -469,7 +518,7 @@
             font-size: 1.2rem;
         }
 
-        /* Footer */
+        /* Footer IGUAL AO INDEX */
         footer {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             color: var(--text-light);
@@ -693,8 +742,16 @@
             }
         }
 
-        /* Responsividade */
+        /* RESPONSIVIDADE IGUAL AO INDEX */
         @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
             .lawyer-profile {
                 grid-template-columns: 1fr 1.5fr;
             }
@@ -702,9 +759,21 @@
             .page-content {
                 grid-template-columns: 1fr 250px;
             }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
         }
         
         @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
             .lawyer-profile {
                 grid-template-columns: 1fr;
                 gap: 3rem;
@@ -722,22 +791,81 @@
             .lawyer-contact {
                 grid-template-columns: 1fr;
             }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
         }
         
         @media (max-width: 768px) {
+            /* Menu Hamburguer - IGUAL AO INDEX */
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
             header {
                 padding: 1rem 2rem;
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: space-between;
             }
             
-            nav ul {
-                margin-top: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
+            header.scrolled {
+                padding: 0.8rem 2rem;
             }
             
-            nav ul li {
-                margin: 0.5rem 1.2rem;
+            .logo-text {
+                font-size: 1.4rem;
             }
             
             .main-content {
@@ -761,6 +889,10 @@
             .modal-content {
                 padding: 2rem;
             }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -783,25 +915,81 @@
             footer {
                 padding: 3rem 1.5rem 1.5rem;
             }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
         }
-     	header.scrolled {
- 	   padding: 0.8rem 3rem;
-  	  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-  	  /* Mantém o gradiente verde mesmo quando scrolled */
-   	 background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
-	}
-
+        @media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    
+    .area-card {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    .member-photo {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .logo-text {
+        font-size: 0.9rem; /* Reduzido para caber em uma linha */
+        white-space: nowrap; /* Impede quebra de linha */
+        margin-left: 0.5rem; /* Espaço entre logo e texto */
+    }
+    
+    /* CORREÇÃO DO HEADER - MANTÉM EM LINHA */
+    .header-logo {
+        flex-direction: row; /* Mantém em linha, não coluna */
+        align-items: center; /* Centraliza verticalmente */
+    }
+    
+    .logo-img {
+        margin-right: 0.5rem; /* Mantém margem à direita */
+        margin-bottom: 0; /* Remove margem inferior */
+        height: 35px; /* Reduz um pouco se necessário */
+    }
+    
+    /* Ajuste adicional para telas muito pequenas */
+    @media (max-width: 360px) {
+        .logo-text {
+            font-size: 0.8rem; /* Reduz ainda mais se necessário */
+        }
+        
+        .logo-img {
+            height: 30px;
+        }
+    }
+}
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header IGUAL AO INDEX -->
     <header>
         <div class="header-logo">
-            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <a href="index.html">
+                <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
             <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
         </div>
         <nav>
-            <ul>
+            <ul id="nav-links">
                 <li><a href="index.html">Início</a></li>
                 <li><a href="index.html#areas">Áreas</a></li>
                 <li><a href="index.html#about">Sobre</a></li>
@@ -809,6 +997,11 @@
                 <li><a href="index.html#blog">Blog</a></li>
                 <li><a href="index.html#contact">Contato</a></li>
             </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
 
@@ -822,9 +1015,9 @@
         <!-- Perfil do Advogado -->
         <div class="lawyer-profile">
             <div class="lawyer-photo-container">
-             <div class="lawyer-photo" style="background-image: url('img/equipe/lucas.jpg'); background-size: cover; background-position: center;">
-    <div class="photo-overlay">Dr. Lukas Medeiros</div>
-</div>
+                <div class="lawyer-photo" style="background-image: url('img/equipe/lucas.jpg'); background-size: cover; background-position: center;">
+                    <div class="photo-overlay">Dr. Lukas Medeiros</div>
+                </div>
             </div>
             <div class="lawyer-info">
                 <h1 class="lawyer-name">Dr. Lukas Medeiros</h1>
@@ -923,7 +1116,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer IGUAL AO INDEX -->
     <footer>
         <div class="footer-content">
             <div class="footer-about">
@@ -987,478 +1180,174 @@
         </div>
     </div>
 
-  <script>
-    // Elementos do DOM
-    const vcardBtn = document.getElementById('vcard-btn');
-    const printBtn = document.getElementById('print-btn');
-    const shareBtn = document.getElementById('share-btn');
-    const vcardModal = document.getElementById('vcard-modal');
-    const closeModal = document.querySelector('.close-modal');
-    const downloadVcard = document.getElementById('download-vcard');
-    const saveContact = document.getElementById('save-contact');
-    
-    // Abrir modal de V-Card
-    vcardBtn.addEventListener('click', function() {
-        vcardModal.style.display = 'flex';
-    });
-    
-    // Fechar modal
-    closeModal.addEventListener('click', function() {
-        vcardModal.style.display = 'none';
-    });
-    
-    // Fechar modal ao clicar fora
-    window.addEventListener('click', function(e) {
-        if (e.target === vcardModal) {
-            vcardModal.style.display = 'none';
-        }
-    });
-    
-    // Função para converter imagem em Base64 (compatível com iPhone)
-    function getImageBase64(url, callback) {
-        // Primeiro, tentamos usar a imagem já carregada na página
-        const existingImage = document.querySelector('.lawyer-photo');
-        if (existingImage && existingImage.style.backgroundImage) {
-            const bgImage = existingImage.style.backgroundImage;
-            const imageUrl = bgImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-            
-            // Se já temos a URL, usamos ela
-            if (imageUrl && imageUrl !== 'none') {
-                convertImageToBase64(imageUrl, callback);
-                return;
-            }
-        }
+    <script>
+        // Menu Mobile - IGUAL AO INDEX
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
         
-        // Fallback para a URL padrão
-        const imageUrl = 'https://mpsadv.com.br/img/equipe/lucas.jpg';
-        convertImageToBase64(imageUrl, callback);
-    }
-    
-    function convertImageToBase64(imageUrl, callback) {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
+        // Criar overlay
+        const navOverlay = document.createElement('div');
+        navOverlay.className = 'nav-overlay';
+        document.body.appendChild(navOverlay);
         
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Definir dimensões do canvas
-            canvas.width = img.width;
-            canvas.height = img.height;
-            
-            // Desenhar imagem no canvas
-            ctx.drawImage(img, 0, 0);
-            
-            // Converter para Base64 (JPEG para melhor compatibilidade)
-            try {
-                const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-                const base64 = dataURL.split(',')[1];
-                callback(base64);
-            } catch (e) {
-                console.error('Erro ao converter imagem:', e);
-                callback(null);
-            }
-        };
-        
-        img.onerror = function() {
-            console.error('Erro ao carregar imagem para V-Card');
-            callback(null);
-        };
-        
-        img.src = imageUrl;
-    }
-    
-    // Gerar e baixar V-Card COM FOTO (compatível com iPhone)
-    downloadVcard.addEventListener('click', function() {
-        getImageBase64('', function(base64Image) {
-            let vcardContent;
-            
-            if (base64Image) {
-                // V-Card com foto em Base64 (melhor compatibilidade)
-                vcardContent = `BEGIN:VCARD
-VERSION:3.0
-FN:Dr. Lukas Medeiros
-N:Medeiros;Lukas;;Dr.
-ORG:Medeiros, Paiva & Soares - Advogados
-TITLE:Sócio Fundador
-TEL;TYPE=WORK,VOICE:+556533215000
-EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
-ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
-URL:https://mpsadv.com.br
-NOTE:Especialista em Direito Empresarial e Societário
-PHOTO;ENCODING=B;TYPE=JPEG:${base64Image}
-END:VCARD`;
-            } else {
-                // V-Card sem foto (fallback)
-                vcardContent = `BEGIN:VCARD
-VERSION:3.0
-FN:Dr. Lukas Medeiros
-N:Medeiros;Lukas;;Dr.
-ORG:Medeiros, Paiva & Soares - Advogados
-TITLE:Sócio Fundador
-TEL;TYPE=WORK,VOICE:+556533215000
-EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
-ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
-URL:https://mpsadv.com.br
-NOTE:Especialista em Direito Empresarial e Societário
-END:VCARD`;
-            }
-            
-            // Criar blob e link para download
-            const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            // Criar elemento de link para download
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'lukas-medeiros.vcf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Liberar objeto URL
-            URL.revokeObjectURL(url);
-            
-            // Fechar modal
-            vcardModal.style.display = 'none';
-            
-            // Feedback visual
-            const message = base64Image ? 
-                'V-Card com foto baixado com sucesso!' : 
-                'V-Card baixado (sem foto devido a limitações técnicas)';
-            showNotification(message, 'success');
+        // Abrir/fechar menu
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
         });
-    });
-    
-    // Salvar nos contatos COM FOTO (otimizado para iPhone)
-    saveContact.addEventListener('click', function() {
-        getImageBase64('', function(base64Image) {
-            let vcardContent;
-            
-            if (base64Image) {
-                // V-Card com foto em Base64
-                vcardContent = `BEGIN:VCARD
-VERSION:3.0
-FN:Dr. Lukas Medeiros
-N:Medeiros;Lukas;;Dr.
-ORG:Medeiros, Paiva & Soares - Advogados
-TITLE:Sócio Fundador
-TEL;TYPE=WORK,VOICE:+556533215000
-EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
-ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
-URL:https://mpsadv.com.br
-NOTE:Especialista em Direito Empresarial e Societário
-PHOTO;ENCODING=B;TYPE=JPEG:${base64Image}
-END:VCARD`;
-            } else {
-                // V-Card sem foto
-                vcardContent = `BEGIN:VCARD
-VERSION:3.0
-FN:Dr. Lukas Medeiros
-N:Medeiros;Lukas;;Dr.
-ORG:Medeiros, Paiva & Soares - Advogados
-TITLE:Sócio Fundador
-TEL;TYPE=WORK,VOICE:+556533215000
-EMAIL;TYPE=PREF,INTERNET:lukas.medeiros@mpsadv.com.br
-ADR;TYPE=WORK:;;Av. Historiador Rubens de Mendonça, 1000;Cuiabá;MT;;78000
-URL:https://mpsadv.com.br
-NOTE:Especialista em Direito Empresarial e Societário
-END:VCARD`;
-            }
-            
-            // Criar blob
-            const blob = new Blob([vcardContent], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            
-            // Tentar usar a Web Share API primeiro (para iOS)
-            if (navigator.share) {
-                const file = new File([blob], "lukas-medeiros.vcf", { type: "text/vcard" });
-                
-                // Verificar se pode compartilhar arquivos
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({
-                        title: 'Dr. Lukas Medeiros - Contato Profissional',
-                        text: 'Adicione o Dr. Lukas Medeiros aos seus contatos',
-                        files: [file]
-                    })
-                    .then(() => {
-                        showNotification('Contato compartilhado com sucesso!', 'success');
-                    })
-                    .catch((error) => {
-                        console.log('Erro ao compartilhar:', error);
-                        iPhoneSaveContact(url, base64Image);
-                    });
-                } else {
-                    iPhoneSaveContact(url, base64Image);
-                }
-            } else {
-                iPhoneSaveContact(url, base64Image);
-            }
-            
-            // Fechar modal
-            vcardModal.style.display = 'none';
+        
+        // Fechar menu ao clicar no overlay
+        navOverlay.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            this.classList.remove('active');
+            document.body.style.overflow = '';
         });
-    });
-    
-    // Método otimizado para iPhone
-    function iPhoneSaveContact(url, hasImage) {
-        // Para iPhone, abrimos o V-Card em uma nova aba/visualização
-        // Isso geralmente dispara o prompt "Adicionar aos Contatos"
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.style.display = 'none';
-        document.body.appendChild(link);
         
-        // Disparar o clique
-        link.click();
-        
-        // Feedback para o usuário
-        const message = hasImage ? 
-            'Abra o V-Card no aplicativo Contatos para salvar com foto' : 
-            'Abra o V-Card no aplicativo Contatos';
-        showNotification(message, 'info');
-        
-        // Limpar após um tempo
-        setTimeout(() => {
-            document.body.removeChild(link);
-            // Não revogamos a URL imediatamente para dar tempo do usuário abrir
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-        }, 1000);
-    }
-    
-    // Imprimir página
-    printBtn.addEventListener('click', function() {
-        document.body.classList.add('printing');
-        
-        setTimeout(() => {
-            window.print();
-            
-            setTimeout(() => {
-                document.body.classList.remove('printing');
-            }, 500);
-        }, 100);
-    });
-    
-    // Compartilhar perfil
-    shareBtn.addEventListener('click', function() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Dr. Lukas Medeiros - Medeiros, Paiva & Soares',
-                text: 'Conheça o perfil do Dr. Lukas Medeiros, Sócio Fundador da MPS Advocacia',
-                url: window.location.href
-            })
-            .then(() => console.log('Conteúdo compartilhado com sucesso'))
-            .catch((error) => {
-                console.log('Erro ao compartilhar:', error);
-                fallbackShare();
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('#nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
-        } else {
-            fallbackShare();
-        }
-    });
-    
-    // Fallback para compartilhamento
-    function fallbackShare() {
-        const shareText = `Dr. Lukas Medeiros - Sócio Fundador\nMedeiros, Paiva & Soares - Advogados\n\n${window.location.href}`;
+        });
         
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(shareText)
-                .then(() => {
-                    showNotification('Link copiado para a área de transferência!', 'success');
-                })
-                .catch(err => {
-                    console.error('Erro ao copiar link: ', err);
-                    manualCopy(shareText);
-                });
-        } else {
-            manualCopy(shareText);
-        }
-    }
-    
-    // Cópia manual para área de transferência
-    function manualCopy(text) {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
         
-        try {
-            document.execCommand('copy');
-            showNotification('Link copiado para a área de transferência!', 'success');
-        } catch (err) {
-            console.error('Erro ao copiar: ', err);
-            showNotification('Não foi possível copiar o link. Copie manualmente: ' + text, 'error');
-        }
+        // Header scroll effect - IGUAL AO INDEX
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
         
-        document.body.removeChild(textArea);
-    }
-    
-    // Mostrar notificação
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.textContent = message;
-        notification.style.position = 'fixed';
-        notification.style.bottom = '20px';
-        notification.style.right = '20px';
-        notification.style.padding = '1rem 1.5rem';
-        notification.style.borderRadius = '8px';
-        notification.style.color = 'white';
-        notification.style.fontWeight = '500';
-        notification.style.zIndex = '3000';
-        notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-        notification.style.transition = 'all 0.3s ease';
-        notification.style.transform = 'translateY(100px)';
-        notification.style.opacity = '0';
-        
-        if (type === 'success') {
-            notification.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-        } else if (type === 'error') {
-            notification.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
-        } else {
-            notification.style.background = 'linear-gradient(135deg, var(--primary-dark), var(--primary-medium))';
-        }
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateY(0)';
-            notification.style.opacity = '1';
-        }, 10);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateY(100px)';
-            notification.style.opacity = '0';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }, 4000);
-    }
-    
-    // Efeito de scroll no header
-    window.addEventListener('scroll', function() {
+        // Inicializar header
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
         }
-    });
-</script>
 
-<script>
-    // Elementos do DOM
-    const vcardBtn = document.getElementById('vcard-btn');
-    const printBtn = document.getElementById('print-btn');
-    const shareBtn = document.getElementById('share-btn');
-    const vcardModal = document.getElementById('vcard-modal');
-    const closeModal = document.querySelector('.close-modal');
-    const downloadVcard = document.getElementById('download-vcard');
-    const saveContact = document.getElementById('save-contact');
-    
-    // Abrir modal de V-Card
-    vcardBtn.addEventListener('click', function() {
-        vcardModal.style.display = 'flex';
-    });
-    
-    // Fechar modal
-    closeModal.addEventListener('click', function() {
-        vcardModal.style.display = 'none';
-    });
-    
-    // Fechar modal ao clicar fora
-    window.addEventListener('click', function(e) {
-        if (e.target === vcardModal) {
-            vcardModal.style.display = 'none';
-        }
-    });
-
-    // Função para obter a URL da imagem corretamente
-    function getImageUrl() {
-        // Tentar obter a URL da imagem de fundo
-        const photoElement = document.querySelector('.lawyer-photo');
-        if (photoElement && photoElement.style.backgroundImage) {
-            const bgImage = photoElement.style.backgroundImage;
-            const matches = bgImage.match(/url\(['"]?(.*?)['"]?\)/i);
-            if (matches && matches[1]) {
-                return matches[1];
-            }
-        }
+        // FUNCIONALIDADES ESPECÍFICAS DO TEMPLATE_EQUIPE
+        const vcardBtn = document.getElementById('vcard-btn');
+        const printBtn = document.getElementById('print-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const vcardModal = document.getElementById('vcard-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const downloadVcard = document.getElementById('download-vcard');
+        const saveContact = document.getElementById('save-contact');
         
-        // Fallback para a URL padrão
-        return 'https://mpsadv.com.br/img/equipe/lucas.jpg';
-    }
-
-    // Função para converter imagem em Base64 com CORS handling
-    function imageToBase64(url, callback) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = 'Anonymous'; // Importante para CORS
-            
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Redimensionar para tamanho adequado (evitar V-Card muito grande)
-                const maxWidth = 300;
-                const scale = Math.min(maxWidth / img.width, 1);
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-                
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                
-                try {
-                    // Converter para JPEG com qualidade 0.8
-                    const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-                    const base64 = dataURL.split(',')[1];
-                    resolve(base64);
-                } catch (e) {
-                    console.error('Erro na conversão:', e);
-                    resolve(null);
-                }
-            };
-            
-            img.onerror = function() {
-                console.warn('Não foi possível carregar a imagem, usando fallback URL');
-                // Se não conseguir converter, usar URL direta como fallback
-                resolve('URL:' + url);
-            };
-            
-            // Adicionar timestamp para evitar cache
-            const timestamp = new Date().getTime();
-            const separator = url.includes('?') ? '&' : '?';
-            img.src = url + separator + 't=' + timestamp;
+        // Abrir modal de V-Card
+        vcardBtn.addEventListener('click', function() {
+            vcardModal.style.display = 'flex';
         });
-    }
-
-    // Gerar conteúdo do V-Card
-    async function generateVCard() {
-        const imageUrl = getImageUrl();
-        let photoField = '';
         
-        try {
-            const base64Image = await imageToBase64(imageUrl);
-            
-            if (base64Image && !base64Image.startsWith('URL:')) {
-                // Usar Base64 se disponível
-                photoField = `PHOTO;ENCODING=B;TYPE=JPEG:${base64Image}`;
-            } else {
-                // Fallback para URL direta (compatível com alguns apps)
-                const actualUrl = base64Image ? base64Image.replace('URL:', '') : imageUrl;
-                photoField = `PHOTO;VALUE=URI:${actualUrl}`;
+        // Fechar modal
+        closeModal.addEventListener('click', function() {
+            vcardModal.style.display = 'none';
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(e) {
+            if (e.target === vcardModal) {
+                vcardModal.style.display = 'none';
             }
-        } catch (error) {
-            console.warn('Usando fallback URL para foto:', error);
-            photoField = `PHOTO;VALUE=URI:${imageUrl}`;
+        });
+
+        // Função para obter a URL da imagem corretamente
+        function getImageUrl() {
+            // Tentar obter a URL da imagem de fundo
+            const photoElement = document.querySelector('.lawyer-photo');
+            if (photoElement && photoElement.style.backgroundImage) {
+                const bgImage = photoElement.style.backgroundImage;
+                const matches = bgImage.match(/url\(['"]?(.*?)['"]?\)/i);
+                if (matches && matches[1]) {
+                    return matches[1];
+                }
+            }
+            
+            // Fallback para a URL padrão
+            return 'https://mpsadv.com.br/img/equipe/lucas.jpg';
         }
-        
-        return `BEGIN:VCARD
+
+        // Função para converter imagem em Base64 com CORS handling
+        function imageToBase64(url, callback) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous'; // Importante para CORS
+                
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Redimensionar para tamanho adequado (evitar V-Card muito grande)
+                    const maxWidth = 300;
+                    const scale = Math.min(maxWidth / img.width, 1);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    try {
+                        // Converter para JPEG com qualidade 0.8
+                        const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+                        const base64 = dataURL.split(',')[1];
+                        resolve(base64);
+                    } catch (e) {
+                        console.error('Erro na conversão:', e);
+                        resolve(null);
+                    }
+                };
+                
+                img.onerror = function() {
+                    console.warn('Não foi possível carregar a imagem, usando fallback URL');
+                    // Se não conseguir converter, usar URL direta como fallback
+                    resolve('URL:' + url);
+                };
+                
+                // Adicionar timestamp para evitar cache
+                const timestamp = new Date().getTime();
+                const separator = url.includes('?') ? '&' : '?';
+                img.src = url + separator + 't=' + timestamp;
+            });
+        }
+
+        // Gerar conteúdo do V-Card
+        async function generateVCard() {
+            const imageUrl = getImageUrl();
+            let photoField = '';
+            
+            try {
+                const base64Image = await imageToBase64(imageUrl);
+                
+                if (base64Image && !base64Image.startsWith('URL:')) {
+                    // Usar Base64 se disponível
+                    photoField = `PHOTO;ENCODING=B;TYPE=JPEG:${base64Image}`;
+                } else {
+                    // Fallback para URL direta (compatível com alguns apps)
+                    const actualUrl = base64Image ? base64Image.replace('URL:', '') : imageUrl;
+                    photoField = `PHOTO;VALUE=URI:${actualUrl}`;
+                }
+            } catch (error) {
+                console.warn('Usando fallback URL para foto:', error);
+                photoField = `PHOTO;VALUE=URI:${imageUrl}`;
+            }
+            
+            return `BEGIN:VCARD
 VERSION:3.0
 FN:Dr. Lukas Medeiros
 N:Medeiros;Lukas;;Dr.
@@ -1471,187 +1360,181 @@ URL:https://mpsadv.com.br
 NOTE:Especialista em Direito Empresarial e Societário
 ${photoField}
 END:VCARD`;
-    }
-
-    // Gerar e baixar V-Card
-    downloadVcard.addEventListener('click', async function() {
-        try {
-            const vcardContent = await generateVCard();
-            
-            // Criar blob
-            const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            // Criar link de download
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'lukas-medeiros.vcf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Limpar
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-            
-            // Fechar modal e mostrar feedback
-            vcardModal.style.display = 'none';
-            showNotification('V-Card baixado com sucesso! A foto será incluída ao importar.', 'success');
-            
-        } catch (error) {
-            console.error('Erro ao gerar V-Card:', error);
-            showNotification('Erro ao gerar V-Card. Tente novamente.', 'error');
         }
-    });
-    
-    // Salvar nos contatos
-    saveContact.addEventListener('click', async function() {
-        try {
-            const vcardContent = await generateVCard();
-            const blob = new Blob([vcardContent], { type: 'text/vcard' });
-            
-            // Tentar Web Share API primeiro (iOS/mobile)
-            if (navigator.share) {
-                const file = new File([blob], "lukas-medeiros.vcf", { type: "text/vcard" });
+
+        // Gerar e baixar V-Card
+        downloadVcard.addEventListener('click', async function() {
+            try {
+                const vcardContent = await generateVCard();
                 
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        title: 'Dr. Lukas Medeiros - Contato',
-                        text: 'Adicione este contato à sua agenda',
-                        files: [file]
-                    });
-                    showNotification('Contato compartilhado com sucesso!', 'success');
-                    vcardModal.style.display = 'none';
-                    return;
+                // Criar blob
+                const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                
+                // Criar link de download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'lukas-medeiros.vcf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Limpar
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                
+                // Fechar modal e mostrar feedback
+                vcardModal.style.display = 'none';
+                showNotification('V-Card baixado com sucesso! A foto será incluída ao importar.', 'success');
+                
+            } catch (error) {
+                console.error('Erro ao gerar V-Card:', error);
+                showNotification('Erro ao gerar V-Card. Tente novamente.', 'error');
+            }
+        });
+        
+        // Salvar nos contatos
+        saveContact.addEventListener('click', async function() {
+            try {
+                const vcardContent = await generateVCard();
+                const blob = new Blob([vcardContent], { type: 'text/vcard' });
+                
+                // Tentar Web Share API primeiro (iOS/mobile)
+                if (navigator.share) {
+                    const file = new File([blob], "lukas-medeiros.vcf", { type: "text/vcard" });
+                    
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            title: 'Dr. Lukas Medeiros - Contato',
+                            text: 'Adicione este contato à sua agenda',
+                            files: [file]
+                        });
+                        showNotification('Contato compartilhado com sucesso!', 'success');
+                        vcardModal.style.display = 'none';
+                        return;
+                    }
                 }
+                
+                // Fallback para download
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'lukas-medeiros.vcf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Feedback específico para iPhone
+                if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                    showNotification('V-Card baixado. Abra o arquivo e selecione "Criar Novo Contato" para adicionar com foto.', 'info', 6000);
+                } else {
+                    showNotification('V-Card baixado. Importe para seus contatos.', 'info');
+                }
+                
+                // Limpar
+                setTimeout(() => URL.revokeObjectURL(url), 10000);
+                vcardModal.style.display = 'none';
+                
+            } catch (error) {
+                console.error('Erro ao salvar contato:', error);
+                showNotification('Erro ao salvar contato. Tente baixar o V-Card.', 'error');
             }
-            
-            // Fallback para download
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'lukas-medeiros.vcf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Feedback específico para iPhone
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                showNotification('V-Card baixado. Abra o arquivo e selecione "Criar Novo Contato" para adicionar com foto.', 'info', 6000);
+        });
+
+        // Imprimir página
+        printBtn.addEventListener('click', function() {
+            document.body.classList.add('printing');
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => document.body.classList.remove('printing'), 500);
+            }, 100);
+        });
+        
+        // Compartilhar
+        shareBtn.addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dr. Lukas Medeiros - Medeiros, Paiva & Soares',
+                    text: 'Conheça o perfil do Dr. Lukas Medeiros, Sócio Fundador',
+                    url: window.location.href
+                }).catch(() => fallbackShare());
             } else {
-                showNotification('V-Card baixado. Importe para seus contatos.', 'info');
+                fallbackShare();
+            }
+        });
+        
+        // Fallback para compartilhamento
+        function fallbackShare() {
+            const shareText = `Dr. Lukas Medeiros - Sócio Fundador\nMedeiros, Paiva & Soares - Advogados\n\n${window.location.href}`;
+            
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(shareText)
+                    .then(() => showNotification('Link copiado!', 'success'))
+                    .catch(() => manualCopy(shareText));
+            } else {
+                manualCopy(shareText);
+            }
+        }
+        
+        // Cópia manual
+        function manualCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Link copiado!', 'success');
+            } catch (err) {
+                showNotification('Copie manualmente: ' + text, 'info');
             }
             
-            // Limpar
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-            vcardModal.style.display = 'none';
+            document.body.removeChild(textArea);
+        }
+        
+        // Mostrar notificação
+        function showNotification(message, type, duration = 4000) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 3000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+                transform: translateY(100px);
+                opacity: 0;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #4CAF50, #45a049)' : 
+                             type === 'error' ? 'linear-gradient(135deg, #f44336, #d32f2f)' : 
+                             'linear-gradient(135deg, var(--primary-dark), var(--primary-medium))'};
+            `;
             
-        } catch (error) {
-            console.error('Erro ao salvar contato:', error);
-            showNotification('Erro ao salvar contato. Tente baixar o V-Card.', 'error');
-        }
-    });
-
-    // Imprimir página
-    printBtn.addEventListener('click', function() {
-        document.body.classList.add('printing');
-        setTimeout(() => {
-            window.print();
-            setTimeout(() => document.body.classList.remove('printing'), 500);
-        }, 100);
-    });
-    
-    // Compartilhar
-    shareBtn.addEventListener('click', function() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Dr. Lukas Medeiros - Medeiros, Paiva & Soares',
-                text: 'Conheça o perfil do Dr. Lukas Medeiros, Sócio Fundador',
-                url: window.location.href
-            }).catch(() => fallbackShare());
-        } else {
-            fallbackShare();
-        }
-    });
-    
-    // Fallback para compartilhamento
-    function fallbackShare() {
-        const shareText = `Dr. Lukas Medeiros - Sócio Fundador\nMedeiros, Paiva & Soares - Advogados\n\n${window.location.href}`;
-        
-        if (navigator.clipboard?.writeText) {
-            navigator.clipboard.writeText(shareText)
-                .then(() => showNotification('Link copiado!', 'success'))
-                .catch(() => manualCopy(shareText));
-        } else {
-            manualCopy(shareText);
-        }
-    }
-    
-    // Cópia manual
-    function manualCopy(text) {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
-        document.body.appendChild(textArea);
-        textArea.select();
-        
-        try {
-            document.execCommand('copy');
-            showNotification('Link copiado!', 'success');
-        } catch (err) {
-            showNotification('Copie manualmente: ' + text, 'info');
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+                notification.style.opacity = '1';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
         }
         
-        document.body.removeChild(textArea);
-    }
-    
-    // Mostrar notificação
-    function showNotification(message, type, duration = 4000) {
-        const notification = document.createElement('div');
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 3000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            transform: translateY(100px);
-            opacity: 0;
-            background: ${type === 'success' ? 'linear-gradient(135deg, #4CAF50, #45a049)' : 
-                         type === 'error' ? 'linear-gradient(135deg, #f44336, #d32f2f)' : 
-                         'linear-gradient(135deg, var(--primary-dark), var(--primary-medium))'};
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateY(0)';
-            notification.style.opacity = '1';
-        }, 10);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateY(100px)';
-            notification.style.opacity = '0';
-            setTimeout(() => notification.remove(), 300);
-        }, duration);
-    }
-    
-    // Scroll header
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        header.classList.toggle('scrolled', window.scrollY > 50);
-    });
-
-    // Pré-carregar a imagem para melhor performance
-    window.addEventListener('load', function() {
-        const imageUrl = getImageUrl();
-        const img = new Image();
-        img.src = imageUrl;
-    });
-</script>
+        // Pré-carregar a imagem para melhor performance
+        window.addEventListener('load', function() {
+            const imageUrl = getImageUrl();
+            const img = new Image();
+            img.src = imageUrl;
+        });
+    </script>
 </body>
 </html>
