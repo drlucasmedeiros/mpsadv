@@ -765,6 +765,7 @@
             text-align: center;
         }
         
+         /* Garantir que os ícones do rodapé não sejam afetados pelos estilos gerais */
         .social-links {
             display: flex;
             gap: 1rem;
@@ -896,6 +897,7 @@
             color: rgba(255, 255, 255, 0.8);
         }
         
+         /* Estilos específicos para os ícones do rodapé */
         .footer-social-links {
             display: flex;
             gap: 1rem;
@@ -913,11 +915,24 @@
             color: var(--white);
             text-decoration: none;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
         
         .footer-social-link:hover {
             background-color: var(--accent);
             transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(201, 167, 105, 0.3);
+        }
+        
+        .footer-social-link i {
+            transition: var(--transition);
+            z-index: 1;
+            position: relative;
+        }
+        
+        .footer-social-link:hover i {
+            transform: scale(1.1);
         }
         
         .footer-links h4,
