@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa Fundador - Medeiros, Paiva & Soares - Advogados</title>
+    <meta name="description" content="Junte-se ao Programa Fundador do escritório Medeiros, Paiva & Soares. Seja um dos primeiros advogados a fazer parte deste modelo inovador de escritório-plataforma.">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+
+ /* Importação das fontes */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Reset e estilos base - IGUAL AO INDEX */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px; /* Mesma base do index */
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header IGUAL AO INDEX */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        /* Navegação IGUAL AO INDEX */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        #nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        #nav-links li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        #nav-links li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        #nav-links li a:hover,
+        #nav-links li a.active {
+            color: var(--accent);
+        }
+        
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
+            width: 100%;
+        }
+        
+        /* Estilos do Menu Hamburger IGUAL AO INDEX */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        /* Animação do Hamburger quando ativo */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile IGUAL AO INDEX */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Conteúdo Principal - PÁGINA DO PROGRAMA FUNDADOR */
+        .main-content {
+            margin-top: 100px;
+            padding: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        /* Título da Página */
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-family: 'Hatton', serif;
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Seção Hero */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h2 {
+            font-family: 'Hatton', serif;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+        
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .hero-cta:hover {
+            background: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-cta i {
+            margin-left: 0.5rem;
+        }
+
+        /* Seções de Conteúdo */
+        .content-section {
+            margin-bottom: 5rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-family: 'Hatton', serif;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .section-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .highlight-box {
+            background: var(--gray-light);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+        
+        .highlight-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards de Benefícios */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .benefit-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid var(--gray-medium);
+            text-align: center;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .benefit-icon i {
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+        
+        .benefit-card h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-card p {
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Modelo de Negócio */
+        .business-model {
+            background: var(--gray-light);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .model-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .model-step {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            color: var(--primary-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .model-step h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .model-step p {
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Tabela de Comparação */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 3rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .comparison-table th {
+            background: var(--primary-dark);
+            color: var(--white);
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: var(--gray-light);
+        }
+        
+        .comparison-table .check {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .comparison-table .cross {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Seção de Investimento */
+        .investment-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .investment-section .section-title h2 {
+            color: var(--white);
+        }
+        
+        .investment-section .section-title p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .investment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .investment-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .investment-card h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+        
+        .investment-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--accent);
+        }
+        
+        .investment-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .investment-features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .investment-features li i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* Formulário de Interesse */
+        .interest-form {
+            background: var(--gray-light);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.2);
+        }
+        
+        .submit-btn {
+            background: var(--primary-dark);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .submit-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* FAQ */
+        .faq-section {
+            margin: 5rem 0;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            background: var(--white);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: var(--transition);
+        }
+        
+        .faq-question:hover {
+            background: var(--gray-light);
+        }
+        
+        .faq-question i {
+            transition: var(--transition);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            background: var(--white);
+        }
+        
+        .faq-item.active .faq-question {
+            background: var(--gray-light);
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Separador */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 4rem 0;
+            opacity: 0.5;
+        }
+
+        /* Footer IGUAL AO INDEX */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* RESPONSIVIDADE IGUAL AO INDEX */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 2.3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Menu Hamburguer - IGUAL AO INDEX */
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
+            header {
+                padding: 1rem 2rem;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                margin-top: 140px;
+            }
+            
+            .hero-section {
+                padding: 3rem 1.5rem;
+            }
+            
+            .model-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .model-step {
+                max-width: 100%;
+            }
+            
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .logo-text {
+                font-size: 0.9rem; /* Reduzido para caber em uma linha */
+                white-space: nowrap; /* Impede quebra de linha */
+                margin-left: 0.5rem; /* Espaço entre logo e texto */
+            }
+            
+            /* CORREÇÃO DO HEADER - MANTÉM EM LINHA */
+            .header-logo {
+                flex-direction: row; /* Mantém em linha, não coluna */
+                align-items: center; /* Centraliza verticalmente */
+            }
+            
+            .logo-img {
+                margin-right: 0.5rem; /* Mantém margem à direita */
+                margin-bottom: 0; /* Remove margem inferior */
+                height: 35px; /* Reduz um pouco se necessário */
+            }
+            
+            /* Ajuste adicional para telas muito pequenas */
+            @media (max-width: 360px) {
+                .logo-text {
+                    font-size: 0.8rem; /* Reduz ainda mais se necessário */
+                }
+                
+                .logo-img {
+                    height: 30px;
+                }
+            }
+        }
+        /* [TODO: INSERIR TODO O CSS DA PÁGINA ANTERIOR AQUI] */
+        /* Manter todo o CSS existente da página do Programa Fundador */
+        
+        /* Adicionais específicos para esta versão */
+        .council-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 5rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+            text-align: center;
+        }
+        
+        .council-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .united-section {
+            background: var(--gray-light);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+            text-align: center;
+        }
+        
+        .united-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .stat-number {
+            font-family: 'Hatton', serif;
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .legal-notes {
+            background: #fff8e1;
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .legal-notes h4 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 3rem auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+            padding: 0 2rem;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--white);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid var(--white);
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header IGUAL AO INDEX -->
+    <header>
+        <div class="header-logo">
+            <a href="index.html">
+                <img src="/logotipo.webp" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#areas">Áreas</a></li>
+                <li><a href="index.html#about">Sobre</a></li>
+                <li><a href="equipe.html">Equipe</a></li>
+                <li><a href="programa-fundador.html" class="active">Programa Fundador</a></li>
+                <li><a href="index.html#blog">Blog</a></li>
+                <li><a href="index.html#contact">Contato</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Início</a> / <a href="programa-fundador.html">Programa Fundador</a>
+        </div>
+        
+        <!-- Cabeçalho da Página -->
+        <div class="page-header">
+            <h1>Programa Fundador</h1>
+            <p>Uma oportunidade única para advogados visionários que desejam construir um dos maiores escritórios do Brasil, com participação no conselho e direitos vitalícios.</p>
+        </div>
+        
+        <!-- Seção Hero -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>Construa Um Legado Conosco</h2>
+                <p>Junte-se aos fundadores do Medeiros, Paiva & Soares e faça parte da história de um dos escritórios que vai revolucionar a advocacia brasileira.</p>
+                <a href="#formulario" class="hero-cta">
+                    Quero Ser Um Fundador <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Seção do Conselho -->
+        <section class="council-section">
+            <div class="council-badge">POSIÇÃO NO CONSELHO</div>
+            <h2 style="color: var(--white); margin-bottom: 1.5rem;">Faça Parte do Nosso Conselho Estratégico</h2>
+            <p style="color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto 2rem;">
+                Como fundador, você não será apenas mais um associado. Você terá assento no Conselho Estratégico do escritório, com poder de voto nas decisões mais importantes.
+            </p>
+            <div class="benefits-grid">
+                <div class="benefit-card" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="color: var(--white);">Voto Estratégico</h3>
+                    <p style="color: rgba(255, 255, 255, 0.9);">Participe das decisões sobre expansão, investimentos e direção do escritório</p>
+                </div>
+                
+                <div class="benefit-card" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="benefit-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 style="color: var(--white);">Direitos Vitalícios</h3>
+                    <p style="color: rgba(255, 255, 255, 0.9);">Condições especiais mantidas mesmo após saída do programa ativo</p>
+                </div>
+                
+                <div class="benefit-card" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="benefit-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 style="color: var(--white);">Status de Fundador</h3>
+                    <p style="color: rgba(255, 255, 255, 0.9);">Reconhecimento perpétuo como um dos construtores do escritório</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção Unidos Somos Mais Fortes -->
+        <section class="united-section">
+            <h2 style="color: var(--primary-dark); margin-bottom: 1rem;">Unidos Somos Mais Fortes</h2>
+            <p style="max-width: 800px; margin: 0 auto 2rem; color: var(--text-medium);">
+                Sozinho você até vai rápido, mas juntos vamos mais longe. A força da nossa marca coletiva abre portas que individualmente seriam inacessíveis.
+            </p>
+            
+            <div class="united-stats">
+                <div class="stat-item">
+                    <div class="stat-number">10x</div>
+                    <div class="stat-label">Mais Visibilidade</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5x</div>
+                    <div class="stat-label">Mais Recursos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Especialidades</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Oportunidades</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box" style="margin-top: 3rem;">
+                <h3>A Força da Nossa Marca Coletiva</h3>
+                <p><strong>Medeiros, Paiva & Soares</strong> não é apenas um nome - é uma marca que será sinônimo de excelência jurídica. Como fundador, você fará parte da construção dessa reputação e se beneficiará do reconhecimento que ela trará.</p>
+                <p>Clientes de grande porte buscam escritórios consolidados. Grandes casos exigem equipes multidisciplinares. Investimentos em tecnologia são viáveis quando compartilhados. Tudo isso se torna possível quando unimos forças.</p>
+            </div>
+        </section>
+        
+        <!-- O Problema -->
+        <section class="content-section">
+            <div class="section-title">
+                <h2>O Desafio do Advogado Independente</h2>
+                <p>Entendemos as dificuldades enfrentadas por profissionais que buscam autonomia sem abrir mão da qualidade e estrutura.</p>
+            </div>
+            <div class="section-content">
+                <p>Como advogado autônomo ou em início de carreira, você provavelmente enfrenta alguns destes desafios:</p>
+                
+                <div class="highlight-box">
+                    <h3>Desafios Comuns</h3>
+                    <ul>
+                        <li>Altos custos com aluguel, mobília e infraestrutura</li>
+                        <li>Dificuldade em competir com grandes escritórios</li>
+                        <li>Falta de suporte administrativo e tecnológico</li>
+                        <li>Isolamento profissional e poucas oportunidades de networking</li>
+                        <li>Dificuldade em captar e reter clientes</li>
+                        <li>Investimento pesado em softwares e ferramentas especializadas</li>
+                    </ul>
+                </div>
+                
+                <p>Nosso Programa Fundador foi criado especificamente para resolver esses problemas, oferecendo uma solução completa e acessível.</p>
+            </div>
+        </section>
+        
+        <!-- A Solução -->
+        <section class="content-section">
+            <div class="section-title">
+                <h2>A Solução: Escritório-Plataforma</h2>
+                <p>Um modelo inovador que combina a independência do trabalho autônomo com a estrutura de um grande escritório.</p>
+            </div>
+            <div class="section-content">
+                <p>Imagine ter acesso a tudo que um grande escritório oferece, mas mantendo sua autonomia e pagando apenas uma fração do custo. É exatamente isso que oferecemos através do nosso Programa Fundador.</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Infraestrutura Física</h3>
+                        <p>Salas de reunião profissionais, espaço de trabalho, recepção e áreas comuns em localização privilegiada.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Tecnologia Completa</h3>
+                        <p>Acesso a sistemas jurídicos, softwares especializados, armazenamento em nuvem e suporte técnico.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Suporte Administrativo</h3>
+                        <p>Recepcionista, secretária compartilhada, organização de agenda e atendimento telefônico.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <h3>Marketing & Captação</h3>
+                        <p>Site profissional, gestão de mídias sociais, campanhas de Google Ads e geração de leads qualificados.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Networking & Parcerias</h3>
+                        <p>Rede de contatos, oportunidades de parceria em casos complexos e troca de experiências.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Desenvolvimento Profissional</h3>
+                        <p>Grupos de estudo, treinamentos, workshops e atualização jurídica constante.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Linha do Tempo de Implementação -->
+        <section class="content-section">
+            <div class="section-title">
+                <h2>Roadmap de Implementação</h2>
+                <p>Plano claro e transparente de como vamos construir este escritório de excelência juntos.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Fase 1 - Fundação (Meses 1-3)</div>
+                        <h3>Estruturação do Conselho</h3>
+                        <p>Seleção dos 5 fundadores, definição do regimento interno, estruturação jurídica do modelo e implantação da infraestrutura física.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Fase 2 - Crescimento (Meses 4-9)</div>
+                        <h3>Expansão da Base</h3>
+                        <p>Captação de mais 10-15 associados regulares, implementação de processos internos, consolidação da marca e primeiras parcerias estratégicas.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Fase 3 - Consolidação (Meses 10-18)</div>
+                        <h3>Escala e Reconhecimento</h3>
+                        <p>Expansão para outras cidades, especialização em nichos de alto valor, reconhecimento como escritório de referência e atração de casos complexos.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Fase 4 - Liderança (Meses 19+)</div>
+                        <h3>Liderança de Mercado</h3>
+                        <p>Posicionamento entre os principais escritórios da região, atuação em casos de grande repercussão e expansão nacional.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Como Funciona -->
+        <section class="content-section">
+            <div class="section-title">
+                <h2>Como Funciona o Programa</h2>
+                <p>Um modelo simples, transparente e vantajoso para ambas as partes.</p>
+            </div>
+            
+            <div class="business-model">
+                <div class="section-content">
+                    <h3 style="text-align: center; margin-bottom: 2rem;">Modelo Híbrido de Remuneração</h3>
+                    
+                    <div class="model-steps">
+                        <div class="model-step">
+                            <div class="step-number">1</div>
+                            <h3>Taxa de Infraestrutura</h3>
+                            <p>Valor fixo mensal para cobrir custos operacionais básicos. Apenas R$ 250/mês para fundadores.</p>
+                        </div>
+                        
+                        <div class="model-step">
+                            <div class="step-number">2</div>
+                            <h3>Percentual sobre Captação</h3>
+                            <p>Apenas 10% sobre honorários de casos captados pela plataforma (site, marketing, indicações).</p>
+                        </div>
+                        
+                        <div class="model-step">
+                            <div class="step-number">3</div>
+                            <h3>Honorários Pessoais</h3>
+                            <p>Seus clientes atuais e captações pessoais são 100% seus, sem qualquer desconto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-content">
+                <h3>Comparação: Tradicional vs. Nosso Modelo</h3>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Escritório Tradicional</th>
+                            <th>Programa Fundador</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Aluguel e Condomínio</td>
+                            <td class="cross">R$ 1.500 - R$ 3.000/mês</td>
+                            <td class="check">Incluído</td>
+                        </tr>
+                        <tr>
+                            <td>Equipamentos e Mobília</td>
+                            <td class="cross">Investimento Inicial Alto</td>
+                            <td class="check">Incluído</td>
+                        </tr>
+                        <tr>
+                            <td>Softwares Jurídicos</td>
+                            <td class="cross">R$ 200 - R$ 500/mês</td>
+                            <td class="check">Incluído</td>
+                        </tr>
+                        <tr>
+                            <td>Suporte Administrativo</td>
+                            <td class="cross">R$ 1.500 - R$ 3.000/mês</td>
+                            <td class="check">Incluído</td>
+                        </tr>
+                        <tr>
+                            <td>Marketing Digital</td>
+                            <td class="cross">R$ 500 - R$ 2.000/mês</td>
+                            <td class="check">Incluído</td>
+                        </tr>
+                        <tr>
+                            <td>Participação no Conselho</td>
+                            <td class="cross">Não</td>
+                            <td class="check">Sim</td>
+                        </tr>
+                        <tr>
+                            <td>Taxa Mensal Fixa</td>
+                            <td class="check">-</td>
+                            <td class="check">R$ 250/mês*</td>
+                        </tr>
+                        <tr>
+                            <td>Percentual sobre Honorários</td>
+                            <td class="check">-</td>
+                            <td class="check">10%* (apenas sobre captação da plataforma)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-medium);">*Condições especiais para os primeiros 5 fundadores</p>
+            </div>
+        </section>
+        
+        <!-- Investimento -->
+        <section class="investment-section">
+            <div class="section-title">
+                <h2>Investimento e Condições Especiais</h2>
+                <p>Oportunidade exclusiva para os primeiros advogados que se juntarem ao nosso programa.</p>
+            </div>
+            
+            <div class="investment-cards">
+                <div class="investment-card">
+                    <h3>Programa Fundador</h3>
+                    <p>Condições Exclusivas para os Primeiros 5</p>
+                    <div class="investment-amount">R$ 0</div>
+                    <p>Taxa de Infraestrutura</p>
+                    <ul class="investment-features">
+                        <li><i class="fas fa-check"></i> Isenção por 3 meses</li>
+                        <li><i class="fas fa-check"></i> Apenas 10% sobre captação</li>
+                        <li><i class="fas fa-check"></i> Voto no Conselho Estratégico</li>
+                        <li><i class="fas fa-check"></i> Status Vitalício de Fundador</li>
+                        <li><i class="fas fa-check"></i> Condições preferenciais permanentes</li>
+                    </ul>
+                </div>
+                
+                <div class="investment-card">
+                    <h3>Após Período Fundador</h3>
+                    <p>Condições Regulares</p>
+                    <div class="investment-amount">R$ 250</div>
+                    <p>Taxa Mensal</p>
+                    <ul class="investment-features">
+                        <li><i class="fas fa-check"></i> 15% sobre captação</li>
+                        <li><i class="fas fa-check"></i> Todos os benefícios inclusos</li>
+                        <li><i class="fas fa-check"></i> Sem contrato de longo prazo</li>
+                        <li><i class="fas fa-check"></i> Rescisão com 30 dias</li>
+                        <li><i class="fas fa-check"></i> Sem assento no Conselho</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Notas Legais Importantes -->
+        <div class="legal-notes">
+            <h4>⚠️ Aspectos Legais e Éticos Relevantes</h4>
+            <p><strong>Responsabilidade Técnica:</strong> Cada advogado mantém responsabilidade individual por seus atos perante a OAB e clientes. O escritório atua como estrutura de suporte, não assumindo responsabilidade técnica pelos casos.</p>
+            <p><strong>Sigilo Profissional:</strong> Implementamos protocolos rígidos para preservar o sigilo entre os associados, protegendo as informações de cada cliente.</p>
+            <p><strong>Conformidade com o Estatuto da OAB:</strong> Todo o modelo está estruturado em conformidade com a legislação profissional, com contratos específicos que respeitam a autonomia de cada advogado.</p>
+            <p><strong>Transparência com Clientes:</strong> A repartição de honorários é comunicada de forma transparente aos clientes, conforme exigido pelo Código de Ética.</p>
+        </div>
+        
+        <!-- Formulário de Interesse -->
+        <section class="interest-form" id="formulario">
+            <div class="section-title">
+                <h2>Quero Ser Um Fundador</h2>
+                <p>Preencha o formulário abaixo e entraremos em contato para uma conversa confidencial.</p>
+            </div>
+            
+            <div class="form-container">
+                <!-- FORM SUBMIT CONFIGURADO IGUAL AO INDEX -->
+                <form action="https://formsubmit.co/atendimento@mpsadv.com.br" method="POST" onsubmit="return validarFormularioFundador()">
+                    <!-- Campos do formulário -->
+                    <input type="text" name="name" id="nome" placeholder="Seu Nome Completo" required>
+                    <input type="email" name="email" id="email" placeholder="Seu E-mail Profissional" required>
+                    <input type="tel" name="phone" id="telefone" placeholder="Seu WhatsApp (com DDD)" pattern="[0-9]{10,11}" title="Digite apenas números com DDD (10 ou 11 dígitos)" required>
+                    
+                    <div class="form-group">
+                        <label for="oab">Nº Inscrição OAB</label>
+                        <input type="text" id="oab" name="oab" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="experiencia">Anos de Experiência na Advocacia</label>
+                        <select id="experiencia" name="experiencia" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="0-2">0-2 anos</option>
+                            <option value="3-5">3-5 anos</option>
+                            <option value="6-10">6-10 anos</option>
+                            <option value="10+">Mais de 10 anos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="especializacao">Suas Principais Áreas de Atuação</label>
+                        <input type="text" id="especializacao" name="especializacao" class="form-control" placeholder="Ex: Direito Civil, Trabalhista, Empresarial..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="carteira">Tamanho Aproximado da Sua Carteira Atual</label>
+                        <select id="carteira" name="carteira" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="0-10">0-10 clientes</option>
+                            <option value="11-30">11-30 clientes</option>
+                            <option value="31-50">31-50 clientes</option>
+                            <option value="50+">Mais de 50 clientes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expectativas">O que você busca no Programa Fundador?</label>
+                        <textarea id="expectativas" name="expectativas" class="form-control" rows="4" placeholder="Descreva suas expectativas, objetivos e como acredita que pode contribuir para o crescimento coletivo..."></textarea>
+                    </div>
+                    
+                    <!-- Configurações do FormSubmit -->
+                    <input type="hidden" name="_subject" value="[PROGRAMA FUNDADOR] Novo Interesse - MPS Advogados">
+                    <input type="hidden" name="_autoresponse" value="Obrigado pelo seu interesse no Programa Fundador do Medeiros, Paiva & Soares! Analisaremos seu perfil e entraremos em contato em até 48h para uma conversa confidencial.">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://mpsadv.com.br/obrigado-fundador.html">
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-crown"></i> Quero Ser Um Fundador
+                    </button>
+                </form>
+                
+                <!-- Aviso de confirmação -->
+                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <p style="color: var(--text-medium); font-size: 0.9rem; margin: 0;">
+                        👑 Você receberá uma confirmação por e-mail e retornaremos em até 48h
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Expandido -->
+        <section class="faq-section">
+            <div class="section-title">
+                <h2>Perguntas Frequentes</h2>
+                <p>Tire suas dúvidas sobre o Programa Fundador</p>
+            </div>
+            
+            <div class="section-content">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como funciona exatamente o Conselho Estratégico?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>O Conselho Estratégico será composto pelos 5 fundadores e os sócios originais. Reuniões mensais definirão direcionamentos sobre: expansão do escritório, investimentos em tecnologia, aprovação de novos associados, estratégias de marketing e políticas internas. Cada fundador tem direito a um voto.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Há investimento financeiro inicial necessário?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Não há exigência de investimento financeiro inicial. O "investimento" dos fundadores é seu comprometimento em construir o escritório conjuntamente, trazer sua expertise e carteira de clientes, e participar ativamente do desenvolvimento da marca.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como são tomadas as decisões no Conselho?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Decisões operacionais diárias ficam com a administração executiva. Decisões estratégicas (mudanças no modelo de negócio, expansões, grandes investimentos) requerem aprovação do Conselho por maioria simples. Decisões estruturais (mudança no contrato social, dissolução) requerem maioria qualificada.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Posso manter meu escritório individual simultaneamente?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim, desde que não haja conflito de interesses. O modelo permite que você mantenha sua prática individual enquanto utiliza a estrutura do MPS para casos específicos ou para expandir sua atuação. A transparência sobre potenciais conflitos é essencial.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como funciona a saída do programa?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Fundadores mantêm seu status vitalício mesmo que deixem de participar ativamente. Se decidirem sair, mantêm condições preferenciais caso queiram retornar. A saída não afeta casos em andamento - cada advogado mantém seus clientes e processos.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como é tratada a concorrência entre os associados?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Implementamos um sistema claro de prioridade por especialidade e regras de encaminhamento. Casos complexos que exigem múltiplas especialidades são encorajados como parcerias internas. O regimento interno detalha esses procedimentos para evitar conflitos.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Há previsão de participação nos lucros do escritório?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Inicialmente, a remuneração do escritório vem das taxas de infraestrutura e percentuais sobre captação. Conforme crescemos, poderemos implementar um modelo de distribuição de lucros sobre os resultados da operação como um todo, sempre com aprovação do Conselho.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como será a divisão de despesas e investimentos futuros?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Despesas operacionais são cobertas pelas taxas mensais. Investimentos significativos (nova unidade, sistema caro) serão decididos pelo Conselho, podendo ser financiados por reservas do escritório ou, se necessário, através de contribuições proporcionais com retorno previsto.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <!-- CTA Final -->
+        <div class="page-header">
+            <h2>Vagas Extremamente Limitadas</h2>
+            <p>Apenas 5 advogados visionários terão acesso a esta oportunidade única de construir um legado. Não é apenas sobre juntar-se a um escritório - é sobre criar um dos maiores escritórios do Brasil.</p>
+            <a href="#formulario" class="hero-cta" style="margin-top: 2rem;">
+                <i class="fas fa-crown"></i> Garantir Minha Vaga no Conselho
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer IGUAL AO INDEX -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">MEDEIROS, PAIVA & SOARES</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+                <div class="footer-social-links">
+                    <a href="https://www.instagram.com/mps.adv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="footer-social-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fas fa-cloud"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@mpsadv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#areas">Áreas</a></li>
+                    <li><a href="index.html#about">Sobre</a></li>
+                    <li><a href="equipe.html">Equipe</a></li>
+                    <li><a href="programa-fundador.html">Programa Fundador</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // [TODO: INSERIR TODO O JAVASCRIPT DA PÁGINA ANTERIOR AQUI]
+        // Manter todo o JavaScript existente
+        
+        // Validação específica do formulário do Programa Fundador
+        function validarFormularioFundador() {
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+            const telefone = document.getElementById("telefone").value;
+            const oab = document.getElementById("oab").value;
+            const experiencia = document.getElementById("experiencia").value;
+            const especializacao = document.getElementById("especializacao").value;
+            const carteira = document.getElementById("carteira").value;
+
+            if (nome.length < 3) {
+                alert("Por favor, insira um nome válido com pelo menos 3 caracteres.");
+                return false;
+            }
+            
+            if (email.indexOf("@") === -1 || email.length < 10) {
+                alert("Informe um e-mail profissional válido.");
+                return false;
+            }
+            
+            // Validação do telefone
+            const telefoneLimpo = telefone.replace(/\D/g, '');
+            if (telefoneLimpo.length < 10 || telefoneLimpo.length > 11) {
+                alert("Por favor, insira um telefone válido com DDD (10 ou 11 dígitos).");
+                return false;
+            }
+            
+            if (oab.length < 3) {
+                alert("Por favor, insira seu número de inscrição na OAB.");
+                return false;
+            }
+            
+            if (!experiencia) {
+                alert("Por favor, selecione sua experiência na advocacia.");
+                return false;
+            }
+            
+            if (especializacao.length < 5) {
+                alert("Por favor, informe suas principais áreas de atuação.");
+                return false;
+            }
+            
+            if (!carteira) {
+                alert("Por favor, selecione o tamanho aproximado da sua carteira atual.");
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+</body>
+</html>

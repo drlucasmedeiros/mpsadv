@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Consultoria - Medeiros, Paiva & Soares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+ /* Importação das fontes */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Reset e estilos base - IGUAL AO INDEX */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px; /* Mesma base do index */
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header IGUAL AO INDEX */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        /* Navegação IGUAL AO INDEX */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        #nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        #nav-links li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        #nav-links li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        #nav-links li a:hover,
+        #nav-links li a.active {
+            color: var(--accent);
+        }
+        
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
+            width: 100%;
+        }
+        
+        /* Estilos do Menu Hamburger IGUAL AO INDEX */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        /* Animação do Hamburger quando ativo */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile IGUAL AO INDEX */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Conteúdo Principal - PÁGINA DO PROGRAMA FUNDADOR */
+        .main-content {
+            margin-top: 100px;
+            padding: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        /* Título da Página */
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-family: 'Hatton', serif;
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Seção Hero */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h2 {
+            font-family: 'Hatton', serif;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+        
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .hero-cta:hover {
+            background: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-cta i {
+            margin-left: 0.5rem;
+        }
+
+        /* Seções de Conteúdo */
+        .content-section {
+            margin-bottom: 5rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-family: 'Hatton', serif;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .section-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .highlight-box {
+            background: var(--gray-light);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+        
+        .highlight-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards de Benefícios */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .benefit-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid var(--gray-medium);
+            text-align: center;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .benefit-icon i {
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+        
+        .benefit-card h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-card p {
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Modelo de Negócio */
+        .business-model {
+            background: var(--gray-light);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .model-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .model-step {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            color: var(--primary-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .model-step h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .model-step p {
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Tabela de Comparação */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 3rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .comparison-table th {
+            background: var(--primary-dark);
+            color: var(--white);
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: var(--gray-light);
+        }
+        
+        .comparison-table .check {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .comparison-table .cross {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Seção de Investimento */
+        .investment-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .investment-section .section-title h2 {
+            color: var(--white);
+        }
+        
+        .investment-section .section-title p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .investment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .investment-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .investment-card h3 {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+        
+        .investment-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--accent);
+        }
+        
+        .investment-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .investment-features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .investment-features li i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* Formulário de Interesse */
+        .interest-form {
+            background: var(--gray-light);
+            padding: 4rem 2rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.2);
+        }
+        
+        .submit-btn {
+            background: var(--primary-dark);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .submit-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* FAQ */
+        .faq-section {
+            margin: 5rem 0;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            background: var(--white);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: var(--transition);
+        }
+        
+        .faq-question:hover {
+            background: var(--gray-light);
+        }
+        
+        .faq-question i {
+            transition: var(--transition);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            background: var(--white);
+        }
+        
+        .faq-item.active .faq-question {
+            background: var(--gray-light);
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Separador */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 4rem 0;
+            opacity: 0.5;
+        }
+
+        /* Footer IGUAL AO INDEX */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* RESPONSIVIDADE IGUAL AO INDEX */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 2.3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Menu Hamburguer - IGUAL AO INDEX */
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
+            header {
+                padding: 1rem 2rem;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                margin-top: 140px;
+            }
+            
+            .hero-section {
+                padding: 3rem 1.5rem;
+            }
+            
+            .model-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .model-step {
+                max-width: 100%;
+            }
+            
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .logo-text {
+                font-size: 0.9rem; /* Reduzido para caber em uma linha */
+                white-space: nowrap; /* Impede quebra de linha */
+                margin-left: 0.5rem; /* Espaço entre logo e texto */
+            }
+            
+            /* CORREÇÃO DO HEADER - MANTÉM EM LINHA */
+            .header-logo {
+                flex-direction: row; /* Mantém em linha, não coluna */
+                align-items: center; /* Centraliza verticalmente */
+            }
+            
+            .logo-img {
+                margin-right: 0.5rem; /* Mantém margem à direita */
+                margin-bottom: 0; /* Remove margem inferior */
+                height: 35px; /* Reduz um pouco se necessário */
+            }
+            
+            /* Ajuste adicional para telas muito pequenas */
+            @media (max-width: 360px) {
+                .logo-text {
+                    font-size: 0.8rem; /* Reduz ainda mais se necessário */
+                }
+                
+                .logo-img {
+                    height: 30px;
+                }
+            }
+        }        
+
+/* MANTER TODOS OS ESTILOS DO HEADER E FOOTER DO SITE PRINCIPAL */
+        /* [INSERIR AQUI OS ESTILOS DO HEADER/FOOTER DO INDEX.HTML] */
+        
+        /* Estilos específicos da página de agendamento */
+        .main-content {
+            margin-top: 100px;
+            padding: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .agendamento-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+        }
+        
+        .agendamento-hero h1 {
+            font-family: 'Hatton', serif;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .agendamento-hero p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calendly-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .benefits-agendamento {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .benefit-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .whatsapp-alternative {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+                margin-top: 80px;
+            }
+            
+            .agendamento-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header IGUAL AO INDEX -->
+    <header>
+        <div class="header-logo">
+            <a href="index.html">
+                <img src="/logotipo.webp" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#areas">Áreas</a></li>
+                <li><a href="index.html#about">Sobre</a></li>
+                <li><a href="equipe.html">Equipe</a></li>
+                <li><a href="programa-fundador.html">Programa Fundador</a></li>
+                <li><a href="agendar-consultoria.html" class="active">Agendar Consultoria</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="agendamento-hero">
+            <h1>Agende Sua Consultoria Gratuita</h1>
+            <p>Escolha o horário que melhor se adapta à sua agenda. Consultoria de 30 minutos com um especialista.</p>
+        </div>
+        
+        <!-- Benefícios -->
+        <div class="benefits-agendamento">
+            <div class="benefit-item">
+                <div class="benefit-icon">⏱️</div>
+                <h3>Até 30 Minutos</h3>
+                <p>Tempo suficiente para analisar seu caso e traçar um plano</p>
+            </div>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">💼</div>
+                <h3>Com Especialista</h3>
+                <p>Atendimento direto com advogado da sua área</p>
+            </div>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">🎯</div>
+                <h3>Diagnóstico Completo</h3>
+                <p>Identificamos as melhores estratégias para seu caso</p>
+            </div>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">💰</div>
+                <h3>Sem Custos</h3>
+                <p>Consulta inicial totalmente gratuita</p>
+            </div>
+        </div>
+        
+        <!-- Container do Calendly -->
+        <div class="calendly-container">
+            <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary-dark);">
+                Escolha Seu Horário Disponível
+            </h3>
+            
+            <!-- Widget do Calendly -->
+            <div class="calendly-inline-widget" 
+                 data-url="https://calendly.com/atendimentompsadvogados/30min" 
+                 style="min-width:320px;height:700px;">
+            </div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+            
+            <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: var(--gray-light); border-radius: 8px;">
+                <p style="margin: 0; color: var(--text-medium); font-size: 0.9rem;">
+                    📧 Você receberá confirmação por e-mail • 🔄 Pode remarcar facilmente • 📱 Adicione ao seu calendário
+                </p>
+            </div>
+        </div>
+        
+        <!-- Alternativa WhatsApp -->
+        <div class="whatsapp-alternative">
+            <h3>Prefere Agendar por WhatsApp?</h3>
+            <p>Também podemos marcar seu horário pelo WhatsApp</p>
+            <a href="https://wa.me/5565993331869?text=Olá! Gostaria de agendar uma consultoria gratuita." 
+               class="hero-cta" 
+               style="background: #25D366; color: white; border: none; margin-top: 1rem;">
+                <i class="fab fa-whatsapp"></i> Agendar por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer IGUAL AO INDEX -->
+    <footer>
+        <!-- [MANTER FOOTER IDÊNTICO AO INDEX] -->
+    </footer>
+
+    <script>
+        // [MANTER SCRIPTS DO HEADER/FOOTER DO INDEX]
+    </script>
+</body>
+</html>
