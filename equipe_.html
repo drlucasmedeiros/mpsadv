@@ -270,6 +270,70 @@
             margin: 0 auto;
         }
 
+        /* Barra de Pesquisa */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+        
+        .search-box {
+            display: flex;
+            background: var(--white);
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-medium);
+            transition: var(--transition);
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--accent);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: transparent;
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-medium);
+        }
+        
+        .search-btn {
+            background: var(--primary-dark);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        
+        .search-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .search-results {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            text-align: center;
+        }
+
         /* Filtros de Categoria */
         .team-filters {
             display: flex;
@@ -419,6 +483,19 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-medium);
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gray-medium);
+        }
 
         /* Separador */
         .divider {
@@ -543,18 +620,10 @@
             color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Responsividade */
+        /* RESPONSIVIDADE IGUAL AO INDEX */
         @media (max-width: 1200px) {
             html {
                 font-size: 16px;
-            }
-            
-            .hero-content h1 {
-                font-size: 4rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2.7rem;
             }
             
             .logo-text {
@@ -567,27 +636,12 @@
         }
         
         @media (max-width: 992px) {
-            .hero-content h1 {
-                font-size: 3.5rem;
-            }
-            
-            .hero-content p {
-                font-size: 1.3rem;
-            }
-            
-            .section-title h2 {
+            .page-header h1 {
                 font-size: 2.5rem;
             }
             
-            .about-content,
-            .contact-content {
-                grid-template-columns: 1fr;
-                gap: 4rem;
-            }
-            
-            .about-image {
-                height: 450px;
-                order: -1;
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
             
             .logo-text {
@@ -596,103 +650,140 @@
         }
         
         @media (max-width: 768px) {
+            /* Menu Hamburguer - IGUAL AO INDEX */
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
             header {
                 padding: 1rem 2rem;
+                flex-direction: row;
+                justify-content: space-between;
             }
             
             header.scrolled {
                 padding: 0.8rem 2rem;
             }
             
-            .hero-content h1 {
-                font-size: 3rem;
-            }
-            
-            .hero-content p {
-                font-size: 1.2rem;
-            }
-            
-            section {
-                padding: 6rem 2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2.2rem;
-            }
-            
-            .areas-grid,
-            .blog-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .area-card {
-                padding: 3rem 2rem;
-            }
-            
             .logo-text {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                margin-top: 140px;
+            }
+            
+            .team-filters {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
             }
             
             .footer-logo {
                 font-size: 1.6rem;
             }
-            
-            .whatsapp-float {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-                bottom: 1.5rem;
-                right: 1.5rem;
-            }
-        }
-    
-    @media (max-width: 480px) {
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .section-title h2 {
-        font-size: 2rem;
-    }
-    
-    .area-card {
-        padding: 2.5rem 1.5rem;
-    }
-    
-    .member-photo {
-        width: 200px;
-        height: 200px;
-    }
-    
-    .logo-text {
-        font-size: 0.9rem; /* Reduzido para caber em uma linha */
-        white-space: nowrap; /* Impede quebra de linha */
-        margin-left: 0.5rem; /* Espaço entre logo e texto */
-    }
-    
-    /* CORREÇÃO DO HEADER - MANTÉM EM LINHA */
-    .header-logo {
-        flex-direction: row; /* Mantém em linha, não coluna */
-        align-items: center; /* Centraliza verticalmente */
-    }
-    
-    .logo-img {
-        margin-right: 0.5rem; /* Mantém margem à direita */
-        margin-bottom: 0; /* Remove margem inferior */
-        height: 35px; /* Reduz um pouco se necessário */
-    }
-    
-    /* Ajuste adicional para telas muito pequenas */
-    @media (max-width: 360px) {
-        .logo-text {
-            font-size: 0.8rem; /* Reduz ainda mais se necessário */
         }
         
-        .logo-img {
-            height: 30px;
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-actions {
+                flex-direction: column;
+            }
+            
+            footer {
+                padding: 3rem 1.5rem 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
         }
-    }
-}
+        
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 0.8rem;
+            }
+            
+            .logo-img {
+                height: 30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -734,6 +825,19 @@
             <p>Conheça nossa equipe de profissionais especializados, comprometidos em oferecer soluções jurídicas de excelência para nossos clientes.</p>
         </div>
         
+        <!-- Barra de Pesquisa -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="search-input" placeholder="Pesquisar por nome, cargo ou especialização...">
+                <button class="search-btn" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="search-results" id="search-results">
+                Mostrando todos os membros da equipe
+            </div>
+        </div>
+        
         <!-- Filtros de Categoria -->
         <div class="team-filters">
             <button class="filter-btn active" data-filter="all">Todos</button>
@@ -744,7 +848,7 @@
         </div>
         
         <!-- Grid de Membros da Equipe -->
-        <div class="team-grid">
+        <div class="team-grid" id="team-grid">
             <!-- Sócios -->
             <div class="team-member" data-category="socios">
                 <div class="member-photo">
@@ -1114,7 +1218,59 @@
         // FILTROS DA PÁGINA DE EQUIPE
         const filterButtons = document.querySelectorAll('.filter-btn');
         const teamMembers = document.querySelectorAll('.team-member');
+        const teamGrid = document.getElementById('team-grid');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const searchResults = document.getElementById('search-results');
         
+        let activeFilter = 'all';
+        let searchTerm = '';
+        
+        // Função para filtrar membros
+        function filterMembers() {
+            let visibleCount = 0;
+            
+            teamMembers.forEach(member => {
+                const category = member.getAttribute('data-category');
+                const name = member.querySelector('.member-name').textContent.toLowerCase();
+                const title = member.querySelector('.member-title').textContent.toLowerCase();
+                const expertise = member.querySelector('.member-expertise').textContent.toLowerCase();
+                
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+                const matchesSearch = searchTerm === '' || 
+                    name.includes(searchTerm) || 
+                    title.includes(searchTerm) || 
+                    expertise.includes(searchTerm);
+                
+                if (matchesFilter && matchesSearch) {
+                    member.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    member.style.display = 'none';
+                }
+            });
+            
+            // Atualizar mensagem de resultados
+            updateResultsMessage(visibleCount);
+        }
+        
+        // Atualizar mensagem de resultados
+        function updateResultsMessage(count) {
+            if (count === 0) {
+                searchResults.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><p>Nenhum membro encontrado com os critérios de busca.</p></div>';
+            } else if (searchTerm === '') {
+                if (activeFilter === 'all') {
+                    searchResults.textContent = `Mostrando todos os ${count} membros da equipe`;
+                } else {
+                    const filterText = document.querySelector(`.filter-btn[data-filter="${activeFilter}"]`).textContent;
+                    searchResults.textContent = `Mostrando ${count} ${filterText.toLowerCase()}`;
+                }
+            } else {
+                searchResults.textContent = `Encontrados ${count} membros para "${searchTerm}"`;
+            }
+        }
+        
+        // Filtros por categoria
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
                 // Remover classe active de todos os botões
@@ -1123,21 +1279,33 @@
                 // Adicionar classe active ao botão clicado
                 this.classList.add('active');
                 
-                // Obter o filtro selecionado
-                const filter = this.getAttribute('data-filter');
+                // Atualizar filtro ativo
+                activeFilter = this.getAttribute('data-filter');
                 
-                // Filtrar membros da equipe
-                teamMembers.forEach(member => {
-                    const category = member.getAttribute('data-category');
-                    
-                    if (filter === 'all' || category === filter) {
-                        member.style.display = 'block';
-                    } else {
-                        member.style.display = 'none';
-                    }
-                });
+                // Aplicar filtros
+                filterMembers();
             });
         });
+        
+        // Pesquisa
+        function performSearch() {
+            searchTerm = searchInput.value.trim().toLowerCase();
+            filterMembers();
+        }
+        
+        searchBtn.addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Pesquisa em tempo real (opcional - descomente para ativar)
+        // searchInput.addEventListener('input', performSearch);
+        
+        // Inicializar
+        filterMembers();
     </script>
 </body>
 </html>
