@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Lukas Medeiros - Medeiros, Paiva & Soares - Advogados</title>
+    <title>Paula Kirche - Medeiros, Paiva & Soares - Advogados</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -1009,18 +1009,18 @@
     <div class="main-content">
         <!-- Breadcrumb -->
         <div class="breadcrumb">
-            <a href="index.html">Início</a> / <a href="equipe.html">Equipe</a> / Dr. Lukas Medeiros
+            <a href="index.html">Início</a> / <a href="equipe.html">Equipe</a> / Paula Kirche
         </div>
         
         <!-- Perfil do Advogado -->
         <div class="lawyer-profile">
             <div class="lawyer-photo-container">
-                <div class="lawyer-photo" style="background-image: url('img/equipe/lucas.jpg'); background-size: cover; background-position: center;">
-                    <div class="photo-overlay">Dr. Lukas Medeiros</div>
+                <div class="lawyer-photo" style="background-image: url('img/equipe/paula.jpeg'); background-size: cover; background-position: center;">
+                    <div class="photo-overlay">Paula Kirche</div>
                 </div>
             </div>
             <div class="lawyer-info">
-                <h1 class="lawyer-name">Dr. Lukas Medeiros</h1>
+                <h1 class="lawyer-name">Paula Kirche</h1>
                 <p class="lawyer-title">SÓCIO FUNDADOR</p>
                 
                 <div class="lawyer-contact">
@@ -1062,7 +1062,7 @@
         <div class="page-content">
             <div class="page-main">
                 <h2>EXPERIÊNCIA</h2>
-                <p>Dr. Lukas Medeiros é um especialista em direito empresarial com mais de 15 anos de experiência. Ele atua na assessoria jurídica de empresas de diversos portes e setores, com foco em contratos empresariais, societário e compliance.</p>
+                <p>Paula Kirche é um especialista em direito empresarial com mais de 15 anos de experiência. Ele atua na assessoria jurídica de empresas de diversos portes e setores, com foco em contratos empresariais, societário e compliance.</p>
                 
                 <p>Representa empresas nacionais e internacionais em operações de fusões e aquisições, reestruturações societárias e contratos comerciais complexos. Seus clientes valorizam sua abordagem pragmática e orientada para resultados, oferecendo soluções jurídicas alinhadas aos objetivos de negócio.</p>
                 
@@ -1167,7 +1167,7 @@
     <div class="modal" id="vcard-modal">
         <div class="modal-content">
             <button class="close-modal">&times;</button>
-            <h2>V-Card do Dr. Lukas Medeiros</h2>
+            <h2>V-Card do Paula Kirche</h2>
             <p>Escolha como deseja gerenciar o cartão de contato:</p>
             <div class="modal-actions">
                 <button class="action-btn" id="download-vcard">
@@ -1349,7 +1349,7 @@
             
             return `BEGIN:VCARD
 VERSION:3.0
-FN:Dr. Lukas Medeiros
+FN:Paula Kirche
 N:Medeiros;Lukas;;Dr.
 ORG:Medeiros, Paiva & Soares - Advogados
 TITLE:Sócio Fundador
@@ -1404,7 +1404,7 @@ END:VCARD`;
                     
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({
-                            title: 'Dr. Lukas Medeiros - Contato',
+                            title: 'Paula Kirche - Contato',
                             text: 'Adicione este contato à sua agenda',
                             files: [file]
                         });
@@ -1453,8 +1453,8 @@ END:VCARD`;
         shareBtn.addEventListener('click', function() {
             if (navigator.share) {
                 navigator.share({
-                    title: 'Dr. Lukas Medeiros - Medeiros, Paiva & Soares',
-                    text: 'Conheça o perfil do Dr. Lukas Medeiros, Sócio Fundador',
+                    title: 'Paula Kirche - Medeiros, Paiva & Soares',
+                    text: 'Conheça o perfil do Paula Kirche, Sócio Fundador',
                     url: window.location.href
                 }).catch(() => fallbackShare());
             } else {
@@ -1464,7 +1464,7 @@ END:VCARD`;
         
         // Fallback para compartilhamento
         function fallbackShare() {
-            const shareText = `Dr. Lukas Medeiros - Sócio Fundador\nMedeiros, Paiva & Soares - Advogados\n\n${window.location.href}`;
+            const shareText = `Paula Kirche - Sócio Fundador\nMedeiros, Paiva & Soares - Advogados\n\n${window.location.href}`;
             
             if (navigator.clipboard?.writeText) {
                 navigator.clipboard.writeText(shareText)
