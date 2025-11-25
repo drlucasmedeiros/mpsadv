@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossa Equipe - Medeiros, Paiva & Soares - Advogados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Importação das fontes */
+        @font-face {
+            font-family: 'Big River';
+            src: url('fonts/big_river_sample.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Medium 500.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Hatton';
+            src: url('fonts/PP Hatton Bold 700.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Reset e estilos base - IGUAL AO INDEX */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e8e8e8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px; /* Mesma base do index */
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--white);
+            overflow-x: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        
+        p, a, li, span, input, textarea, button {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header IGUAL AO INDEX */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+        
+        .header-logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-family: 'Big River', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        /* Navegação IGUAL AO INDEX */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        #nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        #nav-links li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        #nav-links li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        #nav-links li a:hover,
+        #nav-links li a.active {
+            color: var(--accent);
+        }
+        
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
+            width: 100%;
+        }
+        
+        /* Estilos do Menu Hamburger IGUAL AO INDEX */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        /* Animação do Hamburger quando ativo */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile IGUAL AO INDEX */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Conteúdo Principal - PÁGINA DE EQUIPE */
+        .main-content {
+            margin-top: 100px;
+            padding: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        /* Título da Página */
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-family: 'Hatton', serif;
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Filtros de Categoria */
+        .team-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .filter-btn {
+            background: var(--gray-light);
+            color: var(--text-medium);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+        }
+
+        /* Grid de Membros da Equipe */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+        
+        .team-member {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .member-photo {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .member-photo i {
+            font-size: 4rem;
+            color: var(--white);
+            opacity: 0.9;
+        }
+        
+        .member-info {
+            padding: 1.5rem;
+        }
+        
+        .member-name {
+            font-family: 'Hatton', serif;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-title {
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .member-expertise {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .member-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        
+        .member-action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .member-action-btn i {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .member-action-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        
+        .member-action-btn.secondary {
+            background: transparent;
+            color: var(--primary-dark);
+            border: 1px solid var(--gray-medium);
+        }
+        
+        .member-action-btn.secondary:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+            border-color: var(--primary-dark);
+        }
+        
+        .member-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Separador */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 4rem 0;
+            opacity: 0.5;
+        }
+
+        /* Footer IGUAL AO INDEX */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--text-light);
+            padding: 5rem 3rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Big River', serif;
+            font-size: 2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+        
+        .footer-about p {
+            font-weight: 400;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            font-family: 'Hatton', serif;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-contact p {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-contact i {
+            margin-right: 1.2rem;
+            color: var(--accent);
+            width: 25px;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-weight: 400;
+            font-size: 1rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* RESPONSIVIDADE IGUAL AO INDEX */
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+            
+            .logo-text {
+                font-size: 1.6rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Menu Hamburguer - IGUAL AO INDEX */
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
+            header {
+                padding: 1rem 2rem;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            header.scrolled {
+                padding: 0.8rem 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                margin-top: 140px;
+            }
+            
+            .team-filters {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-actions {
+                flex-direction: column;
+            }
+            
+            footer {
+                padding: 3rem 1.5rem 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .logo-img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 0.8rem;
+            }
+            
+            .logo-img {
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header IGUAL AO INDEX -->
+    <header>
+        <div class="header-logo">
+            <a href="index.html">
+                <img src="/logotipo.webp" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
+            <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
+        </div>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#areas">Áreas</a></li>
+                <li><a href="index.html#about">Sobre</a></li>
+                <li><a href="equipe.html" class="active">Equipe</a></li>
+                <li><a href="index.html#blog">Blog</a></li>
+                <li><a href="index.html#contact">Contato</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Início</a> / <a href="equipe.html">Equipe</a>
+        </div>
+        
+        <!-- Cabeçalho da Página -->
+        <div class="page-header">
+            <h1>Nossa Equipe</h1>
+            <p>Conheça nossa equipe de profissionais especializados, comprometidos em oferecer soluções jurídicas de excelência para nossos clientes.</p>
+        </div>
+        
+        <!-- Filtros de Categoria -->
+        <div class="team-filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="socios">Sócios</button>
+            <button class="filter-btn" data-filter="advogados">Advogados</button>
+            <button class="filter-btn" data-filter="parceiros">Parceiros</button>
+            <button class="filter-btn" data-filter="consultores">Consultores</button>
+        </div>
+        
+        <!-- Grid de Membros da Equipe -->
+        <div class="team-grid">
+            <!-- Sócios -->
+            <div class="team-member" data-category="socios">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Sócio</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dr. Lukas Medeiros</h3>
+                    <p class="member-title">Sócio Fundador</p>
+                    <p class="member-expertise">Direito Empresarial, Direito Societário, Fusões e Aquisições</p>
+                    <div class="member-actions">
+                        <a href="lucas-medeiros.html" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:lukas.medeiros@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="socios">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Sócio</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dra. Isabela Paiva</h3>
+                    <p class="member-title">Sócia</p>
+                    <p class="member-expertise">Direito Tributário, Planejamento Fiscal, Contencioso Tributário</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:isabela.paiva@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="socios">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Sócio</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dr. Rafael Soares</h3>
+                    <p class="member-title">Sócio</p>
+                    <p class="member-expertise">Direito Civil, Contratos, Direito do Consumidor</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:rafael.soares@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advogados -->
+            <div class="team-member" data-category="advogados">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Advogado</div>
+                <div class="member-info">
+                    <h3 class="member-name">Kfir Abutbul</h3>
+                    <p class="member-title">Advogado Sênior</p>
+                    <p class="member-expertise">Direito Internacional, Arbitragem, Contratos Internacionais</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:kfir.abutbul@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="advogados">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Advogado</div>
+                <div class="member-info">
+                    <h3 class="member-name">Frederiek Adams</h3>
+                    <p class="member-title">Advogado Sênior</p>
+                    <p class="member-expertise">Direito Ambiental, Compliance, Direito Regulatório</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:frederiek.adams@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="advogados">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Advogado</div>
+                <div class="member-info">
+                    <h3 class="member-name">John Adams</h3>
+                    <p class="member-title">Advogado</p>
+                    <p class="member-expertise">Direito Trabalhista, Relações de Trabalho, Contencioso Trabalhista</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:john.adams@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="advogados">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Advogado</div>
+                <div class="member-info">
+                    <h3 class="member-name">Ferhat Aftar</h3>
+                    <p class="member-title">Advogado</p>
+                    <p class="member-expertise">Direito Digital, Propriedade Intelectual, Proteção de Dados</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:ferhat.aftar@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="advogados">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Advogado</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dra. Mariana Costa</h3>
+                    <p class="member-title">Advogada</p>
+                    <p class="member-expertise">Direito de Família, Sucessões, Mediação Familiar</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:mariana.costa@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parceiros -->
+            <div class="team-member" data-category="parceiros">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Parceiro</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dr. Carlos Mendonça</h3>
+                    <p class="member-title">Parceiro Estratégico</p>
+                    <p class="member-expertise">Direito Bancário, Mercado de Capitais, Finanças Corporativas</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:carlos.mendonca@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="parceiros">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Parceiro</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dra. Patrícia Lima</h3>
+                    <p class="member-title">Parceira Internacional</p>
+                    <p class="member-expertise">Direito Comercial Internacional, Investimentos Estrangeiros</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:patricia.lima@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Consultores -->
+            <div class="team-member" data-category="consultores">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Consultor</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dr. Eduardo Silva</h3>
+                    <p class="member-title">Consultor Jurídico</p>
+                    <p class="member-expertise">Due Diligence, Compliance Corporativo, Governança</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:eduardo.silva@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member" data-category="consultores">
+                <div class="member-photo">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-category">Consultor</div>
+                <div class="member-info">
+                    <h3 class="member-name">Dra. Fernanda Oliveira</h3>
+                    <p class="member-title">Consultora Tributária</p>
+                    <p class="member-expertise">Consultoria Tributária, Planejamento Fiscal Internacional</p>
+                    <div class="member-actions">
+                        <a href="#" class="member-action-btn">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </a>
+                        <a href="mailto:fernanda.oliveira@mpsadv.com.br" class="member-action-btn secondary">
+                            <i class="fas fa-envelope"></i> Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <!-- Seção de Recrutamento -->
+        <div class="page-header">
+            <h2>Junte-se à Nossa Equipe</h2>
+            <p>Estamos sempre em busca de talentos excepcionais para integrar nossa equipe. Se você é um profissional dedicado e busca excelência no exercício da advocacia, entre em contato conosco.</p>
+            <a href="mailto:rh@mpsadv.com.br" class="member-action-btn" style="margin-top: 2rem;">
+                <i class="fas fa-envelope"></i> Enviar Currículo
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer IGUAL AO INDEX -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">MEDEIROS, PAIVA & SOARES</div>
+                <p>Excelência e inovação em serviços jurídicos em Cuiabá e em todo o Brasil.</p>
+                <div class="footer-social-links">
+                    <a href="https://www.instagram.com/mps.adv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/16SRsP9XhY" class="footer-social-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="footer-social-link" target="_blank">
+                        <i class="fas fa-cloud"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@mpsadv" class="footer-social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>LINKS</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#areas">Áreas</a></li>
+                    <li><a href="index.html#about">Sobre</a></li>
+                    <li><a href="equipe.html">Equipe</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>CONTATO</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Historiador Rubens de Mendonça, 1000 - Cuiabá, MT</p>
+                <p><i class="fas fa-phone"></i> (65) 3321-5000</p>
+                <p><i class="fas fa-envelope"></i> contato@mpsadv.com.br</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Medeiros, Paiva & Soares - Advogados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu Mobile - IGUAL AO INDEX
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        
+        // Criar overlay
+        const navOverlay = document.createElement('div');
+        navOverlay.className = 'nav-overlay';
+        document.body.appendChild(navOverlay);
+        
+        // Abrir/fechar menu
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Fechar menu ao clicar no overlay
+        navOverlay.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            this.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('#nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Header scroll effect - IGUAL AO INDEX
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Inicializar header
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+
+        // FILTROS DA PÁGINA DE EQUIPE
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const teamMembers = document.querySelectorAll('.team-member');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remover classe active de todos os botões
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Adicionar classe active ao botão clicado
+                this.classList.add('active');
+                
+                // Obter o filtro selecionado
+                const filter = this.getAttribute('data-filter');
+                
+                // Filtrar membros da equipe
+                teamMembers.forEach(member => {
+                    const category = member.getAttribute('data-category');
+                    
+                    if (filter === 'all' || category === filter) {
+                        member.style.display = 'block';
+                    } else {
+                        member.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
