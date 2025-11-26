@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema MPS Advogados - Gestão Completa</title>
+    
+    <!-- Fontes e ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root{
+            --primary-dark:#001A1A; --primary-medium:#002B2B; --primary-light:#004D4D;
+            --accent:#C9A769; --accent-light:#D4B989; --text-light:#f8f8f8; --text-dark:#1A1A1A;
+            --text-medium:#5A5A5A; --white:#ffffff; --gray-light:#f5f5f5; --transition: all .4s cubic-bezier(.23,1,.32,1);
+            --success:#28a745; --warning:#ffc107; --danger:#dc3545; --info:#17a2b8;
+        }
+        body{ font-family:'Neue Haas Grotesk Display Pro',sans-serif; background:var(--white); color:var(--text-dark); }
+        .header{ background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-medium) 50%,var(--primary-light) 100%); padding:1.5rem 3rem; color:var(--text-light); }
+        .header-content{ max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+        .logo{ font-family:'Big River',serif; font-size:1.8rem; letter-spacing:1.5px; text-transform:uppercase; }
+        .user-info{ display:flex; gap:1rem; align-items:center }
+        .logout-btn{ background:transparent; border:1px solid var(--accent); color:var(--accent); padding:.5rem 1.2rem; border-radius:4px; cursor:pointer }
+
+        .main-container{ max-width:1200px; margin:0 auto; padding:2rem 3rem; min-height:calc(100vh - 120px); }
+        .login-container{ display:flex; justify-content:center; align-items:center; min-height:80vh }
+        .login-card{ padding:3rem; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,.06); max-width:450px }
+        .form-control{ width:100%; padding:1rem; border-radius:4px; border:1px solid rgba(0,0,0,.08) }
+        .btn{ background:var(--accent); color:var(--primary-dark); padding:1rem 1.6rem; border:none; border-radius:4px; cursor:pointer }
+
+        /* Tabelas e abas */
+        .tabs{ display:flex; gap:0.5rem; margin-bottom:1rem }
+        .tab{ padding:1rem 1.2rem; cursor:pointer }
+        .tab.active{ border-bottom:2px solid var(--accent); }
+        .tab-content{ display:none }
+        .tab-content.active{ display:block }
+
+        table{ width:100%; border-collapse:collapse }
+        th, td{ padding:1rem; text-align:left }
+        thead{ background:var(--primary-dark); color:var(--text-light) }
+
+        /* Modal base */
+        .modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; align-items:center; justify-content:center }
+        .modal.active{ display:flex }
+        .modal-content{ background:var(--white); width:90%; max-width:900px; border-radius:8px; padding:1.6rem; max-height:90vh; overflow:auto }
+        .modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem }
+        .modal-close{ background:none; border:none; font-size:1.6rem; cursor:pointer }
+
+        /* Timeline */
+        .timeline{ border-left:3px solid var(--accent); padding-left:18px; margin-top:8px }
+        .timeline-item{ margin-bottom:18px; position:relative }
+        .timeline-item::before{ content:""; width:12px; height:12px; background:var(--accent); border-radius:50%; position:absolute; left:-30px; top:6px }
+        .timeline-date{ display:block; font-size:0.9rem; color:var(--text-medium); margin-bottom:4px }
+
+        /* Tabs dentro do modal */
+        .modal-tabs { display: flex; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem; }
+        .modal-tab { padding: 0.75rem 1.5rem; cursor: pointer; border-bottom: 2px solid transparent; }
+        .modal-tab.active { border-bottom: 2px solid var(--accent); color: var(--primary-dark); font-weight: 500; }
+        .modal-tab-content { display: none; }
+        .modal-tab-content.active { display: block; }
+
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-pendente { background-color: #FFF3CD; color: #856404; }
+        .status-andamento { background-color: #D1ECF1; color: #0C5460; }
+        .status-concluido { background-color: #D4EDDA; color: #155724; }
+        .status-arquivado { background-color: #E2E3E5; color: #383D41; }
+
+        /* Financial badges */
+        .financial-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .financial-receita { background-color: #D4EDDA; color: #155724; }
+        .financial-despesa { background-color: #F8D7DA; color: #721C24; }
+        .financial-pendente { background-color: #FFF3CD; color: #856404; }
+        .financial-pago { background-color: #D1ECF1; color: #0C5460; }
+
+        /* Alertas */
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background-color: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+        
+        .alert-error {
+            background-color: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+
+        /* Botões de ação */
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 0.8rem;
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover {
+            color: var(--accent);
+        }
+        
+        .btn-danger {
+            color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            color: #c82333;
+        }
+
+        /* Estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Notificações */
+        .notifications {
+            position: relative;
+        }
+        
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .notification-dropdown.show {
+            display: block;
+        }
+        
+        .notification-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        
+        .notification-item.unread {
+            background: #f8f9fa;
+        }
+        
+        .notification-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+            margin-top: 0.25rem;
+        }
+
+        /* Gráficos */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .chart-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card h4 {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 4px;
+            color: var(--text-medium);
+        }
+
+        /* Busca Avançada */
+        .advanced-search {
+            background: var(--gray-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .advanced-search-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Loading */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Backup Section */
+        .backup-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--gray-light);
+            border-radius: 8px;
+        }
+
+        /* Small screens */
+        @media (max-width:768px){ 
+            .header-content {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .main-container{ padding:1rem; } 
+            .modal-content { width: 95%; padding: 1rem; }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-actions input {
+                width: 100% !important;
+            }
+            
+            .notification-dropdown { 
+                width: 300px; 
+                right: -50px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header" id="header" style="display:none;">
+        <div class="header-content">
+            <div class="logo">MEDEIROS, PAIVA & SOARES</div>
+            <div class="user-info">
+                <div class="notifications">
+                    <button class="notification-btn" id="notificationBtn" title="Notificações">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display:none">0</span>
+                    </button>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notificações</h3>
+                            <button class="mark-all-read" onclick="markAllNotificationsAsRead()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:0.9rem;">Marcar todas como lidas</button>
+                        </div>
+                        <div class="notification-list" id="notificationList"></div>
+                    </div>
+                </div>
+                <span id="userNameDisplay">Usuário</span>
+                <span id="userRole" style="opacity:.85; font-size:.95rem"></span>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Login -->
+        <div id="loginPage" class="login-container">
+            <div class="login-card">
+                <h2>Acesso ao Sistema</h2>
+                <p>Entre com suas credenciais para acessar o sistema</p>
+                <form id="loginForm">
+                    <div class="form-group"><label>E-mail</label><input id="email" class="form-control" type="email" required></div>
+                    <div class="form-group"><label>Senha</label><input id="password" class="form-control" type="password" required></div>
+                    <div class="form-group"><label>Tipo de Usuário</label>
+                        <select id="userType" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="admin">Advogado/Administrador</option>
+                            <option value="client">Cliente</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-full" type="submit">Entrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="dashboard-container" style="display:none">
+            <div class="dashboard-header"><h1>Dashboard do Administrador</h1><p>Gerencie clientes, processos e usuários</p></div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="clients">Clientes</div>
+                <div class="tab" data-tab="processes">Processos</div>
+                <div class="tab" data-tab="internal-deadlines">Prazos Internos</div>
+                <div class="tab" data-tab="users">Usuários</div>
+                <div class="tab" data-tab="reports">Relatórios</div>
+            </div>
+
+            <div id="clients-tab" class="tab-content active">
+                <div class="form-actions" style="display:flex; justify-content:space-between; margin-bottom:1rem">
+                    <div>
+                        <input id="clientSearch" class="form-control" placeholder="Buscar cliente..." style="width:320px">
+                        <button class="advanced-search-toggle" onclick="toggleAdvancedSearch('clients')">
+                            <i class="fas fa-filter"></i> Busca Avançada
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn" id="addClientBtn">Adicionar Cliente</button>
+                    </div>
+                </div>
+
+                <div class="advanced-search" id="clientsAdvancedSearch" style="display:none">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Status</label>
+                            <select id="searchClientStatus" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Data Cadastro (De)</label>
+                            <input id="searchClientDateFrom" class="form-control" type="date">
+                        </div>
+                        <div>
+                            <label>Data Cadastro (Até)</label>
+                            <input id="searchClientDateTo" class="form-control" type="date">
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: right;">
+                        <button class="btn" onclick="applyAdvancedSearch('clients')">Aplicar Filtros</button>
+                        <button class="btn" onclick="clearAdvancedSearch('clients')" style="background: transparent; border: 1px solid var(--primary-dark); color: var(--primary-dark);">Limpar</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="clientsTable"><thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>CPF/CNPJ</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="clientsTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="processes-tab" class="tab-content">
+                <div class="form-actions" style="display:flex; justify-content:space-between; margin-bottom:1rem">
+                    <div>
+                        <input id="processSearch" class="form-control" placeholder="Buscar processo..." style="width:320px">
+                        <button class="advanced-search-toggle" onclick="toggleAdvancedSearch('processes')">
+                            <i class="fas fa-filter"></i> Busca Avançada
+                        </button>
+                    </div>
+                    <button class="btn" id="addProcessBtn">Adicionar Processo</button>
+                </div>
+
+                <div class="advanced-search" id="processesAdvancedSearch" style="display:none">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Status</label>
+                            <select id="searchProcessStatus" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="pendente">Pendente</option>
+                                <option value="andamento">Em Andamento</option>
+                                <option value="concluido">Concluído</option>
+                                <option value="arquivado">Arquivado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Data Início (De)</label>
+                            <input id="searchProcessDateFrom" class="form-control" type="date">
+                        </div>
+                        <div>
+                            <label>Data Início (Até)</label>
+                            <input id="searchProcessDateTo" class="form-control" type="date">
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: right;">
+                        <button class="btn" onclick="applyAdvancedSearch('processes')">Aplicar Filtros</button>
+                        <button class="btn" onclick="clearAdvancedSearch('processes')" style="background: transparent; border: 1px solid var(--primary-dark); color: var(--primary-dark);">Limpar</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="processesTable"><thead><tr><th>Número</th><th>Cliente</th><th>Tipo</th><th>Status</th><th>Data Início</th><th>Advogado</th><th>Ações</th></tr></thead>
+                    <tbody id="processesTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- Nova aba de Prazos Internos -->
+            <div id="internal-deadlines-tab" class="tab-content">
+                <div class="form-actions" style="margin-bottom:1rem">
+                    <button class="btn" id="addInternalDeadlineBtn">Adicionar Prazo Interno</button>
+                </div>
+                <div class="table-container">
+                    <table id="internalDeadlinesTable">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Advogado</th>
+                                <th>Processo</th>
+                                <th>Prazo</th>
+                                <th>Dias Restantes</th>
+                                <th>Timeline Cliente</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="internalDeadlinesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="users-tab" class="tab-content">
+                <div class="form-actions" style="display:flex; justify-content:flex-end; margin-bottom:1rem">
+                    <button class="btn" id="addUserBtn">Adicionar Usuário</button>
+                </div>
+                <div class="table-container">
+                    <table id="usersTable"><thead><tr><th>Nome</th><th>E-mail</th><th>Tipo</th><th>Vinculado</th><th>Status</th><th>Último Acesso</th><th>Ações</th></tr></thead>
+                    <tbody id="usersTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="reports-tab" class="tab-content">
+                <div class="form-container">
+                    <div class="form-title">Relatórios e Analytics</div>
+                    
+                    <!-- Filtros -->
+                    <div class="filters" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1.5rem; padding:1.5rem; background:var(--gray-light); border-radius:8px;">
+                        <div>
+                            <label>Período</label>
+                            <select id="reportPeriod" class="form-control">
+                                <option value="all">Todo o período</option>
+                                <option value="30">Últimos 30 dias</option>
+                                <option value="90">Últimos 3 meses</option>
+                                <option value="365">Último ano</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Advogado</label>
+                            <select id="reportLawyer" class="form-control">
+                                <option value="all">Todos</option>
+                                <option value="Dr. Lukas Medeiros">Dr. Lukas Medeiros</option>
+                                <option value="Dra. Losainny Silva">Dra. Losainny Silva</option>
+                                <option value="Taiza Barros">Taiza Barros</option>
+                                <option value="Marvilei Soares">Marvilei Soares</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn" id="generateReport">Gerar Relatório</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráficos -->
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <h4>Processos por Status</h4>
+                            <div class="chart-placeholder" id="statusChart">
+                                Gráfico será gerado aqui
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h4>Processos por Advogado</h4>
+                            <div class="chart-placeholder" id="lawyerChart">
+                                Gráfico será gerado aqui
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estatísticas -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalProcesses">0</div>
+                            <div class="stat-label">Total de Processos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="activeClients">0</div>
+                            <div class="stat-label">Clientes Ativos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="processesInProgress">0</div>
+                            <div class="stat-label">Processos em Andamento</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalRevenue">R$ 0</div>
+                            <div class="stat-label">Receita Total</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabela de Processos -->
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo</th>
+                                    <th>Status</th>
+                                    <th>Honorários</th>
+                                    <th>Custos</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportProcessesBody">
+                                <!-- Dados carregados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="export-options" style="display:flex; gap:1rem; margin-top:1.5rem; justify-content:flex-end;">
+                        <button class="btn" onclick="exportToPDF()">Exportar PDF</button>
+                        <button class="btn" onclick="exportToExcel()">Exportar Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Dashboard -->
+        <div id="clientDashboard" class="dashboard-container" style="display:none">
+            <div class="dashboard-header"><h1>Área do Cliente</h1><p>Acompanhe seus processos</p></div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="my-processes">Meus Processos</div>
+                <div class="tab" data-tab="my-documents">Meus Documentos</div>
+                <div class="tab" data-tab="my-profile">Meu Perfil</div>
+            </div>
+
+            <div id="my-processes-tab" class="tab-content active">
+                <div class="table-container">
+                    <table id="clientProcessesTable"><thead><tr><th>Número</th><th>Tipo</th><th>Status</th><th>Data Início</th><th>Advogado</th><th>Ações</th></tr></thead>
+                    <tbody id="clientProcessesTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="my-documents-tab" class="tab-content">
+                <div class="table-container">
+                    <table id="clientDocumentsTable"><thead><tr><th>Documento</th><th>Processo</th><th>Data</th><th>Tipo</th><th>Ações</th></tr></thead>
+                    <tbody id="clientDocumentsTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="my-profile-tab" class="tab-content">
+                <form id="clientProfileForm">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                        <div><label>Nome</label><input id="clientProfileName" class="form-control" required></div>
+                        <div><label>E-mail</label><input id="clientProfileEmail" class="form-control" required></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem">
+                        <div><label>Telefone</label><input id="clientProfilePhone" class="form-control"></div>
+                        <div><label>CPF/CNPJ</label><input id="clientProfileCPF" class="form-control"></div>
+                    </div>
+                    <div style="margin-top:1rem"><label>Endereço</label><input id="clientProfileAddress" class="form-control"></div>
+                    <div style="margin-top:1rem; text-align:right"><button class="btn" type="submit">Atualizar Perfil</button></div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modais: Client / Process / User -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="clientModalTitle">Adicionar Cliente</h2><button class="modal-close" onclick="closeClientModal()">&times;</button></div>
+            <form id="clientForm">
+                <input type="hidden" id="clientId">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                    <div><label>Nome</label><input id="clientName" class="form-control" required></div>
+                    <div><label>E-mail</label><input id="clientEmail" class="form-control" required></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem">
+                    <div><label>Telefone</label><input id="clientPhone" class="form-control" required></div>
+                    <div><label>CPF/CNPJ</label><input id="clientCPF" class="form-control" required></div>
+                </div>
+                <div style="margin-top:1rem"><label>Endereço</label><input id="clientAddress" class="form-control"></div>
+                <div style="margin-top:1rem"><label>Status</label>
+                    <select id="clientStatus" class="form-control"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
+                </div>
+                <div style="margin-top:1rem; display:flex; justify-content:flex-end; gap:1rem">
+                    <button type="button" class="btn" onclick="closeClientModal()" style="background:transparent; border:1px solid var(--primary-dark); color:var(--primary-dark)">Cancelar</button>
+                    <button class="btn" type="submit">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="processModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="processModalTitle">Adicionar Processo</h2><button class="modal-close" onclick="closeProcessModal()">&times;</button></div>
+            <form id="processForm">
+                <input type="hidden" id="processId">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                    <div><label>Número do Processo</label><input id="processNumber" class="form-control" required><div style="font-size:.85rem; color:var(--text-medium)">Formato: NNNNNN-DD.AAAA.J.TR.OOOO</div></div>
+                    <div><label>Cliente</label><select id="processClient" class="form-control" required><option value="">Selecione um cliente</option></select></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem">
+                    <div><label>Tipo</label><select id="processType" class="form-control" required><option value="">Selecione</option><option value="civil">Civil</option><option value="trabalhista">Trabalhista</option><option value="penal">Penal</option><option value="previdenciario">Previdenciário</option><option value="empresarial">Empresarial</option><option value="familia">Família</option></select></div>
+                    <div><label>Status</label><select id="processStatus" class="form-control" required><option value="pendente">Pendente</option><option value="andamento">Em Andamento</option><option value="concluido">Concluído</option><option value="arquivado">Arquivado</option></select></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem">
+                    <div><label>Advogado</label><select id="processLawyer" class="form-control" required><option value="">Selecione o advogado</option><option value="lucas">Dr. Lukas Medeiros</option><option value="losainny">Dra. Losainny Silva</option><option value="taiza">Taiza Barros</option><option value="marvilei">Marvilei Soares</option></select></div>
+                    <div><label>Data de Início</label><input id="processStartDate" class="form-control" type="date" required></div>
+                </div>
+                <div style="margin-top:1rem">
+                    <label>Prazo Final (Opcional)</label>
+                    <input id="processDeadline" class="form-control" type="date">
+                </div>
+                <div style="margin-top:1rem"><label>Descrição</label><textarea id="processDescription" class="form-control" rows="4" required></textarea></div>
+                <div style="margin-top:1rem; display:flex; justify-content:flex-end; gap:1rem">
+                    <button type="button" class="btn" onclick="closeProcessModal()" style="background:transparent; border:1px solid var(--primary-dark); color:var(--primary-dark)">Cancelar</button>
+                    <button class="btn" type="submit">Salvar Processo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="userModalTitle">Adicionar Usuário</h2><button class="modal-close" onclick="closeUserModal()">&times;</button></div>
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                    <div><label>Nome</label><input id="userNameInput" class="form-control" required></div>
+                    <div><label>E-mail</label><input id="userEmail" class="form-control" required></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem">
+                    <div><label>Senha</label><input id="userPassword" class="form-control" required></div>
+                    <div><label>Tipo de Usuário</label><select id="userTypeModal" class="form-control" required><option value="">Selecione</option><option value="admin">Administrador</option><option value="client">Cliente</option></select></div>
+                </div>
+                <div style="margin-top:1rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                    <div><label>Vincular a Cliente (opcional)</label><select id="userClientSelect" class="form-control"><option value="">Nenhum</option></select></div>
+                    <div><label>Status</label><select id="userStatus" class="form-control"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div>
+                </div>
+                <div style="margin-top:1rem; display:flex; justify-content:flex-end; gap:1rem">
+                    <button type="button" class="btn" onclick="closeUserModal()" style="background:transparent; border:1px solid var(--primary-dark); color:var(--primary-dark)">Cancelar</button>
+                    <button class="btn" type="submit">Salvar Usuário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de detalhes do processo (timeline + finanças) -->
+    <div class="modal" id="processDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalhes do Processo</h2>
+                <button class="modal-close" onclick="closeProcessDetails()">&times;</button>
+            </div>
+            
+            <!-- Tabs dentro do modal -->
+            <div class="modal-tabs">
+                <div class="modal-tab active" data-tab="timeline">Timeline</div>
+                <div class="modal-tab" data-tab="financial">Financeiro</div>
+            </div>
+            
+            <!-- Conteúdo da Timeline -->
+            <div id="timeline-tab" class="modal-tab-content active">
+                <div id="processDetailsContent"></div>
+                <div id="addUpdateContainer" style="margin-top:1.5rem; border-top:1px solid #ccc; padding-top:1rem;"></div>
+            </div>
+            
+            <!-- Conteúdo do Financeiro -->
+            <div id="financial-tab" class="modal-tab-content">
+                <div id="financialDetailsContent"></div>
+                <div id="addFinancialContainer" style="margin-top:1.5rem; border-top:1px solid #ccc; padding-top:1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Prazos Internos -->
+    <div class="modal" id="internalDeadlineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="internalDeadlineModalTitle">Adicionar Prazo Interno</h2>
+                <button class="modal-close" onclick="closeInternalDeadlineModal()">&times;</button>
+            </div>
+            <form id="internalDeadlineForm">
+                <input type="hidden" id="internalDeadlineId">
+                <div style="margin-bottom:1rem">
+                    <label>Descrição</label>
+                    <textarea id="internalDeadlineDescription" class="form-control" rows="3" required></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem">
+                    <div>
+                        <label>Advogado</label>
+                        <select id="internalDeadlineLawyer" class="form-control" required>
+                            <option value="">Selecione o advogado</option>
+                            <option value="Dr. Lukas Medeiros">Dr. Lukas Medeiros</option>
+                            <option value="Dra. Losainny Silva">Dra. Losainny Silva</option>
+                            <option value="Taiza Barros">Taiza Barros</option>
+                            <option value="Marvilei Soares">Marvilei Soares</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Data do Prazo</label>
+                        <input id="internalDeadlineDate" class="form-control" type="date" required>
+                    </div>
+                </div>
+                <div style="margin-bottom:1rem">
+                    <label>Processo (opcional)</label>
+                    <select id="internalDeadlineProcess" class="form-control">
+                        <option value="">Nenhum</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:1rem">
+                    <label>
+                        <input type="checkbox" id="internalDeadlineShowInTimeline"> Mostrar na timeline do cliente
+                    </label>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:1rem">
+                    <button type="button" class="btn" onclick="closeInternalDeadlineModal()" style="background:transparent; border:1px solid var(--primary-dark); color:var(--primary-dark)">Cancelar</button>
+                    <button class="btn" type="submit">Salvar Prazo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do backend
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby6pv5m17uJsHOYDrF45oBgUwEZ4lDf8JqJg_2BCalm3LImEValgyI7j3N-7W-OTAJN/exec';
+
+        // Função para chamar o backend
+        async function callBackend(action, data = {}) {
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Erro ao conectar com o backend:', error);
+                showAlert('Erro de conexão com o servidor', 'error');
+                return null;
+            }
+        }
+
+        // --- Funções do Banco de Dados ---
+        async function getUsers() {
+            const result = await callBackend('getUsers');
+            return result?.data || [];
+        }
+
+        async function saveUser(user) {
+            const result = await callBackend('saveUser', user);
+            return result?.data || null;
+        }
+
+        async function deleteUser(id) {
+            const result = await callBackend('deleteUser', { id });
+            return result?.success || false;
+        }
+
+        async function getClients() {
+            const result = await callBackend('getClients');
+            return result?.data || [];
+        }
+
+        async function saveClient(client) {
+            const result = await callBackend('saveClient', client);
+            return result?.data || null;
+        }
+
+        async function deleteClient(id) {
+            const result = await callBackend('deleteClient', { id });
+            return result?.success || false;
+        }
+
+        async function getProcesses() {
+            const result = await callBackend('getProcesses');
+            return result?.data || [];
+        }
+
+        async function saveProcess(process) {
+            const result = await callBackend('saveProcess', process);
+            return result?.data || null;
+        }
+
+        async function deleteProcess(id) {
+            const result = await callBackend('deleteProcess', { id });
+            return result?.success || false;
+        }
+
+        async function getFinancials() {
+            const result = await callBackend('getFinancials');
+            return result?.data || [];
+        }
+
+        async function saveFinancial(financial) {
+            const result = await callBackend('saveFinancial', financial);
+            return result?.data || null;
+        }
+
+        async function deleteFinancial(id) {
+            const result = await callBackend('deleteFinancial', { id });
+            return result?.success || false;
+        }
+
+        async function getNotifications() {
+            const result = await callBackend('getNotifications');
+            return result?.data || [];
+        }
+
+        async function saveNotification(notification) {
+            const result = await callBackend('saveNotification', notification);
+            return result?.data || null;
+        }
+
+        async function getInternalDeadlines() {
+            const result = await callBackend('getInternalDeadlines');
+            return result?.data || [];
+        }
+
+        async function saveInternalDeadline(deadline) {
+            const result = await callBackend('saveInternalDeadline', deadline);
+            return result?.data || null;
+        }
+
+        async function deleteInternalDeadline(id) {
+            const result = await callBackend('deleteInternalDeadline', { id });
+            return result?.success || false;
+        }
+
+        async function getDocuments() {
+            const result = await callBackend('getDocuments');
+            return result?.data || [];
+        }
+
+        // DOM refs
+        const loginPage = document.getElementById('loginPage'); 
+        const adminDashboard = document.getElementById('adminDashboard'); 
+        const clientDashboard = document.getElementById('clientDashboard'); 
+        const header = document.getElementById('header');
+        const loginForm = document.getElementById('loginForm'); 
+        const logoutBtn = document.getElementById('logoutBtn'); 
+        const userNameDisplay = document.getElementById('userNameDisplay'); 
+        const userRole = document.getElementById('userRole');
+        const tabs = document.querySelectorAll('.tab');
+
+        let currentUser = null;
+        let currentProcessId = null;
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const savedUser = localStorage.getItem('currentUser'); 
+            if(savedUser){ 
+                currentUser = JSON.parse(savedUser); 
+                showDashboard(); 
+            }
+
+            // events
+            loginForm.addEventListener('submit', handleLogin); 
+            logoutBtn.addEventListener('click', handleLogout);
+            document.getElementById('addClientBtn').addEventListener('click', ()=>openClientModal()); 
+            document.getElementById('addProcessBtn').addEventListener('click', ()=>openProcessModal()); 
+            document.getElementById('addUserBtn').addEventListener('click', ()=>openUserModal());
+            document.getElementById('addInternalDeadlineBtn').addEventListener('click', ()=>openInternalDeadlineModal());
+            document.getElementById('clientForm').addEventListener('submit', handleClientSubmit); 
+            document.getElementById('processForm').addEventListener('submit', handleProcessSubmit); 
+            document.getElementById('userForm').addEventListener('submit', handleUserSubmit); 
+            document.getElementById('internalDeadlineForm').addEventListener('submit', handleInternalDeadlineSubmit);
+            document.getElementById('clientProfileForm')?.addEventListener('submit', handleClientProfileSubmit);
+
+            document.getElementById('clientSearch').addEventListener('input', loadClientsTable); 
+            document.getElementById('processSearch').addEventListener('input', loadProcessesTable);
+
+            tabs.forEach(tab=>tab.addEventListener('click', ()=>{ 
+                switchTab(tab.getAttribute('data-tab')); 
+            }));
+
+            // Configurar tabs do modal
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchModalTab(tabId);
+                });
+            });
+
+            // Notificações
+            document.getElementById('notificationBtn').addEventListener('click', toggleNotifications);
+            
+            // close modals on outside click
+            window.addEventListener('click', function(event){ 
+                ['clientModal','processModal','userModal','processDetailsModal','internalDeadlineModal'].forEach(id=>{ 
+                    const m=document.getElementById(id); 
+                    if(event.target===m) {
+                        if (id === 'processDetailsModal') closeProcessDetails();
+                        else if (id === 'internalDeadlineModal') closeInternalDeadlineModal();
+                        else m.classList.remove('active'); 
+                    }
+                }); 
+                
+                // Fechar dropdown de notificações ao clicar fora
+                if (!event.target.closest('.notifications')) {
+                    document.getElementById('notificationDropdown').classList.remove('show');
+                }
+            });
+
+            // Configurar relatórios
+            document.getElementById('generateReport').addEventListener('click', generateReports);
+        });
+
+        // --- Verificação de permissão para financeiro ---
+        function checkFinancialAccess() {
+            return currentUser && currentUser.type === 'admin';
+        }
+
+        // --- Auth ---
+        async function handleLogin(e){ 
+            e.preventDefault(); 
+            const email=document.getElementById('email').value; 
+            const password=document.getElementById('password').value; 
+            const userType=document.getElementById('userType').value; 
+            
+            const users = await getUsers();
+            const user = users.find(u=>u.email===email && u.password===password && u.type===userType && u.status==='ativo'); 
+            
+            if(user){ 
+                currentUser=user; 
+                user.lastAccess=new Date().toISOString(); 
+                await saveUser(user); 
+                localStorage.setItem('currentUser', JSON.stringify(user)); 
+                showDashboard(); 
+            } else { 
+                alert('Credenciais inválidas ou usuário inativo!'); 
+            } 
+        }
+        
+        function handleLogout(){ 
+            currentUser=null; 
+            localStorage.removeItem('currentUser'); 
+            showLogin(); 
+        }
+
+        function showLogin(){ 
+            loginPage.style.display='flex'; 
+            adminDashboard.style.display='none'; 
+            clientDashboard.style.display='none'; 
+            header.style.display='none'; 
+            loginForm.reset(); 
+        }
+        
+        async function showDashboard(){ 
+            loginPage.style.display='none'; 
+            header.style.display='block'; 
+            userNameDisplay.textContent=currentUser.name; 
+            userRole.textContent = currentUser.type==='admin'?'Administrador':'Cliente'; 
+            if(currentUser.type==='admin'){ 
+                adminDashboard.style.display='block'; 
+                clientDashboard.style.display='none'; 
+                await loadAdminData(); 
+            } else { 
+                adminDashboard.style.display='none'; 
+                clientDashboard.style.display='block'; 
+                await loadClientData(); 
+            } 
+            await loadNotifications();
+        }
+
+        function switchTab(tabId){ 
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
+            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
+            const tab = document.querySelector(`.tab[data-tab="${tabId}"]`); 
+            if(tab) tab.classList.add('active'); 
+            const content=document.getElementById(`${tabId}-tab`) || document.getElementById(`${tabId}`); 
+            if(content) content.classList.add('active'); 
+            
+            // Se a aba de relatórios foi selecionada, atualizar os dados
+            if (tabId === 'reports') {
+                generateReports();
+            } else if (tabId === 'internal-deadlines') {
+                loadInternalDeadlinesTable();
+            }
+        }
+
+        function switchModalTab(tabId) {
+            // Remover classe active de todas as tabs do modal
+            document.querySelectorAll('.modal-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.modal-tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active à tab selecionada
+            document.querySelector(`.modal-tab[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+
+        // --- Notificações ---
+        async function loadNotifications() {
+            const notifications = await getNotifications();
+            const userNotifications = notifications.filter(n => n.userId === currentUser.id);
+            const unreadCount = userNotifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            const list = document.getElementById('notificationList');
+            
+            if (unreadCount > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = unreadCount;
+            } else {
+                badge.style.display = 'none';
+            }
+            
+            list.innerHTML = '';
+            
+            if (userNotifications.length === 0) {
+                list.innerHTML = '<div class="notification-item" style="text-align: center; color: var(--text-medium);">Nenhuma notificação</div>';
+                return;
+            }
+            
+            // Ordenar por data (mais recentes primeiro)
+            userNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            userNotifications.forEach(notification => {
+                const item = document.createElement('div');
+                item.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                item.innerHTML = `
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatDateTime(notification.createdAt)}</div>
+                `;
+                item.addEventListener('click', () => markNotificationAsRead(notification.id));
+                list.appendChild(item);
+            });
+        }
+        
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        async function markNotificationAsRead(id) {
+            const notifications = await getNotifications();
+            const notification = notifications.find(n => n.id === id);
+            if (notification) {
+                notification.read = true;
+                await saveNotification(notification);
+                loadNotifications();
+            }
+        }
+        
+        async function markAllNotificationsAsRead() {
+            const notifications = await getNotifications();
+            const userNotifications = notifications.filter(n => n.userId === currentUser.id);
+            
+            for (const notification of userNotifications) {
+                notification.read = true;
+                await saveNotification(notification);
+            }
+            
+            loadNotifications();
+        }
+        
+        async function createNotification(notificationData) {
+            const notification = {
+                ...notificationData,
+                read: false,
+                createdAt: new Date().toISOString()
+            };
+            await saveNotification(notification);
+            if (currentUser && notificationData.userId === currentUser.id) {
+                loadNotifications();
+            }
+        }
+
+        // --- Admin data load ---
+        async function loadAdminData(){ 
+            await loadClientsTable(); 
+            await loadProcessesTable(); 
+            await loadUsersTable(); 
+            await loadInternalDeadlinesTable();
+        }
+
+        async function loadClientsTable(){ 
+            const clients = await getClients(); 
+            const search = document.getElementById('clientSearch').value.toLowerCase(); 
+            const filtered = clients.filter(c=> c.name.toLowerCase().includes(search) || c.email.toLowerCase().includes(search) || (c.cpf||'').includes(search)); 
+            const tbody=document.getElementById('clientsTableBody'); 
+            tbody.innerHTML=''; 
+            filtered.forEach(client=>{ 
+                const tr=document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td>${client.name}</td>
+                    <td>${client.email}</td>
+                    <td>${client.phone||''}</td>
+                    <td>${client.cpf||''}</td>
+                    <td><span class="status-badge ${client.status==='ativo'?'status-andamento':'status-arquivado'}">${client.status==='ativo'?'Ativo':'Inativo'}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="editClient(${client.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn btn-danger" onclick="deleteClientConfirm(${client.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </td>
+                `; 
+                tbody.appendChild(tr); 
+            }); 
+            populateUserClientSelect(); 
+        }
+
+        async function loadProcessesTable(){ 
+            const processes = await getProcesses(); 
+            const clients = await getClients(); 
+            const search=document.getElementById('processSearch').value.toLowerCase(); 
+            const filtered = processes.filter(p=> (p.number||'').toLowerCase().includes(search) || (p.description||'').toLowerCase().includes(search)); 
+            const tbody=document.getElementById('processesTableBody'); 
+            tbody.innerHTML=''; 
+            filtered.forEach(process=>{ 
+                const client = clients.find(c=> c.id===process.clientId); 
+                const row=document.createElement('tr'); 
+                row.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${client?client.name:'N/A'}</td>
+                    <td>${process.type}</td>
+                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
+                    <td>${formatDate(process.startDate)}</td>
+                    <td>${process.lawyer}</td>
+                    <td>
+                        <button class="action-btn" onclick="editProcess(${process.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn" onclick="viewProcess(${process.id})" title="Ver Detalhes"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn btn-danger" onclick="deleteProcessConfirm(${process.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </td>
+                `; 
+                tbody.appendChild(row); 
+            }); 
+        }
+
+        async function loadUsersTable(){ 
+            const users = await getUsers(); 
+            const clients = await getClients(); 
+            const tbody=document.getElementById('usersTableBody'); 
+            tbody.innerHTML=''; 
+            users.forEach(user=>{ 
+                const clientName = user.clientId ? (clients.find(c=>c.id===user.clientId)?.name || 'N/A') : '-'; 
+                const tr=document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.type==='admin'?'Administrador':'Cliente'}</td>
+                    <td>${clientName}</td>
+                    <td><span class="status-badge ${user.status==='ativo'?'status-andamento':'status-arquivado'}">${user.status==='ativo'?'Ativo':'Inativo'}</span></td>
+                    <td>${user.lastAccess?formatDate(user.lastAccess):'-'}</td>
+                    <td>
+                        <button class="action-btn" onclick="editUser(${user.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                        ${user.id!==currentUser?.id?`<button class="action-btn btn-danger" onclick="deleteUserConfirm(${user.id})" title="Excluir"><i class="fas fa-trash"></i></button>`:''}
+                    </td>
+                `; 
+                tbody.appendChild(tr); 
+            }); 
+        }
+
+        // --- Internal Deadlines ---
+        async function loadInternalDeadlinesTable(){ 
+            const deadlines = await getInternalDeadlines(); 
+            const processes = await getProcesses();
+            const tbody=document.getElementById('internalDeadlinesTableBody'); 
+            tbody.innerHTML=''; 
+            deadlines.forEach(deadline=>{ 
+                const today = new Date();
+                const deadlineDate = new Date(deadline.date);
+                const timeDiff = deadlineDate.getTime() - today.getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const process = deadline.processId ? processes.find(p=>p.id===deadline.processId) : null;
+                
+                const tr=document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td>${deadline.description}</td>
+                    <td>${deadline.lawyer}</td>
+                    <td>${process ? process.number : '-'}</td>
+                    <td>${formatDate(deadline.date)}</td>
+                    <td>${daysRemaining > 0 ? daysRemaining + ' dias' : '<span style="color:red">Expirado</span>'}</td>
+                    <td>${deadline.showInTimeline ? 'Sim' : 'Não'}</td>
+                    <td>
+                        <button class="action-btn" onclick="editInternalDeadline(${deadline.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn btn-danger" onclick="deleteInternalDeadlineConfirm(${deadline.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </td>
+                `; 
+                tbody.appendChild(tr); 
+            }); 
+        }
+
+        // --- Client data load ---
+        async function loadClientData(){ 
+            await loadClientProcessesTable(); 
+            await loadClientDocumentsTable(); 
+            await loadClientProfile(); 
+        }
+        
+        async function loadClientProcessesTable(){ 
+            const processes = await getProcesses(); 
+            const tbody=document.getElementById('clientProcessesTableBody'); 
+            tbody.innerHTML=''; 
+            if(!currentUser?.clientId) return; 
+            const clientProcesses = processes.filter(p=> p.clientId === currentUser.clientId); 
+            clientProcesses.forEach(process=>{ 
+                const tr=document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${process.type}</td>
+                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
+                    <td>${formatDate(process.startDate)}</td>
+                    <td>${process.lawyer}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewProcess(${process.id})" title="Ver Detalhes"><i class="fas fa-eye"></i></button>
+                    </td>
+                `; 
+                tbody.appendChild(tr); 
+            }); 
+        }
+
+        async function loadClientDocumentsTable(){ 
+            const documents = await getDocuments(); 
+            const processes = await getProcesses(); 
+            const clientProcesses = processes.filter(p=> p.clientId === currentUser.clientId); 
+            const clientDocuments = documents.filter(d=> clientProcesses.some(p=>p.id===d.processId)); 
+            const tbody=document.getElementById('clientDocumentsTableBody'); 
+            tbody.innerHTML=''; 
+            clientDocuments.forEach(doc=>{ 
+                const proc = processes.find(p=>p.id===doc.processId); 
+                const tr=document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td>${doc.name}</td>
+                    <td>${proc?proc.number:'N/A'}</td>
+                    <td>${formatDate(doc.uploadDate)}</td>
+                    <td>${doc.type}</td>
+                    <td>
+                        <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
+                        <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+                    </td>
+                `; 
+                tbody.appendChild(tr); 
+            }); 
+        }
+
+        async function loadClientProfile(){ 
+            const clients = await getClients(); 
+            const client = clients.find(c=> c.id === currentUser.clientId); 
+            if(client){ 
+                document.getElementById('clientProfileName').value = client.name; 
+                document.getElementById('clientProfileEmail').value = client.email; 
+                document.getElementById('clientProfilePhone').value = client.phone; 
+                document.getElementById('clientProfileCPF').value = client.cpf; 
+                document.getElementById('clientProfileAddress').value = client.address; 
+            } 
+        }
+
+        // --- Modais open/close ---
+        function openClientModal(id=null){ 
+            const modal=document.getElementById('clientModal'); 
+            const title=document.getElementById('clientModalTitle'); 
+            const form=document.getElementById('clientForm'); 
+            if(id){ 
+                title.textContent='Editar Cliente'; 
+                // Carregar dados do cliente
+                getClients().then(clients => {
+                    const client = clients.find(c=>c.id===id); 
+                    if(client){ 
+                        document.getElementById('clientId').value = client.id; 
+                        document.getElementById('clientName').value = client.name; 
+                        document.getElementById('clientEmail').value = client.email; 
+                        document.getElementById('clientPhone').value = client.phone; 
+                        document.getElementById('clientCPF').value = client.cpf; 
+                        document.getElementById('clientAddress').value = client.address || ''; 
+                        document.getElementById('clientStatus').value = client.status; 
+                    } 
+                });
+            } else { 
+                title.textContent='Adicionar Cliente'; 
+                form.reset(); 
+                document.getElementById('clientId').value=''; 
+            } 
+            modal.classList.add('active'); 
+        }
+        
+        function closeClientModal(){ 
+            document.getElementById('clientModal').classList.remove('active'); 
+        }
+
+        async function openProcessModal(id=null){ 
+            const modal=document.getElementById('processModal'); 
+            const title=document.getElementById('processModalTitle'); 
+            const form=document.getElementById('processForm'); 
+            const clientSelect=document.getElementById('processClient'); 
+            clientSelect.innerHTML = '<option value="">Selecione um cliente</option>'; 
+            
+            const clients = await getClients();
+            clients.filter(c=>c.status==='ativo').forEach(c=>{ 
+                const opt=document.createElement('option'); 
+                opt.value=c.id; 
+                opt.textContent=c.name; 
+                clientSelect.appendChild(opt); 
+            }); 
+            
+            if(id){ 
+                title.textContent='Editar Processo'; 
+                const processes = await getProcesses();
+                const proc = processes.find(p=>p.id===id); 
+                if(proc){ 
+                    document.getElementById('processId').value=proc.id; 
+                    document.getElementById('processNumber').value=proc.number; 
+                    document.getElementById('processClient').value=proc.clientId; 
+                    document.getElementById('processType').value=proc.type; 
+                    document.getElementById('processStatus').value=proc.status; 
+                    document.getElementById('processLawyer').value=proc.lawyer; 
+                    document.getElementById('processStartDate').value=proc.startDate; 
+                    document.getElementById('processDeadline').value=proc.deadline || ''; 
+                    document.getElementById('processDescription').value=proc.description; 
+                } 
+            } else { 
+                title.textContent='Adicionar Processo'; 
+                form.reset(); 
+                document.getElementById('processId').value=''; 
+                document.getElementById('processStartDate').valueAsDate=new Date(); 
+            } 
+            modal.classList.add('active'); 
+        }
+        
+        function closeProcessModal(){ 
+            document.getElementById('processModal').classList.remove('active'); 
+        }
+
+        async function openUserModal(id=null){ 
+            const modal=document.getElementById('userModal'); 
+            const title=document.getElementById('userModalTitle'); 
+            const form=document.getElementById('userForm'); 
+            await populateUserClientSelect(); 
+            if(id){ 
+                title.textContent='Editar Usuário'; 
+                const users = await getUsers();
+                const user = users.find(u=>u.id===id); 
+                if(user){ 
+                    document.getElementById('userId').value=user.id; 
+                    document.getElementById('userNameInput').value=user.name; 
+                    document.getElementById('userEmail').value=user.email; 
+                    document.getElementById('userPassword').value=user.password; 
+                    document.getElementById('userTypeModal').value=user.type; 
+                    document.getElementById('userStatus').value=user.status; 
+                    document.getElementById('userClientSelect').value = user.clientId || ''; 
+                } 
+            } else { 
+                title.textContent='Adicionar Usuário'; 
+                form.reset(); 
+                document.getElementById('userId').value=''; 
+            } 
+            modal.classList.add('active'); 
+        }
+        
+        function closeUserModal(){ 
+            document.getElementById('userModal').classList.remove('active'); 
+        }
+
+        async function openInternalDeadlineModal(id=null){ 
+            const modal=document.getElementById('internalDeadlineModal'); 
+            const title=document.getElementById('internalDeadlineModalTitle'); 
+            const form=document.getElementById('internalDeadlineForm'); 
+            
+            // Preencher select de processos
+            const processSelect = document.getElementById('internalDeadlineProcess');
+            processSelect.innerHTML = '<option value="">Nenhum</option>';
+            const processes = await getProcesses();
+            processes.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.number;
+                processSelect.appendChild(opt);
+            });
+            
+            if(id){ 
+                title.textContent='Editar Prazo Interno'; 
+                const deadlines = await getInternalDeadlines();
+                const deadline = deadlines.find(d=>d.id===id); 
+                if(deadline){ 
+                    document.getElementById('internalDeadlineId').value = deadline.id; 
+                    document.getElementById('internalDeadlineDescription').value = deadline.description; 
+                    document.getElementById('internalDeadlineLawyer').value = deadline.lawyer; 
+                    document.getElementById('internalDeadlineDate').value = deadline.date; 
+                    document.getElementById('internalDeadlineProcess').value = deadline.processId || ''; 
+                    document.getElementById('internalDeadlineShowInTimeline').checked = deadline.showInTimeline || false; 
+                } 
+            } else { 
+                title.textContent='Adicionar Prazo Interno'; 
+                form.reset(); 
+                document.getElementById('internalDeadlineId').value=''; 
+                document.getElementById('internalDeadlineDate').valueAsDate=new Date(); 
+            } 
+            modal.classList.add('active'); 
+        }
+        
+        function closeInternalDeadlineModal(){ 
+            document.getElementById('internalDeadlineModal').classList.remove('active'); 
+        }
+
+        // --- Form handlers ---
+        async function handleClientSubmit(e){ 
+            e.preventDefault(); 
+            const client = { 
+                id: document.getElementById('clientId').value ? parseInt(document.getElementById('clientId').value) : null, 
+                name: document.getElementById('clientName').value, 
+                email: document.getElementById('clientEmail').value, 
+                phone: document.getElementById('clientPhone').value, 
+                cpf: document.getElementById('clientCPF').value, 
+                address: document.getElementById('clientAddress').value, 
+                status: document.getElementById('clientStatus').value 
+            }; 
+            const saved = await saveClient(client); 
+            await loadClientsTable(); 
+            closeClientModal(); 
+            showAlert('Cliente salvo com sucesso!','success'); 
+            
+            // if there's a user with same email, link it automatically
+            const users = await getUsers(); 
+            const userMatch = users.find(u=>u.email===saved.email && u.type==='client'); 
+            if(userMatch){ 
+                userMatch.clientId = saved.id; 
+                await saveUser(userMatch); 
+                await loadUsersTable(); 
+            }
+        }
+
+        async function handleProcessSubmit(e){ 
+            e.preventDefault(); 
+            const process = { 
+                id: document.getElementById('processId').value ? parseInt(document.getElementById('processId').value) : null, 
+                number: document.getElementById('processNumber').value, 
+                clientId: parseInt(document.getElementById('processClient').value), 
+                type: document.getElementById('processType').value, 
+                status: document.getElementById('processStatus').value, 
+                lawyer: document.getElementById('processLawyer').value, 
+                startDate: document.getElementById('processStartDate').value, 
+                deadline: document.getElementById('processDeadline').value || null,
+                description: document.getElementById('processDescription').value 
+            }; 
+            const saved = await saveProcess(process); 
+            await loadProcessesTable(); 
+            closeProcessModal(); 
+            showAlert('Processo salvo com sucesso!','success'); 
+        }
+
+        async function handleUserSubmit(e){ 
+            e.preventDefault(); 
+            const user = { 
+                id: document.getElementById('userId').value ? parseInt(document.getElementById('userId').value) : null, 
+                name: document.getElementById('userNameInput').value, 
+                email: document.getElementById('userEmail').value, 
+                password: document.getElementById('userPassword').value, 
+                type: document.getElementById('userTypeModal').value, 
+                status: document.getElementById('userStatus').value, 
+                lastAccess: new Date().toISOString() 
+            }; 
+            const clientSelect = document.getElementById('userClientSelect').value; 
+            if(user.type === 'client'){ 
+                if(clientSelect) user.clientId = parseInt(clientSelect); 
+                else { 
+                    // try to match by email
+                    const clients = await getClients();
+                    const c = clients.find(c=>c.email===user.email); 
+                    if(c) user.clientId = c.id; 
+                }
+            }
+            await saveUser(user); 
+            await loadUsersTable(); 
+            closeUserModal(); 
+            showAlert('Usuário salvo com sucesso!','success'); 
+        }
+
+        async function handleInternalDeadlineSubmit(e){ 
+            e.preventDefault(); 
+            const deadline = { 
+                id: document.getElementById('internalDeadlineId').value ? parseInt(document.getElementById('internalDeadlineId').value) : null, 
+                description: document.getElementById('internalDeadlineDescription').value, 
+                lawyer: document.getElementById('internalDeadlineLawyer').value, 
+                date: document.getElementById('internalDeadlineDate').value, 
+                processId: document.getElementById('internalDeadlineProcess').value ? parseInt(document.getElementById('internalDeadlineProcess').value) : null,
+                showInTimeline: document.getElementById('internalDeadlineShowInTimeline').checked
+            }; 
+            await saveInternalDeadline(deadline); 
+            
+            // Se marcado para mostrar na timeline e há um processo vinculado, adicionar na timeline
+            if (deadline.showInTimeline && deadline.processId) {
+                const processes = await getProcesses();
+                const process = processes.find(p => p.id === deadline.processId);
+                if (process) {
+                    const update = {
+                        date: new Date().toISOString().split('T')[0],
+                        description: `Prazo: ${deadline.description} - ${formatDate(deadline.date)}`
+                    };
+                    if (!process.updates) process.updates = [];
+                    process.updates.push(update);
+                    await saveProcess(process);
+                }
+            }
+            
+            await loadInternalDeadlinesTable(); 
+            closeInternalDeadlineModal(); 
+            showAlert('Prazo interno salvo com sucesso!','success'); 
+        }
+
+        async function handleClientProfileSubmit(e){ 
+            e.preventDefault(); 
+            const client = { 
+                id: currentUser.clientId, 
+                name: document.getElementById('clientProfileName').value, 
+                email: document.getElementById('clientProfileEmail').value, 
+                phone: document.getElementById('clientProfilePhone').value, 
+                cpf: document.getElementById('clientProfileCPF').value, 
+                address: document.getElementById('clientProfileAddress').value, 
+                status:'ativo' 
+            }; 
+            await saveClient(client); 
+            // atualizar usuário vinculado
+            const users = await getUsers(); 
+            const user = users.find(u=>u.id===currentUser.id); 
+            if(user){ 
+                user.name = client.name; 
+                user.email = client.email; 
+                await saveUser(user); 
+                currentUser = user; 
+                localStorage.setItem('currentUser', JSON.stringify(user)); 
+                userNameDisplay.textContent = user.name; 
+            }
+            showAlert('Perfil atualizado com sucesso!','success'); 
+        }
+
+        // --- Edit / Delete ---
+        function editClient(id){ openClientModal(id); }
+        function editProcess(id){ openProcessModal(id); }
+        function editUser(id){ openUserModal(id); }
+        function editInternalDeadline(id){ openInternalDeadlineModal(id); }
+
+        async function deleteClientConfirm(id){ 
+            if(confirm('Tem certeza que deseja excluir este cliente?')){ 
+                await deleteClient(id); 
+                // also unlink users
+                const users = await getUsers(); 
+                const usersToUpdate = users.filter(u=>u.clientId===id);
+                for (const user of usersToUpdate) {
+                    delete user.clientId;
+                    await saveUser(user);
+                }
+                await loadClientsTable(); 
+                await loadUsersTable(); 
+                showAlert('Cliente excluído com sucesso!','success'); 
+            } 
+        }
+        
+        async function deleteProcessConfirm(id){ 
+            if(confirm('Tem certeza?')){ 
+                await deleteProcess(id); 
+                await loadProcessesTable(); 
+                showAlert('Processo excluído com sucesso!','success'); 
+            } 
+        }
+        
+        async function deleteUserConfirm(id){ 
+            if(confirm('Tem certeza?')){ 
+                await deleteUser(id); 
+                await loadUsersTable(); 
+                showAlert('Usuário excluído com sucesso!','success'); 
+            } 
+        }
+        
+        async function deleteInternalDeadlineConfirm(id){ 
+            if(confirm('Tem certeza?')){ 
+                await deleteInternalDeadline(id); 
+                await loadInternalDeadlinesTable(); 
+                showAlert('Prazo interno excluído com sucesso!','success'); 
+            } 
+        }
+
+        // --- Utilities ---
+        function getStatusText(s){ 
+            const map = { 
+                'pendente':'Pendente', 
+                'andamento':'Em Andamento', 
+                'concluido':'Concluído', 
+                'arquivado':'Arquivado' 
+            }; 
+            return map[s] || s; 
+        }
+        
+        function getPaymentMethodText(p) {
+            const map = {
+                'a_vista': 'À vista',
+                'parcelado': 'Parcelado',
+                'contrato_mensal': 'Contrato mensal',
+                'outro': 'Outro'
+            };
+            return map[p] || p;
+        }
+        
+        function formatDate(d){ 
+            if(!d) return '-'; 
+            const date = new Date(d); 
+            return date.toLocaleDateString('pt-BR'); 
+        }
+        
+        function formatDateTime(d){ 
+            if(!d) return '-'; 
+            const date = new Date(d); 
+            return date.toLocaleString('pt-BR'); 
+        }
+        
+        function showAlert(message,type){ 
+            const main=document.querySelector('.main-container'); 
+            const a=document.createElement('div'); 
+            a.className = 'alert alert-'+type; 
+            a.style.padding='12px'; 
+            a.style.borderRadius='6px'; 
+            a.style.marginBottom='12px'; 
+            a.textContent = message; 
+            main.insertBefore(a, main.firstChild); 
+            setTimeout(()=>a.remove(),5000); 
+        }
+
+        // Populate client select for user modal
+        async function populateUserClientSelect(){ 
+            const sel = document.getElementById('userClientSelect'); 
+            if(!sel) return; 
+            const clients = await getClients(); 
+            sel.innerHTML = '<option value="">Nenhum</option>'; 
+            clients.filter(c=>c.status==='ativo').forEach(c=>{ 
+                const opt = document.createElement('option'); 
+                opt.value = c.id; 
+                opt.textContent = c.name; 
+                sel.appendChild(opt); 
+            }); 
+        }
+
+        // --- Busca Avançada ---
+        function toggleAdvancedSearch(type) {
+            const element = document.getElementById(`${type}AdvancedSearch`);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function applyAdvancedSearch(type) {
+            if (type === 'clients') {
+                loadClientsTable();
+            } else if (type === 'processes') {
+                loadProcessesTable();
+            }
+        }
+        
+        function clearAdvancedSearch(type) {
+            if (type === 'clients') {
+                document.getElementById('searchClientStatus').value = '';
+                document.getElementById('searchClientDateFrom').value = '';
+                document.getElementById('searchClientDateTo').value = '';
+            } else if (type === 'processes') {
+                document.getElementById('searchProcessStatus').value = '';
+                document.getElementById('searchProcessDateFrom').value = '';
+                document.getElementById('searchProcessDateTo').value = '';
+            }
+            applyAdvancedSearch(type);
+        }
+
+        // --- Timeline / Details ---
+        async function viewProcess(id){ 
+            currentProcessId = id;
+            const processes = await getProcesses();
+            const proc = processes.find(p=>p.id===id); 
+            if(!proc) return; 
+            const clients = await getClients();
+            const client = clients.find(c=>c.id===proc.clientId); 
+            
+            // Reset para a aba de timeline
+            switchModalTab('timeline');
+            
+            let html = `<h3 style="margin-bottom:.25rem">${proc.number}</h3><div style="font-size:.95rem; color:var(--text-medium); margin-bottom:.75rem">Cliente: ${client?client.name:'N/A'} • Advogado: ${proc.lawyer}</div><p style="margin-bottom:.75rem">${proc.description}</p><h4>Timeline</h4><div class="timeline">`; 
+            (proc.updates||[]).forEach(u=>{ 
+                html += `<div class="timeline-item"><span class="timeline-date">${formatDate(u.date)}</span><div class="timeline-desc">${u.description}</div></div>`; 
+            }); 
+            html += `</div>`; 
+            document.getElementById('processDetailsContent').innerHTML = html;
+            
+            // Adicionar formulário para adicionar atualizações (apenas para admin)
+            const addUpdateContainer = document.getElementById('addUpdateContainer');
+            if(currentUser.type === 'admin') {
+                addUpdateContainer.innerHTML = `
+                    <h4>Adicionar Atualização</h4>
+                    <form id="addUpdateForm">
+                        <input type="hidden" id="updateProcessId" value="${proc.id}">
+                        <div style="margin-bottom:1rem">
+                            <label>Descrição da Atualização</label>
+                            <textarea id="updateDescription" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div style="text-align:right">
+                            <button type="submit" class="btn">Adicionar</button>
+                        </div>
+                    </form>
+                `;
+                
+                document.getElementById('addUpdateForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const processId = parseInt(document.getElementById('updateProcessId').value);
+                    const description = document.getElementById('updateDescription').value;
+                    
+                    if(!description) return;
+                    
+                    const processes = await getProcesses();
+                    const process = processes.find(p=>p.id===processId);
+                    if(process) {
+                        // Adiciona a nova atualização
+                        const newUpdate = {
+                            date: new Date().toISOString().split('T')[0],
+                            description: description
+                        };
+                        if(!process.updates) process.updates = [];
+                        process.updates.push(newUpdate);
+                        await saveProcess(process);
+                        // Atualiza a visualização
+                        viewProcess(processId);
+                        showAlert('Atualização adicionada com sucesso!', 'success');
+                    }
+                });
+            } else {
+                addUpdateContainer.innerHTML = '';
+            }
+            
+            // Carregar dados financeiros
+            await loadFinancialData(id);
+            
+            document.getElementById('processDetailsModal').classList.add('active'); 
+        }
+        
+        async function loadFinancialData(processId) {
+            // VERIFICAÇÃO DE PERMISSÃO
+            if (!checkFinancialAccess()) {
+                const financialContainer = document.getElementById('financialDetailsContent');
+                financialContainer.innerHTML = `
+                    <div class="alert alert-error">
+                        <i class="fas fa-lock"></i> Acesso restrito. Apenas administradores podem visualizar informações financeiras.
+                    </div>
+                `;
+                document.getElementById('addFinancialContainer').innerHTML = '';
+                return;
+            }
+            
+            const financials = await getFinancials();
+            const processFinancials = financials.filter(f => f.processId === processId);
+            const financialContainer = document.getElementById('financialDetailsContent');
+            
+            let html = `<h4>Resumo Financeiro</h4>`;
+            
+            // Calcular totais
+            const honorarios = processFinancials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
+            const custos = processFinancials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
+            const saldo = honorarios - custos;
+            
+            html += `
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--success);">R$ ${honorarios.toLocaleString('pt-BR')}</div>
+                        <div style="font-size: 0.9rem; color: var(--text-medium);">Honorários</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--danger);">R$ ${custos.toLocaleString('pt-BR')}</div>
+                        <div style="font-size: 0.9rem; color: var(--text-medium);">Custos</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: ${saldo >= 0 ? 'var(--success)' : 'var(--danger)'};">R$ ${saldo.toLocaleString('pt-BR')}</div>
+                        <div style="font-size: 0.9rem; color: var(--text-medium);">Saldo</div>
+                    </div>
+                </div>
+            `;
+            
+            html += `<h4>Lançamentos Financeiros</h4>`;
+            
+            if (processFinancials.length > 0) {
+                html += `
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: var(--primary-dark); color: var(--text-light);">
+                                <th style="padding: 0.75rem;">Data</th>
+                                <th style="padding: 0.75rem;">Tipo</th>
+                                <th style="padding: 0.75rem;">Descrição</th>
+                                <th style="padding: 0.75rem;">Valor</th>
+                                <th style="padding: 0.75rem;">Forma de Pagamento</th>
+                                <th style="padding: 0.75rem;">Status</th>
+                                <th style="padding: 0.75rem;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                processFinancials.forEach(financial => {
+                    const tipoText = financial.type === 'honorario' ? 'Honorário' : 'Custo';
+                    const tipoClass = financial.type === 'honorario' ? 'financial-receita' : 'financial-despesa';
+                    const statusClass = financial.status === 'pago' ? 'financial-pago' : 'financial-pendente';
+                    const statusText = financial.status === 'pago' ? 'Pago' : 'Pendente';
+                    
+                    html += `
+                        <tr>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">${formatDate(financial.date)}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;"><span class="financial-badge ${tipoClass}">${tipoText}</span></td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">${financial.description}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">R$ ${financial.value.toLocaleString('pt-BR')}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">${getPaymentMethodText(financial.paymentMethod)}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;"><span class="financial-badge ${statusClass}">${statusText}</span></td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">
+                                <button class="action-btn" onclick="editFinancial(${financial.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn btn-danger" onclick="deleteFinancialConfirm(${financial.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `</tbody></table>`;
+            } else {
+                html += `<p style="text-align: center; color: var(--text-medium); padding: 2rem;">Nenhum lançamento financeiro registrado.</p>`;
+            }
+            
+            financialContainer.innerHTML = html;
+            
+            // Adicionar formulário para novos lançamentos (apenas para admin)
+            const addFinancialContainer = document.getElementById('addFinancialContainer');
+            if(currentUser.type === 'admin') {
+                addFinancialContainer.innerHTML = `
+                    <h4>Adicionar Lançamento Financeiro</h4>
+                    <form id="addFinancialForm">
+                        <input type="hidden" id="financialProcessId" value="${processId}">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label>Tipo</label>
+                                <select id="financialType" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <option value="honorario">Honorário</option>
+                                    <option value="custo">Custo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Status</label>
+                                <select id="financialStatus" class="form-control" required>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="pago">Pago</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem">
+                            <label>Descrição</label>
+                            <input type="text" id="financialDescription" class="form-control" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label>Valor (R$)</label>
+                                <input type="number" id="financialValue" class="form-control" step="0.01" min="0" required>
+                            </div>
+                            <div>
+                                <label>Data</label>
+                                <input type="date" id="financialDate" class="form-control" required>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:1rem">
+                            <label>Forma de Pagamento</label>
+                            <select id="financialPaymentMethod" class="form-control" required>
+                                <option value="">Selecione</option>
+                                <option value="a_vista">À vista</option>
+                                <option value="parcelado">Parcelado</option>
+                                <option value="contrato_mensal">Contrato mensal</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div style="text-align:right">
+                            <button type="submit" class="btn">Adicionar</button>
+                        </div>
+                    </form>
+                `;
+                
+                // Definir data atual como padrão
+                document.getElementById('financialDate').valueAsDate = new Date();
+                
+                document.getElementById('addFinancialForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const processId = parseInt(document.getElementById('financialProcessId').value);
+                    const type = document.getElementById('financialType').value;
+                    const description = document.getElementById('financialDescription').value;
+                    const value = parseFloat(document.getElementById('financialValue').value);
+                    const date = document.getElementById('financialDate').value;
+                    const status = document.getElementById('financialStatus').value;
+                    const paymentMethod = document.getElementById('financialPaymentMethod').value;
+                    
+                    if(!type || !description || !value || !paymentMethod) return;
+                    
+                    const financial = {
+                        processId: processId,
+                        type: type,
+                        description: description,
+                        value: value,
+                        date: date,
+                        status: status,
+                        paymentMethod: paymentMethod
+                    };
+                    
+                    await saveFinancial(financial);
+                    // Atualiza a visualização
+                    await loadFinancialData(processId);
+                    showAlert('Lançamento financeiro adicionado com sucesso!', 'success');
+                    
+                    // Limpar formulário
+                    document.getElementById('addFinancialForm').reset();
+                    document.getElementById('financialDate').valueAsDate = new Date();
+                });
+            } else {
+                addFinancialContainer.innerHTML = '';
+            }
+        }
+        
+        function closeProcessDetails(){ 
+            document.getElementById('processDetailsModal').classList.remove('active'); 
+            // Limpa os containers
+            document.getElementById('addUpdateContainer').innerHTML = '';
+            document.getElementById('addFinancialContainer').innerHTML = '';
+            currentProcessId = null;
+        }
+        
+        async function editFinancial(id) {
+            const financials = await getFinancials();
+            const financial = financials.find(f => f.id === id);
+            if (!financial) return;
+            
+            // Preencher o formulário com os dados existentes
+            document.getElementById('financialType').value = financial.type;
+            document.getElementById('financialStatus').value = financial.status;
+            document.getElementById('financialDescription').value = financial.description;
+            document.getElementById('financialValue').value = financial.value;
+            document.getElementById('financialDate').value = financial.date;
+            document.getElementById('financialPaymentMethod').value = financial.paymentMethod;
+            
+            // Rolar para o formulário
+            document.getElementById('addFinancialContainer').scrollIntoView({ behavior: 'smooth' });
+            
+            // Alterar o botão para "Atualizar"
+            const form = document.getElementById('addFinancialForm');
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.textContent = 'Atualizar';
+            submitButton.onclick = async function(e) {
+                e.preventDefault();
+                
+                // Atualizar o lançamento
+                financial.type = document.getElementById('financialType').value;
+                financial.status = document.getElementById('financialStatus').value;
+                financial.description = document.getElementById('financialDescription').value;
+                financial.value = parseFloat(document.getElementById('financialValue').value);
+                financial.date = document.getElementById('financialDate').value;
+                financial.paymentMethod = document.getElementById('financialPaymentMethod').value;
+                
+                await saveFinancial(financial);
+                await loadFinancialData(currentProcessId);
+                showAlert('Lançamento financeiro atualizado com sucesso!', 'success');
+                
+                // Restaurar o formulário para adição
+                document.getElementById('addFinancialForm').reset();
+                document.getElementById('financialDate').valueAsDate = new Date();
+                submitButton.textContent = 'Adicionar';
+                submitButton.onclick = null;
+            };
+        }
+        
+        async function deleteFinancialConfirm(id) {
+            if(confirm('Tem certeza que deseja excluir este lançamento financeiro?')) {
+                await deleteFinancial(id);
+                await loadFinancialData(currentProcessId);
+                showAlert('Lançamento financeiro excluído com sucesso!', 'success');
+            }
+        }
+
+        // --- Relatórios ---
+        async function generateReports() {
+            const period = document.getElementById('reportPeriod').value;
+            const lawyer = document.getElementById('reportLawyer').value;
+            
+            // Obter dados do backend
+            const processes = await getProcesses();
+            const clients = await getClients();
+            const financials = await getFinancials();
+            
+            // Aplicar filtros
+            let filteredProcesses = processes;
+            
+            if (lawyer !== 'all') {
+                filteredProcesses = filteredProcesses.filter(p => p.lawyer === lawyer);
+            }
+            
+            if (period !== 'all') {
+                const days = parseInt(period);
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+                
+                filteredProcesses = filteredProcesses.filter(p => {
+                    const processDate = new Date(p.startDate);
+                    return processDate >= cutoffDate;
+                });
+            }
+            
+            // Calcular totais financeiros
+            let totalRevenue = 0;
+            let totalExpenses = 0;
+            
+            filteredProcesses.forEach(process => {
+                const processFinancials = financials.filter(f => f.processId === process.id);
+                const honorarios = processFinancials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
+                const custos = processFinancials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
+                
+                totalRevenue += honorarios;
+                totalExpenses += custos;
+            });
+            
+            // Atualizar estatísticas
+            document.getElementById('totalProcesses').textContent = filteredProcesses.length;
+            document.getElementById('activeClients').textContent = clients.filter(c => c.status === 'ativo').length;
+            document.getElementById('processesInProgress').textContent = filteredProcesses.filter(p => p.status === 'andamento').length;
+            document.getElementById('totalRevenue').textContent = `R$ ${totalRevenue.toLocaleString('pt-BR')}`;
+            
+            // Atualizar gráficos
+            renderCharts(filteredProcesses);
+            
+            // Atualizar tabela de processos
+            updateProcessesReportTable(filteredProcesses, clients, financials);
+        }
+
+        function updateProcessesReportTable(processes, clients, financials) {
+            const tbody = document.getElementById('reportProcessesBody');
+            tbody.innerHTML = '';
+            
+            processes.forEach(process => {
+                const client = clients.find(c => c.id === process.clientId);
+                const processFinancials = financials.filter(f => f.processId === process.id);
+                const honorarios = processFinancials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
+                const custos = processFinancials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
+                const saldo = honorarios - custos;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${client ? client.name : 'N/A'}</td>
+                    <td>${process.type}</td>
+                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
+                    <td>R$ ${honorarios.toLocaleString('pt-BR')}</td>
+                    <td>R$ ${custos.toLocaleString('pt-BR')}</td>
+                    <td style="font-weight: bold; color: ${saldo >= 0 ? 'var(--success)' : 'var(--danger)'};">R$ ${saldo.toLocaleString('pt-BR')}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            if (processes.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="7" style="text-align: center; color: var(--text-medium);">Nenhum processo encontrado</td>`;
+                tbody.appendChild(row);
+            }
+        }
+
+        function renderCharts(processes) {
+            // Gráfico de status
+            const statusCount = {
+                'pendente': processes.filter(p => p.status === 'pendente').length,
+                'andamento': processes.filter(p => p.status === 'andamento').length,
+                'concluido': processes.filter(p => p.status === 'concluido').length,
+                'arquivado': processes.filter(p => p.status === 'arquivado').length
+            };
+            
+            const statusChart = document.getElementById('statusChart');
+            statusChart.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Pendente</span>
+                        <span style="font-weight: bold;">${statusCount.pendente}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Em Andamento</span>
+                        <span style="font-weight: bold;">${statusCount.andamento}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Concluído</span>
+                        <span style="font-weight: bold;">${statusCount.concluido}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Arquivado</span>
+                        <span style="font-weight: bold;">${statusCount.arquivado}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Gráfico de advogados
+            const lawyerCount = {};
+            processes.forEach(p => {
+                lawyerCount[p.lawyer] = (lawyerCount[p.lawyer] || 0) + 1;
+            });
+            
+            const lawyerChart = document.getElementById('lawyerChart');
+            lawyerChart.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
+                    ${Object.entries(lawyerCount).map(([lawyer, count]) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>${lawyer}</span>
+                            <span style="font-weight: bold;">${count}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function exportToPDF() {
+            alert('Funcionalidade de exportação para PDF será implementada em breve!');
+        }
+
+        function exportToExcel() {
+            // Obter dados da tabela de relatórios
+            const table = document.querySelector('#reports-tab table');
+            if (!table) {
+                alert('Nenhuma tabela encontrada para exportar.');
+                return;
+            }
+
+            // Criar uma string CSV
+            let csv = [];
+            
+            // Obter cabeçalhos
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push(th.innerText);
+            });
+            csv.push(headers.join(','));
+            
+            // Obter linhas de dados
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    // Remover qualquer formatação HTML e quebras de linha
+                    let text = td.innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/,/g, ";");
+                    row.push(text);
+                });
+                csv.push(row.join(','));
+            });
+            
+            // Juntar tudo em uma string
+            const csvString = csv.join('\n');
+            
+            // Criar um blob e fazer download
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'relatorio_processos.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showAlert('Relatório exportado com sucesso!', 'success');
+        }
+    </script>
+</body>
+</html>
