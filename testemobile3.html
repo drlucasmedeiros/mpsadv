@@ -2277,77 +2277,64 @@
 
         // --- CORREÇÃO COMPLETA: savePrazoInterno ---
         async function savePrazoInterno(prazo) {
-            try {
-                console.log('🔄 Tentando salvar prazo:', prazo);
+    try {
+        console.log('🔄 Tentando salvar prazo:', prazo);
 
-                // Validar dados obrigatórios
-                if (!prazo.processoId || !prazo.titulo || !prazo.dataVencimento || !prazo.responsavelId) {
-                    throw new Error('Dados obrigatórios faltando: processo, título, data vencimento ou responsável');
-                }
-
-                const prazoData = {
-                    processo_id: prazo.processoId,
-                    titulo: prazo.titulo,
-                    descricao: prazo.descricao || '',
-                    tipo_prazo: prazo.tipoPrazo || 'outro',
-                    data_vencimento: prazo.dataVencimento,
-                    data_lembrete: prazo.dataLembrete || null,
-                    responsavel_id: prazo.responsavelId,
-                    status: prazo.status || 'pendente',
-                    prioridade: prazo.prioridade || 'media',
-                    visivel_cliente: prazo.visivelCliente || false
-                };
-
-                console.log('📤 Dados formatados para Supabase:', prazoData);
-
-                let result;
-                if (prazo.id) {
-                    // Atualizar prazo existente
-                    const { data, error } = await supabase
-                        .from('prazos_internos')
-                        .update(prazoData)
-                        .eq('id', prazo.id)
-                        .select();
-
-                    if (error) {
-                        console.error('❌ Erro ao atualizar prazo:', error);
-                        throw error;
-                    }
-                    result = data[0];
-                } else {
-                    // Criar novo prazo
-                    const { data, error } = await supabase
-                        .from('prazos_internos')
-                        .insert([prazoData])
-                        .select();
-
-                    if (error) {
-                        console.error('❌ Erro ao criar prazo:', error);
-                        throw error;
-                    }
-                    result = data[0];
-                }
-
-                console.log('✅ Prazo salvo com sucesso:', result);
-                return result;
-            } catch (error) {
-                console.error('❌ Erro completo ao salvar prazo:', error);
-                return null;
-            }
+        // Validar dados obrigatórios
+        if (!prazo.processoId || !prazo.titulo || !prazo.dataVencimento || !prazo.responsavelId) {
+            throw new Error('Dados obrigatórios faltando: processo, título, data vencimento ou responsável');
         }
 
-        async function deletePrazoInterno(id) {
-            try {
-                const { error } = await supabase
-                    .from('prazos_internos')
-                    .delete()
-                    .eq('id', id);
-                return !error;
-            } catch (error) {
-                console.error('Erro ao excluir prazo interno:', error);
-                return false;
+        const prazoData = {
+            processo_id: prazo.processoId,
+            titulo: prazo.titulo,
+            descricao: prazo.descricao || '',
+            tipo_prazo: prazo.tipoPrazo || 'outro',
+            data_vencimento: prazo.dataVencimento,
+            data_lembrete: prazo.dataLembrete || null,
+            responsavel_id: prazo.responsavelId,
+            status: prazo.status || 'pendente',
+            prioridade: prazo.prioridade || 'media',
+            visivel_cliente: prazo.visivelCliente || false
+        };
+
+        console.log('📤 Dados formatados para Supabase:', prazoData);
+
+        let result;
+        if (prazo.id) {
+            // Atualizar prazo existente
+            const { data, error } = await supabase
+                .from('prazos_internos')
+                .update(prazoData)
+                .eq('id', prazo.id)
+                .select();
+
+            if (error) {
+                console.error('❌ Erro ao atualizar prazo:', error);
+                throw error;
             }
+            result = data[0];
+        } else {
+            // Criar novo prazo
+            const { data, error } = await supabase
+                .from('prazos_internos')
+                .insert([prazoData])
+                .select();
+
+            if (error) {
+                console.error('❌ Erro ao criar prazo:', error);
+                throw error;
+            }
+            result = data[0];
         }
+
+        console.log('✅ Prazo salvo com sucesso:', result);
+        return result;
+    } catch (error) {
+        console.error('❌ Erro completo ao salvar prazo:', error);
+        return null;
+    }
+}
 
         // --- NOVAS FUNÇÕES: Audiências ---
         async function getAudiencias(processoId = null) {
@@ -2375,63 +2362,63 @@
 
         // --- CORREÇÃO COMPLETA: saveAudiencia ---
         async function saveAudiencia(audiencia) {
-            try {
-                console.log('🔄 Tentando salvar audiência:', audiencia);
+    try {
+        console.log('🔄 Tentando salvar audiência:', audiencia);
 
-                // Validar dados obrigatórios
-                if (!audiencia.processoId || !audiencia.titulo || !audiencia.dataAudiencia) {
-                    throw new Error('Dados obrigatórios faltando: processo, título ou data');
-                }
-
-                const audienciaData = {
-                    processo_id: audiencia.processoId,
-                    titulo: audiencia.titulo,
-                    descricao: audiencia.descricao || '',
-                    data_audiencia: audiencia.dataAudiencia,
-                    local: audiencia.local || '',
-                    tipo_audiencia: audiencia.tipoAudiencia || 'outra',
-                    participantes: audiencia.participantes || '',
-                    resultado: audiencia.resultado || '',
-                    status: audiencia.status || 'agendada'
-                };
-
-                console.log('📤 Dados formatados para Supabase:', audienciaData);
-
-                let result;
-                if (audiencia.id) {
-                    // Atualizar audiência existente
-                    const { data, error } = await supabase
-                        .from('calendario_audiencias')
-                        .update(audienciaData)
-                        .eq('id', audiencia.id)
-                        .select();
-
-                    if (error) {
-                        console.error('❌ Erro ao atualizar audiência:', error);
-                        throw error;
-                    }
-                    result = data[0];
-                } else {
-                    // Criar nova audiência
-                    const { data, error } = await supabase
-                        .from('calendario_audiencias')
-                        .insert([audienciaData])
-                        .select();
-
-                    if (error) {
-                        console.error('❌ Erro ao criar audiência:', error);
-                        throw error;
-                    }
-                    result = data[0];
-                }
-
-                console.log('✅ Audiência salva com sucesso:', result);
-                return result;
-            } catch (error) {
-                console.error('❌ Erro completo ao salvar audiência:', error);
-                return null;
-            }
+        // Validar dados obrigatórios
+        if (!audiencia.processoId || !audiencia.titulo || !audiencia.dataAudiencia) {
+            throw new Error('Dados obrigatórios faltando: processo, título ou data');
         }
+
+        const audienciaData = {
+            processo_id: audiencia.processoId,
+            titulo: audiencia.titulo,
+            descricao: audiencia.descricao || '',
+            data_audiencia: audiencia.dataAudiencia,
+            local: audiencia.local || '',
+            tipo_audiencia: audiencia.tipoAudiencia || 'outra',
+            participantes: audiencia.participantes || '',
+            resultado: audiencia.resultado || '',
+            status: audiencia.status || 'agendada'
+        };
+
+        console.log('📤 Dados formatados para Supabase:', audienciaData);
+
+        let result;
+        if (audiencia.id) {
+            // Atualizar audiência existente
+            const { data, error } = await supabase
+                .from('calendario_audiencias')
+                .update(audienciaData)
+                .eq('id', audiencia.id)
+                .select();
+
+            if (error) {
+                console.error('❌ Erro ao atualizar audiência:', error);
+                throw error;
+            }
+            result = data[0];
+        } else {
+            // Criar nova audiência
+            const { data, error } = await supabase
+                .from('calendario_audiencias')
+                .insert([audienciaData])
+                .select();
+
+            if (error) {
+                console.error('❌ Erro ao criar audiência:', error);
+                throw error;
+            }
+            result = data[0];
+        }
+
+        console.log('✅ Audiência salva com sucesso:', result);
+        return result;
+    } catch (error) {
+        console.error('❌ Erro completo ao salvar audiência:', error);
+        return null;
+    }
+}
 
         async function deleteAudiencia(id) {
             try {
