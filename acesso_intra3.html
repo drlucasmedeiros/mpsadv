@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
-
+    <!-- Seus meta tags e estilos atuais -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         :root{
@@ -739,1362 +740,495 @@
     </div>
 
     <script>
-        // --- Banco simulado ---
-        const DB_KEYS = { 
-            USERS: 'mps_users', 
-            CLIENTS: 'mps_clients', 
-            PROCESSES: 'mps_processes', 
-            DOCUMENTS: 'mps_documents',
-            FINANCIALS: 'mps_financials',
-            NOTIFICATIONS: 'mps_notifications'
-        };
+       // Configuração do Supabase
+const SUPABASE_URL = 'https://vzwwmiupvfdrmgcmuldf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6d3dtaXVwdmZkcm1nY211bGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjQ2NzQsImV4cCI6MjA3OTk0MDY3NH0.tsQkCfxcZQmt6fJf6lLBnAdzl4fjQPWPAVmWlMQe1ss';
+// Configuração do Supabase - USE SUAS CREDENCIAIS REAIS AQUI!
+const SUPABASE_URL = 'https://db.vzwwmiupvfdrmgcmuldf.supabase.co';
+const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON-AQUI'; // Cole a chave anon do Settings > API
 
-        function initializeDatabase(){
-            if(!localStorage.getItem(DB_KEYS.USERS)){
-                const defaultUsers = [
-                    { id:1, name:'Dr. Lukas Medeiros', email:'admin@mpsadv.com.br', password:'admin123', type:'admin', status:'ativo', lastAccess:new Date().toISOString() },
-                    { id:2, name:'João Silva', email:'cliente@exemplo.com', password:'123456', type:'client', status:'ativo', lastAccess:new Date().toISOString(), clientId:1 }
-                ]; localStorage.setItem(DB_KEYS.USERS, JSON.stringify(defaultUsers));
-            }
-            if(!localStorage.getItem(DB_KEYS.CLIENTS)){
-                const defaultClients = [
-                    { id:1, name:'João Silva', email:'cliente@exemplo.com', phone:'(65) 99999-9999', cpf:'123.456.789-00', address:'Rua das Flores, 123 - Centro, Cuiabá/MT', status:'ativo', createdAt:new Date().toISOString() },
-                    { id:2, name:'Maria Santos', email:'maria@exemplo.com', phone:'(65) 98888-8888', cpf:'987.654.321-00', address:'Av. Historiador Rubens de Mendonça, 500 - Cuiabá/MT', status:'ativo', createdAt:new Date().toISOString() }
-                ]; localStorage.setItem(DB_KEYS.CLIENTS, JSON.stringify(defaultClients));
-            }
-            if(!localStorage.getItem(DB_KEYS.PROCESSES)){
-                const defaultProcesses = [
-                    { id:1, number:'001234-56.2023.8.11.0001', clientId:1, type:'Civil', status:'andamento', description:'Ação de indenização por danos morais', lawyer:'Dr. Lukas Medeiros', startDate:'2023-10-15', deadline:'2024-06-15', createdAt:new Date().toISOString(), updates:[{date:'2023-10-15', description:'Processo protocolado'},{date:'2023-10-22', description:'Contestação apresentada'}] },
-                    { id:2, number:'002345-67.2023.8.11.0002', clientId:2, type:'Trabalhista', status:'pendente', description:'Reclamação trabalhista', lawyer:'Dra. Losainny Silva', startDate:'2023-09-10', deadline:'2024-05-10', createdAt:new Date().toISOString(), updates:[{date:'2023-09-10', description:'Petição inicial protocolada'}]} 
-                ]; localStorage.setItem(DB_KEYS.PROCESSES, JSON.stringify(defaultProcesses));
-            }
-            if(!localStorage.getItem(DB_KEYS.DOCUMENTS)){
-                const defaultDocuments = [ 
-                    { id:1, name:'Petição Inicial', processId:1, type:'PDF', uploadDate:'2023-10-15', fileSize:'2.4 MB' }, 
-                    { id:2, name:'Contestação', processId:1, type:'PDF', uploadDate:'2023-10-22', fileSize:'1.8 MB' } 
-                ];
-                localStorage.setItem(DB_KEYS.DOCUMENTS, JSON.stringify(defaultDocuments));
-            }
-            if(!localStorage.getItem(DB_KEYS.FINANCIALS)){
-                const defaultFinancials = [
-                    { id:1, processId:1, type:'honorario', description:'Honorários contratuais', value:5000, date:'2023-10-15', status:'pendente' },
-                    { id:2, processId:1, type:'custo', description:'Custas processuais', value:350, date:'2023-10-16', status:'pago' },
-                    { id:3, processId:2, type:'honorario', description:'Honorários iniciais', value:2000, date:'2023-09-10', status:'pago' }
-                ];
-                localStorage.setItem(DB_KEYS.FINANCIALS, JSON.stringify(defaultFinancials));
-            }
-            if(!localStorage.getItem(DB_KEYS.NOTIFICATIONS)){
-                const defaultNotifications = [
-                    { id:1, type:'warning', title:'Processo próximo do prazo', message:'Processo 001234-56.2023.8.11.0001 está próximo do prazo final', userId:1, read:false, createdAt:new Date().toISOString() },
-                    { id:2, type:'info', title:'Novo documento disponível', message:'Petição inicial disponível para download', userId:2, read:false, createdAt:new Date().toISOString() }
-                ];
-                localStorage.setItem(DB_KEYS.NOTIFICATIONS, JSON.stringify(defaultNotifications));
-            }
-        }
+// Inicializar cliente Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function getFromDB(key){ return JSON.parse(localStorage.getItem(key)) || []; }
-        function saveToDB(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+// --- Funções para Supabase (SUBSTITUEM o localStorage) ---
 
-        // Users
-        function getUsers(){ return getFromDB(DB_KEYS.USERS); }
-        function saveUser(user){ 
-            const users = getUsers(); 
-            if(user.id){ 
-                const idx = users.findIndex(u=>u.id===user.id); 
-                if(idx!==-1) users[idx]=user; 
-            } else { 
-                user.id = users.length>0? Math.max(...users.map(u=>u.id))+1 : 1; 
-                user.createdAt = new Date().toISOString(); 
-                users.push(user); 
-            } 
-            saveToDB(DB_KEYS.USERS, users); 
-            return user; 
-        }
-        function deleteUser(id){ saveToDB(DB_KEYS.USERS, getUsers().filter(u=>u.id!==id)); }
+// Clientes
+async function getClients() {
+    const { data, error } = await supabase
+        .from('clientes')
+        .select('*')
+        .order('nome');
+    return error ? [] : data;
+}
 
-        // Clients
-        function getClients(){ return getFromDB(DB_KEYS.CLIENTS); }
-        function saveClient(client){ 
-            const clients = getClients(); 
-            if(client.id){ 
-                const idx = clients.findIndex(c=>c.id===client.id); 
-                if(idx!==-1) clients[idx]=client; 
-            } else { 
-                client.id = clients.length>0? Math.max(...clients.map(c=>c.id))+1 : 1; 
-                client.createdAt = new Date().toISOString(); 
-                clients.push(client); 
-            } 
-            saveToDB(DB_KEYS.CLIENTS, clients); 
-            return client; 
-        }
-        function deleteClient(id){ saveToDB(DB_KEYS.CLIENTS, getClients().filter(c=>c.id!==id)); }
+async function saveClient(client) {
+    if (client.id) {
+        const { data, error } = await supabase
+            .from('clientes')
+            .update(client)
+            .eq('id', client.id);
+        return error ? null : data[0];
+    } else {
+        const { data, error } = await supabase
+            .from('clientes')
+            .insert([client])
+            .select();
+        return error ? null : data[0];
+    }
+}
 
-        // Processes
-        function getProcesses(){ return getFromDB(DB_KEYS.PROCESSES); }
-        function saveProcess(process){ 
-            const processes = getProcesses(); 
-            if(process.id){ 
-                const idx = processes.findIndex(p=>p.id===process.id); 
-                if(idx!==-1) processes[idx]=process; 
-            } else { 
-                process.id = processes.length>0? Math.max(...processes.map(p=>p.id))+1 : 1; 
-                process.createdAt = new Date().toISOString(); 
-                process.updates = process.updates || [{ date: process.startDate, description: 'Processo cadastrado no sistema' }]; 
-                processes.push(process); 
-            } 
-            saveToDB(DB_KEYS.PROCESSES, processes); 
-            return process; 
-        }
-        function deleteProcess(id){ saveToDB(DB_KEYS.PROCESSES, getProcesses().filter(p=>p.id!==id)); }
+async function deleteClient(id) {
+    const { error } = await supabase
+        .from('clientes')
+        .delete()
+        .eq('id', id);
+    return !error;
+}
 
-        // Financials
-        function getFinancials(){ return getFromDB(DB_KEYS.FINANCIALS); }
-        function saveFinancial(financial){ 
-            const financials = getFinancials(); 
-            if(financial.id){ 
-                const idx = financials.findIndex(f=>f.id===financial.id); 
-                if(idx!==-1) financials[idx]=financial; 
-            } else { 
-                financial.id = financials.length>0? Math.max(...financials.map(f=>f.id))+1 : 1; 
-                financial.createdAt = new Date().toISOString(); 
-                financials.push(financial); 
-            } 
-            saveToDB(DB_KEYS.FINANCIALS, financials); 
-            return financial; 
-        }
-        function deleteFinancial(id){ saveToDB(DB_KEYS.FINANCIALS, getFinancials().filter(f=>f.id!==id)); }
+// Processos
+async function getProcesses() {
+    const { data, error } = await supabase
+        .from('processos')
+        .select(`
+            *,
+            clientes (nome, email),
+            advogados (nome)
+        `)
+        .order('data_abertura', { ascending: false });
+    return error ? [] : data;
+}
 
-        // Notifications
-        function getNotifications(){ return getFromDB(DB_KEYS.NOTIFICATIONS); }
-        function saveNotification(notification){ 
-            const notifications = getNotifications(); 
-            if(notification.id){ 
-                const idx = notifications.findIndex(n=>n.id===notification.id); 
-                if(idx!==-1) notifications[idx]=notification; 
-            } else { 
-                notification.id = notifications.length>0? Math.max(...notifications.map(n=>n.id))+1 : 1; 
-                notification.createdAt = new Date().toISOString(); 
-                notifications.push(notification); 
-            } 
-            saveToDB(DB_KEYS.NOTIFICATIONS, notifications); 
-            return notification; 
-        }
-        function deleteNotification(id){ saveToDB(DB_KEYS.NOTIFICATIONS, getNotifications().filter(n=>n.id!==id)); }
+async function saveProcess(process) {
+    if (process.id) {
+        const { data, error } = await supabase
+            .from('processos')
+            .update(process)
+            .eq('id', process.id);
+        return error ? null : data[0];
+    } else {
+        const { data, error } = await supabase
+            .from('processos')
+            .insert([process])
+            .select();
+        return error ? null : data[0];
+    }
+}
 
-        function getDocuments(){ return getFromDB(DB_KEYS.DOCUMENTS); }
+async function deleteProcess(id) {
+    const { error } = await supabase
+        .from('processos')
+        .delete()
+        .eq('id', id);
+    return !error;
+}
 
-        // DOM refs
-        const loginPage = document.getElementById('loginPage'); 
-        const adminDashboard = document.getElementById('adminDashboard'); 
-        const clientDashboard = document.getElementById('clientDashboard'); 
-        const header = document.getElementById('header');
-        const loginForm = document.getElementById('loginForm'); 
-        const logoutBtn = document.getElementById('logoutBtn'); 
-        const userNameDisplay = document.getElementById('userNameDisplay'); 
-        const userRole = document.getElementById('userRole');
-        const tabs = document.querySelectorAll('.tab');
+// Usuários
+async function getUsers() {
+    const { data, error } = await supabase
+        .from('usuarios')
+        .select('*, clientes(nome), advogados(nome)')
+        .order('nome');
+    return error ? [] : data;
+}
 
-        let currentUser = null;
-        let currentProcessId = null;
+async function saveUser(user) {
+    if (user.id) {
+        const { data, error } = await supabase
+            .from('usuarios')
+            .update(user)
+            .eq('id', user.id);
+        return error ? null : data[0];
+    } else {
+        const { data, error } = await supabase
+            .from('usuarios')
+            .insert([user])
+            .select();
+        return error ? null : data[0];
+    }
+}
 
-        document.addEventListener('DOMContentLoaded', ()=>{
-            initializeDatabase();
-            const savedUser = localStorage.getItem('currentUser'); 
-            if(savedUser){ 
-                currentUser = JSON.parse(savedUser); 
-                showDashboard(); 
-            }
+async function deleteUser(id) {
+    const { error } = await supabase
+        .from('usuarios')
+        .delete()
+        .eq('id', id);
+    return !error;
+}
 
-            // events
-            loginForm.addEventListener('submit', handleLogin); 
-            logoutBtn.addEventListener('click', handleLogout);
-            document.getElementById('addClientBtn').addEventListener('click', ()=>openClientModal()); 
-            document.getElementById('addProcessBtn').addEventListener('click', ()=>openProcessModal()); 
-            document.getElementById('addUserBtn').addEventListener('click', ()=>openUserModal());
-            document.getElementById('clientForm').addEventListener('submit', handleClientSubmit); 
-            document.getElementById('processForm').addEventListener('submit', handleProcessSubmit); 
-            document.getElementById('userForm').addEventListener('submit', handleUserSubmit); 
-            document.getElementById('clientProfileForm')?.addEventListener('submit', handleClientProfileSubmit);
+// Financeiro
+async function getFinancials() {
+    const { data, error } = await supabase
+        .from('financeiro')
+        .select('*')
+        .order('data_vencimento');
+    return error ? [] : data;
+}
 
-            document.getElementById('clientSearch').addEventListener('input', loadClientsTable); 
-            document.getElementById('processSearch').addEventListener('input', loadProcessesTable);
+async function saveFinancial(financial) {
+    if (financial.id) {
+        const { data, error } = await supabase
+            .from('financeiro')
+            .update(financial)
+            .eq('id', financial.id);
+        return error ? null : data[0];
+    } else {
+        const { data, error } = await supabase
+            .from('financeiro')
+            .insert([financial])
+            .select();
+        return error ? null : data[0];
+    }
+}
 
-            tabs.forEach(tab=>tab.addEventListener('click', ()=>{ 
-                switchTab(tab.getAttribute('data-tab')); 
-            }));
+async function deleteFinancial(id) {
+    const { error } = await supabase
+        .from('financeiro')
+        .delete()
+        .eq('id', id);
+    return !error;
+}
 
-            // Configurar tabs do modal
-            document.querySelectorAll('.modal-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    switchModalTab(tabId);
-                });
-            });
+// Notificações
+async function getNotifications() {
+    if (!currentUser) return [];
+    const { data, error } = await supabase
+        .from('notificacoes')
+        .select('*')
+        .eq('usuario_id', currentUser.id)
+        .order('created_at', { ascending: false });
+    return error ? [] : data;
+}
 
-            // Notificações
-            document.getElementById('notificationBtn').addEventListener('click', toggleNotifications);
-            
-            // Verificar prazos a cada minuto
-            setInterval(checkDeadlines, 60000);
-            
-            // close modals on outside click
-            window.addEventListener('click', function(event){ 
-                ['clientModal','processModal','userModal','processDetailsModal'].forEach(id=>{ 
-                    const m=document.getElementById(id); 
-                    if(event.target===m) {
-                        if (id === 'processDetailsModal') closeProcessDetails();
-                        else m.classList.remove('active'); 
-                    }
-                }); 
-                
-                // Fechar dropdown de notificações ao clicar fora
-                if (!event.target.closest('.notifications')) {
-                    document.getElementById('notificationDropdown').classList.remove('show');
-                }
-            });
+async function saveNotification(notification) {
+    const { data, error } = await supabase
+        .from('notificacoes')
+        .insert([notification])
+        .select();
+    return error ? null : data[0];
+}
 
-            // Configurar relatórios
-            document.getElementById('generateReport').addEventListener('click', generateReports);
-            
-            // Configurar backup
-            document.getElementById('backupFile').addEventListener('change', handleBackupImport);
-            
-            // initial load for selects
-            populateUserClientSelect();
+async function markNotificationAsRead(id) {
+    const { error } = await supabase
+        .from('notificacoes')
+        .update({ lida: true })
+        .eq('id', id);
+    return !error;
+}
+
+// Documentos
+async function getDocuments() {
+    const { data, error } = await supabase
+        .from('documentos')
+        .select('*');
+    return error ? [] : data;
+}
+
+// Processo Atualizações (Timeline)
+async function getProcessUpdates(processId) {
+    const { data, error } = await supabase
+        .from('processo_atualizacoes')
+        .select('*')
+        .eq('processo_id', processId)
+        .order('data_atualizacao', { ascending: false });
+    return error ? [] : data;
+}
+
+async function saveProcessUpdate(update) {
+    const { data, error } = await supabase
+        .from('processo_atualizacoes')
+        .insert([update])
+        .select();
+    return error ? null : data[0];
+}
+
+// --- Sistema de Login Atualizado ---
+async function handleLogin(e) { 
+    e.preventDefault(); 
+    const email = document.getElementById('email').value; 
+    const password = document.getElementById('password').value; 
+    const userType = document.getElementById('userType').value; 
+    
+    const { data: users, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', email)
+        .eq('senha', password)
+        .eq('tipo_usuario', userType === 'admin' ? 'admin' : 'cliente')
+        .eq('status', 'ativo');
+    
+    if (error || !users || users.length === 0) { 
+        alert('Credenciais inválidas ou usuário inativo!'); 
+        return;
+    }
+    
+    const user = users[0];
+    currentUser = user;
+    
+    // Atualizar último acesso
+    await supabase
+        .from('usuarios')
+        .update({ ultimo_acesso: new Date().toISOString() })
+        .eq('id', user.id);
+    
+    localStorage.setItem('currentUser', JSON.stringify(user)); 
+    showDashboard(); 
+}
+
+// --- Variáveis Globais ---
+let currentUser = null;
+let currentProcessId = null;
+
+// --- DOM Refs (mantenha esta parte igual) ---
+const loginPage = document.getElementById('loginPage'); 
+const adminDashboard = document.getElementById('adminDashboard'); 
+const clientDashboard = document.getElementById('clientDashboard'); 
+const header = document.getElementById('header');
+const loginForm = document.getElementById('loginForm'); 
+const logoutBtn = document.getElementById('logoutBtn'); 
+const userNameDisplay = document.getElementById('userNameDisplay'); 
+const userRole = document.getElementById('userRole');
+const tabs = document.querySelectorAll('.tab');
+
+// --- Event Listeners (atualize para funções async) ---
+document.addEventListener('DOMContentLoaded', async ()=>{
+    const savedUser = localStorage.getItem('currentUser'); 
+    if(savedUser){ 
+        currentUser = JSON.parse(savedUser); 
+        showDashboard(); 
+    }
+
+    // events
+    loginForm.addEventListener('submit', handleLogin); 
+    logoutBtn.addEventListener('click', handleLogout);
+    document.getElementById('addClientBtn').addEventListener('click', ()=>openClientModal()); 
+    document.getElementById('addProcessBtn').addEventListener('click', ()=>openProcessModal()); 
+    document.getElementById('addUserBtn').addEventListener('click', ()=>openUserModal());
+    document.getElementById('clientForm').addEventListener('submit', handleClientSubmit); 
+    document.getElementById('processForm').addEventListener('submit', handleProcessSubmit); 
+    document.getElementById('userForm').addEventListener('submit', handleUserSubmit); 
+    document.getElementById('clientProfileForm')?.addEventListener('submit', handleClientProfileSubmit);
+
+    document.getElementById('clientSearch').addEventListener('input', loadClientsTable); 
+    document.getElementById('processSearch').addEventListener('input', loadProcessesTable);
+
+    tabs.forEach(tab=>tab.addEventListener('click', ()=>{ 
+        switchTab(tab.getAttribute('data-tab')); 
+    }));
+
+    // Configurar tabs do modal
+    document.querySelectorAll('.modal-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            switchModalTab(tabId);
         });
+    });
 
-        // --- Verificação de permissão para financeiro ---
-        function checkFinancialAccess() {
-            return currentUser && currentUser.type === 'admin';
-        }
-
-        // --- Auth ---
-        function handleLogin(e){ 
-            e.preventDefault(); 
-            const email=document.getElementById('email').value; 
-            const password=document.getElementById('password').value; 
-            const userType=document.getElementById('userType').value; 
-            const users=getUsers(); 
-            const user = users.find(u=>u.email===email && u.password===password && u.type===userType && u.status==='ativo'); 
-            if(user){ 
-                currentUser=user; 
-                user.lastAccess=new Date().toISOString(); 
-                saveUser(user); 
-                localStorage.setItem('currentUser', JSON.stringify(user)); 
-                showDashboard(); 
-            } else { 
-                alert('Credenciais inválidas ou usuário inativo!'); 
-            } 
-        }
+    // Notificações
+    document.getElementById('notificationBtn').addEventListener('click', toggleNotifications);
+    
+    // Verificar prazos a cada minuto
+    setInterval(checkDeadlines, 60000);
+    
+    // close modals on outside click
+    window.addEventListener('click', function(event){ 
+        ['clientModal','processModal','userModal','processDetailsModal'].forEach(id=>{ 
+            const m=document.getElementById(id); 
+            if(event.target===m) {
+                if (id === 'processDetailsModal') closeProcessDetails();
+                else m.classList.remove('active'); 
+            }
+        }); 
         
-        function handleLogout(){ 
-            currentUser=null; 
-            localStorage.removeItem('currentUser'); 
-            showLogin(); 
+        // Fechar dropdown de notificações ao clicar fora
+        if (!event.target.closest('.notifications')) {
+            document.getElementById('notificationDropdown').classList.remove('show');
         }
+    });
 
-        function showLogin(){ 
-            loginPage.style.display='flex'; 
-            adminDashboard.style.display='none'; 
-            clientDashboard.style.display='none'; 
-            header.style.display='none'; 
-            loginForm.reset(); 
-        }
-        
-        function showDashboard(){ 
-            loginPage.style.display='none'; 
-            header.style.display='block'; 
-            userNameDisplay.textContent=currentUser.name; 
-            userRole.textContent = currentUser.type==='admin'?'Administrador':'Cliente'; 
-            if(currentUser.type==='admin'){ 
-                adminDashboard.style.display='block'; 
-                clientDashboard.style.display='none'; 
-                loadAdminData(); 
-            } else { 
-                adminDashboard.style.display='none'; 
-                clientDashboard.style.display='block'; 
-                loadClientData(); 
-            } 
-            loadNotifications();
-            checkDeadlines(); // Verificar prazos ao logar
-        }
+    // Configurar relatórios
+    document.getElementById('generateReport').addEventListener('click', generateReports);
+    
+    // Configurar backup
+    document.getElementById('backupFile').addEventListener('change', handleBackupImport);
+    
+    // initial load for selects
+    await populateUserClientSelect();
+});
 
-        function switchTab(tabId){ 
-            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
-            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
-            const tab = document.querySelector(`.tab[data-tab="${tabId}"]`); 
-            if(tab) tab.classList.add('active'); 
-            const content=document.getElementById(`${tabId}-tab`) || document.getElementById(`${tabId}`); 
-            if(content) content.classList.add('active'); 
-            
-            // Se a aba de relatórios foi selecionada, atualizar os dados
-            if (tabId === 'reports') {
-                generateReports();
-            }
-        }
+// --- Funções Principais (atualize para async) ---
 
-        function switchModalTab(tabId) {
-            // Remover classe active de todas as tabs do modal
-            document.querySelectorAll('.modal-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.modal-tab-content').forEach(content => content.classList.remove('active'));
-            
-            // Adicionar classe active à tab selecionada
-            document.querySelector(`.modal-tab[data-tab="${tabId}"]`).classList.add('active');
-            document.getElementById(`${tabId}-tab`).classList.add('active');
-        }
+function handleLogout(){ 
+    currentUser=null; 
+    localStorage.removeItem('currentUser'); 
+    showLogin(); 
+}
 
-        // --- Notificações ---
-        function loadNotifications() {
-            const notifications = getNotifications().filter(n => n.userId === currentUser.id);
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const badge = document.getElementById('notificationBadge');
-            const list = document.getElementById('notificationList');
-            
-            if (unreadCount > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = unreadCount;
-            } else {
-                badge.style.display = 'none';
-            }
-            
-            list.innerHTML = '';
-            
-            if (notifications.length === 0) {
-                list.innerHTML = '<div class="notification-item" style="text-align: center; color: var(--text-medium);">Nenhuma notificação</div>';
-                return;
-            }
-            
-            // Ordenar por data (mais recentes primeiro)
-            notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            notifications.forEach(notification => {
-                const item = document.createElement('div');
-                item.className = `notification-item ${notification.read ? '' : 'unread'}`;
-                item.innerHTML = `
-                    <div class="notification-title">${notification.title}</div>
-                    <div class="notification-message">${notification.message}</div>
-                    <div class="notification-time">${formatDateTime(notification.createdAt)}</div>
-                `;
-                item.addEventListener('click', () => markNotificationAsRead(notification.id));
-                list.appendChild(item);
-            });
-        }
-        
-        function toggleNotifications() {
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.classList.toggle('show');
-        }
-        
-        function markNotificationAsRead(id) {
-            const notifications = getNotifications();
-            const notification = notifications.find(n => n.id === id);
-            if (notification) {
-                notification.read = true;
-                saveToDB(DB_KEYS.NOTIFICATIONS, notifications);
-                loadNotifications();
-            }
-        }
-        
-        function markAllNotificationsAsRead() {
-            const notifications = getNotifications();
-            notifications.forEach(notification => {
-                if (notification.userId === currentUser.id) {
-                    notification.read = true;
-                }
-            });
-            saveToDB(DB_KEYS.NOTIFICATIONS, notifications);
-            loadNotifications();
-        }
-        
-        function createNotification(notificationData) {
-            const notification = {
-                ...notificationData,
-                read: false,
-                createdAt: new Date().toISOString()
-            };
-            saveNotification(notification);
-            if (currentUser && notificationData.userId === currentUser.id) {
-                loadNotifications();
-            }
-        }
+function showLogin(){ 
+    loginPage.style.display='flex'; 
+    adminDashboard.style.display='none'; 
+    clientDashboard.style.display='none'; 
+    header.style.display='none'; 
+    loginForm.reset(); 
+}
 
-        // --- Sistema de Prazos ---
-        function checkDeadlines() {
-            const processes = getProcesses();
-            const today = new Date();
-            const warningDate = new Date();
-            warningDate.setDate(today.getDate() + 7); // 7 dias de antecedência
-            
-            processes.forEach(process => {
-                if (process.deadline) {
-                    const deadline = new Date(process.deadline);
-                    if (deadline <= warningDate && deadline >= today) {
-                        // Encontrar o ID do advogado responsável
-                        const users = getUsers();
-                        const lawyerUser = users.find(u => u.name === process.lawyer);
-                        if (lawyerUser) {
-                            createNotification({
-                                type: 'warning',
-                                title: 'Prazo próximo',
-                                message: `Processo ${process.number} vence em ${formatDate(process.deadline)}`,
-                                userId: lawyerUser.id
-                            });
-                        }
-                    }
-                }
-            });
-        }
+function showDashboard(){ 
+    loginPage.style.display='none'; 
+    header.style.display='block'; 
+    userNameDisplay.textContent=currentUser.nome; // Agora usa 'nome' em vez de 'name'
+    userRole.textContent = currentUser.tipo_usuario==='admin'?'Administrador':'Cliente'; 
+    if(currentUser.tipo_usuario==='admin'){ 
+        adminDashboard.style.display='block'; 
+        clientDashboard.style.display='none'; 
+        loadAdminData(); 
+    } else { 
+        adminDashboard.style.display='none'; 
+        clientDashboard.style.display='block'; 
+        loadClientData(); 
+    } 
+    loadNotifications();
+    checkDeadlines();
+}
 
-        // --- Admin data load ---
-        function loadAdminData(){ 
-            loadClientsTable(); 
-            loadProcessesTable(); 
-            loadUsersTable(); 
-        }
+// --- Carregar Dados (atualize para async) ---
+async function loadAdminData(){ 
+    await loadClientsTable(); 
+    await loadProcessesTable(); 
+    await loadUsersTable(); 
+}
 
-        function loadClientsTable(){ 
-            const clients = getClients(); 
-            const search = document.getElementById('clientSearch').value.toLowerCase(); 
-            const filtered = clients.filter(c=> c.name.toLowerCase().includes(search) || c.email.toLowerCase().includes(search) || (c.cpf||'').includes(search)); 
-            const tbody=document.getElementById('clientsTableBody'); 
-            tbody.innerHTML=''; 
-            filtered.forEach(client=>{ 
-                const tr=document.createElement('tr'); 
-                tr.innerHTML = `
-                    <td>${client.name}</td>
-                    <td>${client.email}</td>
-                    <td>${client.phone||''}</td>
-                    <td>${client.cpf||''}</td>
-                    <td><span class="status-badge ${client.status==='ativo'?'status-andamento':'status-arquivado'}">${client.status==='ativo'?'Ativo':'Inativo'}</span></td>
-                    <td>
-                        <button class="action-btn" onclick="editClient(${client.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn btn-danger" onclick="deleteClientConfirm(${client.id})" title="Excluir"><i class="fas fa-trash"></i></button>
-                    </td>
-                `; 
-                tbody.appendChild(tr); 
-            }); 
-            populateUserClientSelect(); 
-        }
+async function loadClientsTable(){ 
+    const clients = await getClients(); 
+    const search = document.getElementById('clientSearch').value.toLowerCase(); 
+    const filtered = clients.filter(c=> 
+        c.nome.toLowerCase().includes(search) || 
+        c.email.toLowerCase().includes(search) || 
+        (c.cpf||'').includes(search)
+    ); 
+    const tbody=document.getElementById('clientsTableBody'); 
+    tbody.innerHTML=''; 
+    filtered.forEach(client=>{ 
+        const tr=document.createElement('tr'); 
+        tr.innerHTML = `
+            <td>${client.nome}</td>
+            <td>${client.email}</td>
+            <td>${client.telefone||''}</td>
+            <td>${client.cpf||''}</td>
+            <td><span class="status-badge ${client.status==='ativo'?'status-andamento':'status-arquivado'}">${client.status==='ativo'?'Ativo':'Inativo'}</span></td>
+            <td>
+                <button class="action-btn" onclick="editClient(${client.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                <button class="action-btn btn-danger" onclick="deleteClientConfirm(${client.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+            </td>
+        `; 
+        tbody.appendChild(tr); 
+    }); 
+    await populateUserClientSelect(); 
+}
 
-        function loadProcessesTable(){ 
-            const processes=getProcesses(); 
-            const clients=getClients(); 
-            const search=document.getElementById('processSearch').value.toLowerCase(); 
-            const filtered = processes.filter(p=> (p.number||'').toLowerCase().includes(search) || (p.description||'').toLowerCase().includes(search)); 
-            const tbody=document.getElementById('processesTableBody'); 
-            tbody.innerHTML=''; 
-            filtered.forEach(process=>{ 
-                const client = clients.find(c=> c.id===process.clientId); 
-                const row=document.createElement('tr'); 
-                row.innerHTML = `
-                    <td>${process.number}</td>
-                    <td>${client?client.name:'N/A'}</td>
-                    <td>${process.type}</td>
-                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
-                    <td>${formatDate(process.startDate)}</td>
-                    <td>${process.lawyer}</td>
-                    <td>
-                        <button class="action-btn" onclick="editProcess(${process.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn" onclick="viewProcess(${process.id})" title="Ver Detalhes"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn btn-danger" onclick="deleteProcessConfirm(${process.id})" title="Excluir"><i class="fas fa-trash"></i></button>
-                    </td>
-                `; 
-                tbody.appendChild(row); 
-            }); 
-        }
+async function loadProcessesTable(){ 
+    const processes = await getProcesses(); 
+    const search = document.getElementById('processSearch').value.toLowerCase(); 
+    const filtered = processes.filter(p=> 
+        (p.numero_processo||'').toLowerCase().includes(search) || 
+        (p.descricao||'').toLowerCase().includes(search)
+    ); 
+    const tbody=document.getElementById('processesTableBody'); 
+    tbody.innerHTML=''; 
+    filtered.forEach(process=>{ 
+        const client = process.clientes; 
+        const row=document.createElement('tr'); 
+        row.innerHTML = `
+            <td>${process.numero_processo}</td>
+            <td>${client?client.nome:'N/A'}</td>
+            <td>${process.tipo_processo}</td>
+            <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
+            <td>${formatDate(process.data_abertura)}</td>
+            <td>${process.advogados ? process.advogados.nome : process.advogado_id}</td>
+            <td>
+                <button class="action-btn" onclick="editProcess(${process.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                <button class="action-btn" onclick="viewProcess(${process.id})" title="Ver Detalhes"><i class="fas fa-eye"></i></button>
+                <button class="action-btn btn-danger" onclick="deleteProcessConfirm(${process.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+            </td>
+        `; 
+        tbody.appendChild(row); 
+    }); 
+}
 
-        function loadUsersTable(){ 
-            const users = getUsers(); 
-            const clients = getClients(); 
-            const tbody=document.getElementById('usersTableBody'); 
-            tbody.innerHTML=''; 
-            users.forEach(user=>{ 
-                const clientName = user.clientId ? (clients.find(c=>c.id===user.clientId)?.name || 'N/A') : '-'; 
-                const tr=document.createElement('tr'); 
-                tr.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.type==='admin'?'Administrador':'Cliente'}</td>
-                    <td>${clientName}</td>
-                    <td><span class="status-badge ${user.status==='ativo'?'status-andamento':'status-arquivado'}">${user.status==='ativo'?'Ativo':'Inativo'}</span></td>
-                    <td>${user.lastAccess?formatDate(user.lastAccess):'-'}</td>
-                    <td>
-                        <button class="action-btn" onclick="editUser(${user.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                        ${user.id!==currentUser?.id?`<button class="action-btn btn-danger" onclick="deleteUserConfirm(${user.id})" title="Excluir"><i class="fas fa-trash"></i></button>`:''}
-                    </td>
-                `; 
-                tbody.appendChild(tr); 
-            }); 
-        }
+// --- CONTINUE com as outras funções mantendo a mesma lógica, mas usando async/await ---
+// [O restante do seu código JavaScript permanece similar, mas substitua todas as chamadas do localStorage pelas funções async acima]
 
-        // --- Client data load ---
-        function loadClientData(){ 
-            loadClientProcessesTable(); 
-            loadClientDocumentsTable(); 
-            loadClientProfile(); 
-        }
-        
-        function loadClientProcessesTable(){ 
-            const processes = getProcesses(); 
-            const tbody=document.getElementById('clientProcessesTableBody'); 
-            tbody.innerHTML=''; 
-            if(!currentUser?.clientId) return; 
-            const clientProcesses = processes.filter(p=> p.clientId === currentUser.clientId); 
-            clientProcesses.forEach(process=>{ 
-                const tr=document.createElement('tr'); 
-                tr.innerHTML = `
-                    <td>${process.number}</td>
-                    <td>${process.type}</td>
-                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
-                    <td>${formatDate(process.startDate)}</td>
-                    <td>${process.lawyer}</td>
-                    <td>
-                        <button class="action-btn" onclick="viewProcess(${process.id})" title="Ver Detalhes"><i class="fas fa-eye"></i></button>
-                    </td>
-                `; 
-                tbody.appendChild(tr); 
-            }); 
-        }
+// Funções utilitárias (mantenha estas)
+function getStatusText(s){ 
+    const map = { 
+        'pendente':'Pendente', 
+        'andamento':'Em Andamento', 
+        'concluido':'Concluído', 
+        'arquivado':'Arquivado' 
+    }; 
+    return map[s] || s; 
+}
 
-        function loadClientDocumentsTable(){ 
-            const documents = getDocuments(); 
-            const processes = getProcesses(); 
-            const clientProcesses = processes.filter(p=> p.clientId === currentUser.clientId); 
-            const clientDocuments = documents.filter(d=> clientProcesses.some(p=>p.id===d.processId)); 
-            const tbody=document.getElementById('clientDocumentsTableBody'); 
-            tbody.innerHTML=''; 
-            clientDocuments.forEach(doc=>{ 
-                const proc = processes.find(p=>p.id===doc.processId); 
-                const tr=document.createElement('tr'); 
-                tr.innerHTML = `
-                    <td>${doc.name}</td>
-                    <td>${proc?proc.number:'N/A'}</td>
-                    <td>${formatDate(doc.uploadDate)}</td>
-                    <td>${doc.type}</td>
-                    <td>
-                        <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
-                        <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-                    </td>
-                `; 
-                tbody.appendChild(tr); 
-            }); 
-        }
+function formatDate(d){ 
+    if(!d) return '-'; 
+    const date = new Date(d); 
+    return date.toLocaleDateString('pt-BR'); 
+}
 
-        function loadClientProfile(){ 
-            const clients = getClients(); 
-            const client = clients.find(c=> c.id === currentUser.clientId); 
-            if(client){ 
-                document.getElementById('clientProfileName').value = client.name; 
-                document.getElementById('clientProfileEmail').value = client.email; 
-                document.getElementById('clientProfilePhone').value = client.phone; 
-                document.getElementById('clientProfileCPF').value = client.cpf; 
-                document.getElementById('clientProfileAddress').value = client.address; 
-            } 
-        }
+function formatDateTime(d){ 
+    if(!d) return '-'; 
+    const date = new Date(d); 
+    return date.toLocaleString('pt-BR'); 
+}
 
-        // --- Modais open/close ---
-        function openClientModal(id=null){ 
-            const modal=document.getElementById('clientModal'); 
-            const title=document.getElementById('clientModalTitle'); 
-            const form=document.getElementById('clientForm'); 
-            if(id){ 
-                title.textContent='Editar Cliente'; 
-                const client = getClients().find(c=>c.id===id); 
-                if(client){ 
-                    document.getElementById('clientId').value = client.id; 
-                    document.getElementById('clientName').value = client.name; 
-                    document.getElementById('clientEmail').value = client.email; 
-                    document.getElementById('clientPhone').value = client.phone; 
-                    document.getElementById('clientCPF').value = client.cpf; 
-                    document.getElementById('clientAddress').value = client.address || ''; 
-                    document.getElementById('clientStatus').value = client.status; 
-                } 
-            } else { 
-                title.textContent='Adicionar Cliente'; 
-                form.reset(); 
-                document.getElementById('clientId').value=''; 
-            } 
-            modal.classList.add('active'); 
-        }
-        
-        function closeClientModal(){ 
-            document.getElementById('clientModal').classList.remove('active'); 
-        }
+function showAlert(message,type){ 
+    const main=document.querySelector('.main-container'); 
+    const a=document.createElement('div'); 
+    a.className = 'alert alert-'+type; 
+    a.style.padding='12px'; 
+    a.style.borderRadius='6px'; 
+    a.style.marginBottom='12px'; 
+    a.textContent = message; 
+    main.insertBefore(a, main.firstChild); 
+    setTimeout(()=>a.remove(),5000); 
+}
 
-        function openProcessModal(id=null){ 
-            const modal=document.getElementById('processModal'); 
-            const title=document.getElementById('processModalTitle'); 
-            const form=document.getElementById('processForm'); 
-            const clientSelect=document.getElementById('processClient'); 
-            clientSelect.innerHTML = '<option value="">Selecione um cliente</option>'; 
-            getClients().filter(c=>c.status==='ativo').forEach(c=>{ 
-                const opt=document.createElement('option'); 
-                opt.value=c.id; 
-                opt.textContent=c.name; 
-                clientSelect.appendChild(opt); 
-            }); 
-            if(id){ 
-                title.textContent='Editar Processo'; 
-                const proc = getProcesses().find(p=>p.id===id); 
-                if(proc){ 
-                    document.getElementById('processId').value=proc.id; 
-                    document.getElementById('processNumber').value=proc.number; 
-                    document.getElementById('processClient').value=proc.clientId; 
-                    document.getElementById('processType').value=proc.type; 
-                    document.getElementById('processStatus').value=proc.status; 
-                    document.getElementById('processLawyer').value=proc.lawyer; 
-                    document.getElementById('processStartDate').value=proc.startDate; 
-                    document.getElementById('processDeadline').value=proc.deadline || ''; 
-                    document.getElementById('processDescription').value=proc.description; 
-                } 
-            } else { 
-                title.textContent='Adicionar Processo'; 
-                form.reset(); 
-                document.getElementById('processId').value=''; 
-                document.getElementById('processStartDate').valueAsDate=new Date(); 
-            } 
-            modal.classList.add('active'); 
-        }
-        
-        function closeProcessModal(){ 
-            document.getElementById('processModal').classList.remove('active'); 
-        }
+// Populate client select for user modal
+async function populateUserClientSelect(){ 
+    const sel = document.getElementById('userClientSelect'); 
+    if(!sel) return; 
+    const clients = await getClients(); 
+    sel.innerHTML = '<option value="">Nenhum</option>'; 
+    clients.filter(c=>c.status==='ativo').forEach(c=>{ 
+        const opt = document.createElement('option'); 
+        opt.value = c.id; 
+        opt.textContent = c.nome; 
+        sel.appendChild(opt); 
+    }); 
+}
 
-        function openUserModal(id=null){ 
-            const modal=document.getElementById('userModal'); 
-            const title=document.getElementById('userModalTitle'); 
-            const form=document.getElementById('userForm'); 
-            populateUserClientSelect(); 
-            if(id){ 
-                title.textContent='Editar Usuário'; 
-                const user = getUsers().find(u=>u.id===id); 
-                if(user){ 
-                    document.getElementById('userId').value=user.id; 
-                    document.getElementById('userNameInput').value=user.name; 
-                    document.getElementById('userEmail').value=user.email; 
-                    document.getElementById('userPassword').value=user.password; 
-                    document.getElementById('userTypeModal').value=user.type; 
-                    document.getElementById('userStatus').value=user.status; 
-                    document.getElementById('userClientSelect').value = user.clientId || ''; 
-                } 
-            } else { 
-                title.textContent='Adicionar Usuário'; 
-                form.reset(); 
-                document.getElementById('userId').value=''; 
-            } 
-            modal.classList.add('active'); 
+// --- Adicione esta função para testar a conexão ---
+async function testConnection() {
+    try {
+        const { data, error } = await supabase.from('clientes').select('count');
+        if (error) {
+            console.error('Erro na conexão:', error);
+            return false;
+        } else {
+            console.log('✅ Conexão com Supabase estabelecida!');
+            return true;
         }
-        
-        function closeUserModal(){ 
-            document.getElementById('userModal').classList.remove('active'); 
-        }
+    } catch (error) {
+        console.error('Erro ao testar conexão:', error);
+        return false;
+    }
+}
 
-        // --- Form handlers ---
-        function handleClientSubmit(e){ 
-            e.preventDefault(); 
-            const client = { 
-                id: document.getElementById('clientId').value ? parseInt(document.getElementById('clientId').value) : null, 
-                name: document.getElementById('clientName').value, 
-                email: document.getElementById('clientEmail').value, 
-                phone: document.getElementById('clientPhone').value, 
-                cpf: document.getElementById('clientCPF').value, 
-                address: document.getElementById('clientAddress').value, 
-                status: document.getElementById('clientStatus').value 
-            }; 
-            const saved = saveClient(client); 
-            loadClientsTable(); 
-            closeClientModal(); 
-            showAlert('Cliente salvo com sucesso!','success'); 
-            // if there's a user with same email, link it automatically
-            const users = getUsers(); 
-            const userMatch = users.find(u=>u.email===saved.email && u.type==='client'); 
-            if(userMatch){ 
-                userMatch.clientId = saved.id; 
-                saveUser(userMatch); 
-                loadUsersTable(); 
-            }
-        }
-
-        function handleProcessSubmit(e){ 
-            e.preventDefault(); 
-            const process = { 
-                id: document.getElementById('processId').value ? parseInt(document.getElementById('processId').value) : null, 
-                number: document.getElementById('processNumber').value, 
-                clientId: parseInt(document.getElementById('processClient').value), 
-                type: document.getElementById('processType').value, 
-                status: document.getElementById('processStatus').value, 
-                lawyer: document.getElementById('processLawyer').value, 
-                startDate: document.getElementById('processStartDate').value, 
-                deadline: document.getElementById('processDeadline').value || null,
-                description: document.getElementById('processDescription').value 
-            }; 
-            const saved = saveProcess(process); 
-            loadProcessesTable(); 
-            closeProcessModal(); 
-            showAlert('Processo salvo com sucesso!','success'); 
-        }
-
-        function handleUserSubmit(e){ 
-            e.preventDefault(); 
-            const user = { 
-                id: document.getElementById('userId').value ? parseInt(document.getElementById('userId').value) : null, 
-                name: document.getElementById('userNameInput').value, 
-                email: document.getElementById('userEmail').value, 
-                password: document.getElementById('userPassword').value, 
-                type: document.getElementById('userTypeModal').value, 
-                status: document.getElementById('userStatus').value, 
-                lastAccess: new Date().toISOString() 
-            }; 
-            const clientSelect = document.getElementById('userClientSelect').value; 
-            if(user.type === 'client'){ 
-                if(clientSelect) user.clientId = parseInt(clientSelect); 
-                else { 
-                    // try to match by email
-                    const c = getClients().find(c=>c.email===user.email); 
-                    if(c) user.clientId = c.id; 
-                }
-            }
-            saveUser(user); 
-            loadUsersTable(); 
-            closeUserModal(); 
-            showAlert('Usuário salvo com sucesso!','success'); 
-        }
-
-        function handleClientProfileSubmit(e){ 
-            e.preventDefault(); 
-            const client = { 
-                id: currentUser.clientId, 
-                name: document.getElementById('clientProfileName').value, 
-                email: document.getElementById('clientProfileEmail').value, 
-                phone: document.getElementById('clientProfilePhone').value, 
-                cpf: document.getElementById('clientProfileCPF').value, 
-                address: document.getElementById('clientProfileAddress').value, 
-                status:'ativo' 
-            }; 
-            saveClient(client); 
-            // atualizar usuário vinculado
-            const users = getUsers(); 
-            const user = users.find(u=>u.id===currentUser.id); 
-            if(user){ 
-                user.name = client.name; 
-                user.email = client.email; 
-                saveUser(user); 
-                currentUser = user; 
-                localStorage.setItem('currentUser', JSON.stringify(user)); 
-                userNameDisplay.textContent = user.name; 
-            }
-            showAlert('Perfil atualizado com sucesso!','success'); 
-        }
-
-        // --- Edit / Delete ---
-        function editClient(id){ openClientModal(id); }
-        function editProcess(id){ openProcessModal(id); }
-        function editUser(id){ openUserModal(id); }
-
-        function deleteClientConfirm(id){ if(confirm('Tem certeza que deseja excluir este cliente?')){ deleteClient(id); // also unlink users
-                const users = getUsers(); users.filter(u=>u.clientId===id).forEach(u=>{ delete u.clientId; saveUser(u); }); loadClientsTable(); loadUsersTable(); showAlert('Cliente excluído com sucesso!','success'); } }
-        function deleteProcessConfirm(id){ if(confirm('Tem certeza?')){ deleteProcess(id); loadProcessesTable(); showAlert('Processo excluído com sucesso!','success'); } }
-        function deleteUserConfirm(id){ if(confirm('Tem certeza?')){ deleteUser(id); loadUsersTable(); showAlert('Usuário excluído com sucesso!','success'); } }
-
-        // --- Utilities ---
-        function getStatusText(s){ const map = { 'pendente':'Pendente', 'andamento':'Em Andamento', 'concluido':'Concluído', 'arquivado':'Arquivado' }; return map[s] || s; }
-        function formatDate(d){ if(!d) return '-'; const date = new Date(d); return date.toLocaleDateString('pt-BR'); }
-        function formatDateTime(d){ if(!d) return '-'; const date = new Date(d); return date.toLocaleString('pt-BR'); }
-        function showAlert(message,type){ const main=document.querySelector('.main-container'); const a=document.createElement('div'); a.className = 'alert alert-'+type; a.style.padding='12px'; a.style.borderRadius='6px'; a.style.marginBottom='12px'; a.textContent = message; main.insertBefore(a, main.firstChild); setTimeout(()=>a.remove(),5000); }
-
-        // Populate client select for user modal
-        function populateUserClientSelect(){ const sel = document.getElementById('userClientSelect'); if(!sel) return; const clients = getClients(); sel.innerHTML = '<option value="">Nenhum</option>'; clients.filter(c=>c.status==='ativo').forEach(c=>{ const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name; sel.appendChild(opt); }); }
-
-        // --- Busca Avançada ---
-        function toggleAdvancedSearch(type) {
-            const element = document.getElementById(`${type}AdvancedSearch`);
-            element.style.display = element.style.display === 'none' ? 'block' : 'none';
-        }
-        
-        function applyAdvancedSearch(type) {
-            if (type === 'clients') {
-                loadClientsTable();
-            } else if (type === 'processes') {
-                loadProcessesTable();
-            }
-        }
-        
-        function clearAdvancedSearch(type) {
-            if (type === 'clients') {
-                document.getElementById('searchClientStatus').value = '';
-                document.getElementById('searchClientDateFrom').value = '';
-                document.getElementById('searchClientDateTo').value = '';
-            } else if (type === 'processes') {
-                document.getElementById('searchProcessStatus').value = '';
-                document.getElementById('searchProcessDateFrom').value = '';
-                document.getElementById('searchProcessDateTo').value = '';
-            }
-            applyAdvancedSearch(type);
-        }
-
-        // --- Timeline / Details ---
-        function viewProcess(id){ 
-            currentProcessId = id;
-            const proc = getProcesses().find(p=>p.id===id); 
-            if(!proc) return; 
-            const clients = getClients(); 
-            const client = clients.find(c=>c.id===proc.clientId); 
-            
-            // Reset para a aba de timeline
-            switchModalTab('timeline');
-            
-            let html = `<h3 style="margin-bottom:.25rem">${proc.number}</h3><div style="font-size:.95rem; color:var(--text-medium); margin-bottom:.75rem">Cliente: ${client?client.name:'N/A'} • Advogado: ${proc.lawyer}</div><p style="margin-bottom:.75rem">${proc.description}</p><h4>Timeline</h4><div class="timeline">`; 
-            (proc.updates||[]).forEach(u=>{ 
-                html += `<div class="timeline-item"><span class="timeline-date">${formatDate(u.date)}</span><div class="timeline-desc">${u.description}</div></div>`; 
-            }); 
-            html += `</div>`; 
-            document.getElementById('processDetailsContent').innerHTML = html;
-            
-            // Adicionar formulário para adicionar atualizações (apenas para admin)
-            const addUpdateContainer = document.getElementById('addUpdateContainer');
-            if(currentUser.type === 'admin') {
-                addUpdateContainer.innerHTML = `
-                    <h4>Adicionar Atualização</h4>
-                    <form id="addUpdateForm">
-                        <input type="hidden" id="updateProcessId" value="${proc.id}">
-                        <div style="margin-bottom:1rem">
-                            <label>Descrição da Atualização</label>
-                            <textarea id="updateDescription" class="form-control" rows="3" required></textarea>
-                        </div>
-                        <div style="text-align:right">
-                            <button type="submit" class="btn">Adicionar</button>
-                        </div>
-                    </form>
-                `;
-                
-                document.getElementById('addUpdateForm').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const processId = parseInt(document.getElementById('updateProcessId').value);
-                    const description = document.getElementById('updateDescription').value;
-                    
-                    if(!description) return;
-                    
-                    const processes = getProcesses();
-                    const process = processes.find(p=>p.id===processId);
-                    if(process) {
-                        // Adiciona a nova atualização
-                        const newUpdate = {
-                            date: new Date().toISOString().split('T')[0],
-                            description: description
-                        };
-                        if(!process.updates) process.updates = [];
-                        process.updates.push(newUpdate);
-                        saveProcess(process);
-                        // Atualiza a visualização
-                        viewProcess(processId);
-                        showAlert('Atualização adicionada com sucesso!', 'success');
-                    }
-                });
-            } else {
-                addUpdateContainer.innerHTML = '';
-            }
-            
-            // Carregar dados financeiros
-            loadFinancialData(id);
-            
-            document.getElementById('processDetailsModal').classList.add('active'); 
-        }
-        
-        function loadFinancialData(processId) {
-            // VERIFICAÇÃO DE PERMISSÃO
-            if (!checkFinancialAccess()) {
-                const financialContainer = document.getElementById('financialDetailsContent');
-                financialContainer.innerHTML = `
-                    <div class="alert alert-error">
-                        <i class="fas fa-lock"></i> Acesso restrito. Apenas administradores podem visualizar informações financeiras.
-                    </div>
-                `;
-                document.getElementById('addFinancialContainer').innerHTML = '';
-                return;
-            }
-            
-            const financials = getFinancials().filter(f => f.processId === processId);
-            const financialContainer = document.getElementById('financialDetailsContent');
-            
-            let html = `<h4>Resumo Financeiro</h4>`;
-            
-            // Calcular totais
-            const honorarios = financials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
-            const custos = financials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
-            const saldo = honorarios - custos;
-            
-            html += `
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--success);">R$ ${honorarios.toLocaleString('pt-BR')}</div>
-                        <div style="font-size: 0.9rem; color: var(--text-medium);">Honorários</div>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--danger);">R$ ${custos.toLocaleString('pt-BR')}</div>
-                        <div style="font-size: 0.9rem; color: var(--text-medium);">Custos</div>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: ${saldo >= 0 ? 'var(--success)' : 'var(--danger)'};">R$ ${saldo.toLocaleString('pt-BR')}</div>
-                        <div style="font-size: 0.9rem; color: var(--text-medium);">Saldo</div>
-                    </div>
-                </div>
-            `;
-            
-            html += `<h4>Lançamentos Financeiros</h4>`;
-            
-            if (financials.length > 0) {
-                html += `
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--primary-dark); color: var(--text-light);">
-                                <th style="padding: 0.75rem;">Data</th>
-                                <th style="padding: 0.75rem;">Tipo</th>
-                                <th style="padding: 0.75rem;">Descrição</th>
-                                <th style="padding: 0.75rem;">Valor</th>
-                                <th style="padding: 0.75rem;">Status</th>
-                                <th style="padding: 0.75rem;">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                financials.forEach(financial => {
-                    const tipoText = financial.type === 'honorario' ? 'Honorário' : 'Custo';
-                    const tipoClass = financial.type === 'honorario' ? 'financial-receita' : 'financial-despesa';
-                    const statusClass = financial.status === 'pago' ? 'financial-pago' : 'financial-pendente';
-                    const statusText = financial.status === 'pago' ? 'Pago' : 'Pendente';
-                    
-                    html += `
-                        <tr>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">${formatDate(financial.date)}</td>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;"><span class="financial-badge ${tipoClass}">${tipoText}</span></td>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">${financial.description}</td>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">R$ ${financial.value.toLocaleString('pt-BR')}</td>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;"><span class="financial-badge ${statusClass}">${statusText}</span></td>
-                            <td style="padding: 0.75rem; border-bottom: 1px solid #e0e0e0;">
-                                <button class="action-btn" onclick="editFinancial(${financial.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn btn-danger" onclick="deleteFinancialConfirm(${financial.id})" title="Excluir"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                html += `</tbody></table>`;
-            } else {
-                html += `<p style="text-align: center; color: var(--text-medium); padding: 2rem;">Nenhum lançamento financeiro registrado.</p>`;
-            }
-            
-            financialContainer.innerHTML = html;
-            
-            // Adicionar formulário para novos lançamentos (apenas para admin)
-            const addFinancialContainer = document.getElementById('addFinancialContainer');
-            if(currentUser.type === 'admin') {
-                addFinancialContainer.innerHTML = `
-                    <h4>Adicionar Lançamento Financeiro</h4>
-                    <form id="addFinancialForm">
-                        <input type="hidden" id="financialProcessId" value="${processId}">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                            <div>
-                                <label>Tipo</label>
-                                <select id="financialType" class="form-control" required>
-                                    <option value="">Selecione</option>
-                                    <option value="honorario">Honorário</option>
-                                    <option value="custo">Custo</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Status</label>
-                                <select id="financialStatus" class="form-control" required>
-                                    <option value="pendente">Pendente</option>
-                                    <option value="pago">Pago</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 1rem">
-                            <label>Descrição</label>
-                            <input type="text" id="financialDescription" class="form-control" required>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                            <div>
-                                <label>Valor (R$)</label>
-                                <input type="number" id="financialValue" class="form-control" step="0.01" min="0" required>
-                            </div>
-                            <div>
-                                <label>Data</label>
-                                <input type="date" id="financialDate" class="form-control" required>
-                            </div>
-                        </div>
-                        <div style="text-align:right">
-                            <button type="submit" class="btn">Adicionar</button>
-                        </div>
-                    </form>
-                `;
-                
-                // Definir data atual como padrão
-                document.getElementById('financialDate').valueAsDate = new Date();
-                
-                document.getElementById('addFinancialForm').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const processId = parseInt(document.getElementById('financialProcessId').value);
-                    const type = document.getElementById('financialType').value;
-                    const description = document.getElementById('financialDescription').value;
-                    const value = parseFloat(document.getElementById('financialValue').value);
-                    const date = document.getElementById('financialDate').value;
-                    const status = document.getElementById('financialStatus').value;
-                    
-                    if(!type || !description || !value) return;
-                    
-                    const financial = {
-                        processId: processId,
-                        type: type,
-                        description: description,
-                        value: value,
-                        date: date,
-                        status: status
-                    };
-                    
-                    saveFinancial(financial);
-                    // Atualiza a visualização
-                    loadFinancialData(processId);
-                    showAlert('Lançamento financeiro adicionado com sucesso!', 'success');
-                    
-                    // Limpar formulário
-                    document.getElementById('addFinancialForm').reset();
-                    document.getElementById('financialDate').valueAsDate = new Date();
-                });
-            } else {
-                addFinancialContainer.innerHTML = '';
-            }
-        }
-        
-        function closeProcessDetails(){ 
-            document.getElementById('processDetailsModal').classList.remove('active'); 
-            // Limpa os containers
-            document.getElementById('addUpdateContainer').innerHTML = '';
-            document.getElementById('addFinancialContainer').innerHTML = '';
-            currentProcessId = null;
-        }
-        
-        function editFinancial(id) {
-            const financial = getFinancials().find(f => f.id === id);
-            if (!financial) return;
-            
-            // Preencher o formulário com os dados existentes
-            document.getElementById('financialType').value = financial.type;
-            document.getElementById('financialStatus').value = financial.status;
-            document.getElementById('financialDescription').value = financial.description;
-            document.getElementById('financialValue').value = financial.value;
-            document.getElementById('financialDate').value = financial.date;
-            
-            // Rolar para o formulário
-            document.getElementById('addFinancialContainer').scrollIntoView({ behavior: 'smooth' });
-            
-            // Alterar o botão para "Atualizar"
-            const form = document.getElementById('addFinancialForm');
-            const submitButton = form.querySelector('button[type="submit"]');
-            submitButton.textContent = 'Atualizar';
-            submitButton.onclick = function(e) {
-                e.preventDefault();
-                
-                // Atualizar o lançamento
-                financial.type = document.getElementById('financialType').value;
-                financial.status = document.getElementById('financialStatus').value;
-                financial.description = document.getElementById('financialDescription').value;
-                financial.value = parseFloat(document.getElementById('financialValue').value);
-                financial.date = document.getElementById('financialDate').value;
-                
-                saveFinancial(financial);
-                loadFinancialData(currentProcessId);
-                showAlert('Lançamento financeiro atualizado com sucesso!', 'success');
-                
-                // Restaurar o formulário para adição
-                document.getElementById('addFinancialForm').reset();
-                document.getElementById('financialDate').valueAsDate = new Date();
-                submitButton.textContent = 'Adicionar';
-                submitButton.onclick = null;
-            };
-        }
-        
-        function deleteFinancialConfirm(id) {
-            if(confirm('Tem certeza que deseja excluir este lançamento financeiro?')) {
-                deleteFinancial(id);
-                loadFinancialData(currentProcessId);
-                showAlert('Lançamento financeiro excluído com sucesso!', 'success');
-            }
-        }
-
-        // --- Relatórios ---
-        function generateReports() {
-            const period = document.getElementById('reportPeriod').value;
-            const lawyer = document.getElementById('reportLawyer').value;
-            
-            // Obter dados do localStorage
-            const processes = getProcesses();
-            const clients = getClients();
-            const financials = getFinancials();
-            
-            // Aplicar filtros
-            let filteredProcesses = processes;
-            
-            if (lawyer !== 'all') {
-                filteredProcesses = filteredProcesses.filter(p => p.lawyer === lawyer);
-            }
-            
-            if (period !== 'all') {
-                const days = parseInt(period);
-                const cutoffDate = new Date();
-                cutoffDate.setDate(cutoffDate.getDate() - days);
-                
-                filteredProcesses = filteredProcesses.filter(p => {
-                    const processDate = new Date(p.startDate);
-                    return processDate >= cutoffDate;
-                });
-            }
-            
-            // Calcular totais financeiros
-            let totalRevenue = 0;
-            let totalExpenses = 0;
-            
-            filteredProcesses.forEach(process => {
-                const processFinancials = financials.filter(f => f.processId === process.id);
-                const honorarios = processFinancials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
-                const custos = processFinancials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
-                
-                totalRevenue += honorarios;
-                totalExpenses += custos;
-            });
-            
-            // Atualizar estatísticas
-            document.getElementById('totalProcesses').textContent = filteredProcesses.length;
-            document.getElementById('activeClients').textContent = clients.filter(c => c.status === 'ativo').length;
-            document.getElementById('processesInProgress').textContent = filteredProcesses.filter(p => p.status === 'andamento').length;
-            document.getElementById('totalRevenue').textContent = `R$ ${totalRevenue.toLocaleString('pt-BR')}`;
-            
-            // Atualizar gráficos
-            renderCharts(filteredProcesses);
-            
-            // Atualizar tabela de processos
-            updateProcessesReportTable(filteredProcesses, clients, financials);
-        }
-
-        function updateProcessesReportTable(processes, clients, financials) {
-            const tbody = document.getElementById('reportProcessesBody');
-            tbody.innerHTML = '';
-            
-            processes.forEach(process => {
-                const client = clients.find(c => c.id === process.clientId);
-                const processFinancials = financials.filter(f => f.processId === process.id);
-                const honorarios = processFinancials.filter(f => f.type === 'honorario').reduce((sum, f) => sum + f.value, 0);
-                const custos = processFinancials.filter(f => f.type === 'custo').reduce((sum, f) => sum + f.value, 0);
-                const saldo = honorarios - custos;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${process.number}</td>
-                    <td>${client ? client.name : 'N/A'}</td>
-                    <td>${process.type}</td>
-                    <td><span class="status-badge status-${process.status}">${getStatusText(process.status)}</span></td>
-                    <td>R$ ${honorarios.toLocaleString('pt-BR')}</td>
-                    <td>R$ ${custos.toLocaleString('pt-BR')}</td>
-                    <td style="font-weight: bold; color: ${saldo >= 0 ? 'var(--success)' : 'var(--danger)'};">R$ ${saldo.toLocaleString('pt-BR')}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            if (processes.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="7" style="text-align: center; color: var(--text-medium);">Nenhum processo encontrado</td>`;
-                tbody.appendChild(row);
-            }
-        }
-
-        function renderCharts(processes) {
-            // Gráfico de status
-            const statusCount = {
-                'pendente': processes.filter(p => p.status === 'pendente').length,
-                'andamento': processes.filter(p => p.status === 'andamento').length,
-                'concluido': processes.filter(p => p.status === 'concluido').length,
-                'arquivado': processes.filter(p => p.status === 'arquivado').length
-            };
-            
-            const statusChart = document.getElementById('statusChart');
-            statusChart.innerHTML = `
-                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Pendente</span>
-                        <span style="font-weight: bold;">${statusCount.pendente}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Em Andamento</span>
-                        <span style="font-weight: bold;">${statusCount.andamento}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Concluído</span>
-                        <span style="font-weight: bold;">${statusCount.concluido}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Arquivado</span>
-                        <span style="font-weight: bold;">${statusCount.arquivado}</span>
-                    </div>
-                </div>
-            `;
-            
-            // Gráfico de advogados
-            const lawyerCount = {};
-            processes.forEach(p => {
-                lawyerCount[p.lawyer] = (lawyerCount[p.lawyer] || 0) + 1;
-            });
-            
-            const lawyerChart = document.getElementById('lawyerChart');
-            lawyerChart.innerHTML = `
-                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
-                    ${Object.entries(lawyerCount).map(([lawyer, count]) => `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>${lawyer}</span>
-                            <span style="font-weight: bold;">${count}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function exportToPDF() {
-            alert('Funcionalidade de exportação para PDF será implementada em breve!');
-        }
-
-        function exportToExcel() {
-            // Obter dados da tabela de relatórios
-            const table = document.querySelector('#reports-tab table');
-            if (!table) {
-                alert('Nenhuma tabela encontrada para exportar.');
-                return;
-            }
-
-            // Criar uma string CSV
-            let csv = [];
-            
-            // Obter cabeçalhos
-            const headers = [];
-            table.querySelectorAll('thead th').forEach(th => {
-                headers.push(th.innerText);
-            });
-            csv.push(headers.join(','));
-            
-            // Obter linhas de dados
-            table.querySelectorAll('tbody tr').forEach(tr => {
-                const row = [];
-                tr.querySelectorAll('td').forEach(td => {
-                    // Remover qualquer formatação HTML e quebras de linha
-                    let text = td.innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/,/g, ";");
-                    row.push(text);
-                });
-                csv.push(row.join(','));
-            });
-            
-            // Juntar tudo em uma string
-            const csvString = csv.join('\n');
-            
-            // Criar um blob e fazer download
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'relatorio_processos.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showAlert('Relatório exportado com sucesso!', 'success');
-        }
-
-        // --- Backup e Restauração ---
-        function exportBackup() {
-            const backupData = {
-                clients: getClients(),
-                processes: getProcesses(),
-                users: getUsers(),
-                documents: getDocuments(),
-                financials: getFinancials(),
-                notifications: getNotifications(),
-                exportDate: new Date().toISOString()
-            };
-            
-            const dataStr = JSON.stringify(backupData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `backup_mps_${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            showAlert('Backup exportado com sucesso!', 'success');
-        }
-
-        function importBackup() {
-            document.getElementById('backupFile').click();
-        }
-
-        function handleBackupImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const backupData = JSON.parse(e.target.result);
-                    
-                    // Validar estrutura do backup
-                    if (!backupData.clients || !backupData.processes || !backupData.users) {
-                        throw new Error('Arquivo de backup inválido');
-                    }
-                    
-                    // Restaurar dados
-                    saveToDB(DB_KEYS.CLIENTS, backupData.clients);
-                    saveToDB(DB_KEYS.PROCESSES, backupData.processes);
-                    saveToDB(DB_KEYS.USERS, backupData.users);
-                    saveToDB(DB_KEYS.DOCUMENTS, backupData.documents || []);
-                    saveToDB(DB_KEYS.FINANCIALS, backupData.financials || []);
-                    saveToDB(DB_KEYS.NOTIFICATIONS, backupData.notifications || []);
-                    
-                    // Recarregar dados
-                    if (currentUser.type === 'admin') {
-                        loadAdminData();
-                    } else {
-                        loadClientData();
-                    }
-                    
-                    showAlert('Backup restaurado com sucesso!', 'success');
-                    
-                    // Limpar input
-                    event.target.value = '';
-                    
-                } catch (error) {
-                    alert('Erro ao importar backup: ' + error.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // --- Loading States ---
-        function showLoading() {
-            const loading = document.createElement('div');
-            loading.id = 'loadingOverlay';
-            loading.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-                    <div style="background: white; padding: 2rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem;">
-                        <div class="spinner"></div>
-                        <span>Carregando...</span>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(loading);
-        }
-
-        function hideLoading() {
-            const loading = document.getElementById('loadingOverlay');
-            if (loading) loading.remove();
-        }
+// Teste a conexão quando a página carregar
+document.addEventListener('DOMContentLoaded', async () => {
+    const connected = await testConnection();
+    if (!connected) {
+        alert('⚠️ Erro na conexão com o banco de dados. Verifique as credenciais do Supabase.');
+    }
+});
     </script>
 </body>
 </html>
