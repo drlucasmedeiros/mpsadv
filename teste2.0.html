@@ -1,0 +1,4169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPS Advogados 2.0 - Sistema Processual</title>
+    
+    <!-- Fontes e ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-dark: #001A1A;
+            --primary-medium: #002B2B;
+            --primary-light: #004D4D;
+            --accent: #C9A769;
+            --accent-light: #D4B989;
+            --text-light: #f8f8f8;
+            --text-dark: #1A1A1A;
+            --text-medium: #5A5A5A;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Layout Principal */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            transition: var(--transition);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .logo-container {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+        
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .nav-section {
+            padding: 1.5rem 0;
+        }
+        
+        .nav-title {
+            padding: 0 1.5rem 0.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .nav-item.active {
+            background: rgba(201, 167, 105, 0.1);
+            border-left-color: var(--accent);
+        }
+        
+        .nav-icon {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar.collapsed .nav-title {
+            display: none;
+        }
+        
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: var(--transition);
+            background: var(--gray-light);
+            min-height: 100vh;
+        }
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 70px;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-medium);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Cards e Conteúdo */
+        .content-area {
+            padding: 2rem;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .card-icon.primary {
+            background: rgba(0, 77, 77, 0.1);
+            color: var(--primary-light);
+        }
+        
+        .card-icon.accent {
+            background: rgba(201, 167, 105, 0.1);
+            color: var(--accent);
+        }
+        
+        .card-icon.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .card-icon.warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-description {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        /* Tabelas */
+        .table-container {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-primary {
+            background: rgba(0, 77, 77, 0.1);
+            color: var(--primary-light);
+        }
+        
+        .badge-accent {
+            background: rgba(201, 167, 105, 0.1);
+            color: var(--accent);
+        }
+        
+        .badge-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Botões */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-light);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-medium);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        
+        .btn-accent:hover {
+            background: var(--accent-light);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-medium);
+            color: var(--text-medium);
+        }
+        
+        .btn-outline:hover {
+            background: var(--gray-light);
+        }
+        
+        /* Formulários */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 167, 105, 0.2);
+        }
+        
+        /* Modais */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+        
+        /* Anotações (Post-It) */
+        .notes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .note {
+            background: #fff9c4;
+            border-radius: 8px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 150px;
+            cursor: move;
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .note-date {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .note-action {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        .note-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            margin-bottom: 0.3rem;
+        }
+        
+        .timeline-content {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+            
+            .sidebar.collapsed {
+                width: 70px;
+            }
+            
+            .sidebar.collapsed ~ .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .content-area {
+                padding: 1rem;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .table-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        
+        /* Utilitários */
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .gap-1 {
+            gap: 1rem;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 77, 77, 0.1);
+            border-left: 4px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+        }
+        
+        .login-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        /* Alertas */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .alert-error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
+        /* Abas */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-medium);
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Pareceres */
+        .opinion-editor {
+            border: 1px solid var(--gray-medium);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .editor-toolbar {
+            background: var(--gray-light);
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .editor-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .editor-btn:hover {
+            background: var(--gray-medium);
+        }
+        
+        .editor-content {
+            min-height: 200px;
+            padding: 1rem;
+            outline: none;
+        }
+        
+        /* Drag & Drop */
+        .drag-over {
+            background: rgba(201, 167, 105, 0.1);
+            border: 2px dashed var(--accent);
+        }
+
+        /* Calendário */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--gray-medium);
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            grid-column: 1 / -1;
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .calendar-day {
+            background: var(--white);
+            padding: 0.8rem;
+            min-height: 100px;
+            font-size: 0.9rem;
+        }
+        
+        .calendar-day.other-month {
+            background: var(--gray-light);
+            color: var(--text-medium);
+        }
+        
+        .calendar-day.has-events {
+            background: rgba(201, 167, 105, 0.1);
+        }
+        
+        .calendar-event {
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Filtros */
+        .filters {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">MPS ADVOGADOS</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginType">Tipo de Usuário</label>
+                    <select id="loginType" class="form-control" required>
+                        <option value="">Selecione</option>
+                        <option value="admin">Administrador</option>
+                        <option value="advogado">Advogado</option>
+                        <option value="cliente">Cliente</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Entrar no Sistema</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Aplicação Principal -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo-container">
+                <div class="logo">MPS ADVOGADOS</div>
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Principal</div>
+                <div class="nav-item active" data-page="dashboard">
+                    <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="nav-text">Dashboard</div>
+                </div>
+                <div class="nav-item" data-page="processos">
+                    <div class="nav-icon"><i class="fas fa-gavel"></i></div>
+                    <div class="nav-text">Processos</div>
+                </div>
+                <div class="nav-item" data-page="clientes">
+                    <div class="nav-icon"><i class="fas fa-users"></i></div>
+                    <div class="nav-text">Clientes</div>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Ferramentas</div>
+                <div class="nav-item" data-page="prazos">
+                    <div class="nav-icon"><i class="fas fa-clock"></i></div>
+                    <div class="nav-text">Controle de Prazos</div>
+                </div>
+                <div class="nav-item" data-page="audiencias">
+                    <div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="nav-text">Audiências</div>
+                </div>
+                <div class="nav-item" data-page="pareceres">
+                    <div class="nav-icon"><i class="fas fa-file-contract"></i></div>
+                    <div class="nav-text">Pareceres</div>
+                </div>
+                <div class="nav-item" data-page="anotacoes">
+                    <div class="nav-icon"><i class="fas fa-sticky-note"></i></div>
+                    <div class="nav-text">Anotações</div>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Administração</div>
+                <div class="nav-item" data-page="advogados">
+                    <div class="nav-icon"><i class="fas fa-user-tie"></i></div>
+                    <div class="nav-text">Advogados</div>
+                </div>
+                <div class="nav-item" data-page="relatorios">
+                    <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="nav-text">Relatórios</div>
+                </div>
+                <div class="nav-item" data-page="configuracoes">
+                    <div class="nav-icon"><i class="fas fa-cog"></i></div>
+                    <div class="nav-text">Configurações</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title" id="pageTitle">Dashboard</div>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div>
+                        <div id="userName">Usuário</div>
+                        <div id="userRole" style="font-size: 0.8rem; color: var(--text-medium);">Administrador</div>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área de Conteúdo -->
+            <div class="content-area">
+                <!-- Dashboard -->
+                <div id="dashboardPage" class="page active">
+                    <div class="dashboard-cards">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Processos Ativos</div>
+                                <div class="card-icon primary">
+                                    <i class="fas fa-gavel"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="totalProcessos">0</div>
+                            <div class="card-description">Processos em andamento</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Prazos Hoje</div>
+                                <div class="card-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="prazosHoje">0</div>
+                            <div class="card-description">Precisa de atenção</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Audiências Agendadas</div>
+                                <div class="card-icon accent">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="audienciasAgendadas">0</div>
+                            <div class="card-description">Próximos 7 dias</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Clientes Ativos</div>
+                                <div class="card-icon success">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="totalClientes">0</div>
+                            <div class="card-description">Clientes ativos no sistema</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2" style="flex-wrap: wrap;">
+                        <div class="card" style="flex: 1; min-width: 300px;">
+                            <div class="card-header">
+                                <div class="card-title">Processos por Status</div>
+                            </div>
+                            <div style="height: 250px; padding: 1rem;">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card" style="flex: 1; min-width: 300px;">
+                            <div class="card-header">
+                                <div class="card-title">Próximos Prazos</div>
+                            </div>
+                            <div style="max-height: 250px; overflow-y: auto;">
+                                <div class="timeline" id="deadlinesList">
+                                    <!-- Carregado dinamicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Processos Recentes</div>
+                            <button class="btn btn-primary" id="addProcessBtn">
+                                <i class="fas fa-plus"></i> Novo Processo
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Cliente</th>
+                                        <th>Tipo</th>
+                                        <th>Status</th>
+                                        <th>Advogado</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentProcessesTable">
+                                    <!-- Dados carregados via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Outras páginas serão carregadas aqui dinamicamente -->
+                <div id="dynamicContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Processo -->
+    <div class="modal" id="processModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="processModalTitle">Adicionar Processo</div>
+                <button class="modal-close" id="closeProcessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="processForm">
+                    <input type="hidden" id="processId">
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processNumber">Número do Processo</label>
+                            <input type="text" id="processNumber" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processClient">Cliente</label>
+                            <select id="processClient" class="form-control" required>
+                                <option value="">Selecione um cliente</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processType">Tipo de Processo</label>
+                            <select id="processType" class="form-control" required>
+                                <option value="">Selecione</option>
+                                <option value="civil">Civil</option>
+                                <option value="trabalhista">Trabalhista</option>
+                                <option value="penal">Penal</option>
+                                <option value="previdenciario">Previdenciário</option>
+                                <option value="empresarial">Empresarial</option>
+                                <option value="familia">Família</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processStatus">Status</label>
+                            <select id="processStatus" class="form-control" required>
+                                <option value="pendente">Pendente</option>
+                                <option value="andamento">Em Andamento</option>
+                                <option value="concluido">Concluído</option>
+                                <option value="arquivado">Arquivado</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processLawyer">Advogado Responsável</label>
+                            <select id="processLawyer" class="form-control" required>
+                                <option value="">Selecione o advogado</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="processStartDate">Data de Abertura</label>
+                            <input type="date" id="processStartDate" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="processDescription">Descrição</label>
+                        <textarea id="processDescription" class="form-control" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelProcessBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveProcessBtn">Salvar Processo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cliente -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="clientModalTitle">Adicionar Cliente</div>
+                <button class="modal-close" id="closeClientModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="clientForm">
+                    <input type="hidden" id="clientId">
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientName">Nome Completo</label>
+                            <input type="text" id="clientName" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientEmail">E-mail</label>
+                            <input type="email" id="clientEmail" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientPhone">Telefone</label>
+                            <input type="tel" id="clientPhone" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientCPF">CPF/CNPJ</label>
+                            <input type="text" id="clientCPF" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientAddress">Endereço</label>
+                        <input type="text" id="clientAddress" class="form-control">
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientPassword">Senha</label>
+                            <input type="password" id="clientPassword" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="clientStatus">Status</label>
+                            <select id="clientStatus" class="form-control" required>
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelClientBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveClientBtn">Salvar Cliente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Prazo -->
+    <div class="modal" id="deadlineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="deadlineModalTitle">Adicionar Prazo</div>
+                <button class="modal-close" id="closeDeadlineModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="deadlineForm">
+                    <input type="hidden" id="deadlineId">
+                    <div class="form-group">
+                        <label for="deadlineProcess">Processo</label>
+                        <select id="deadlineProcess" class="form-control" required>
+                            <option value="">Selecione o processo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="deadlineType">Tipo de Prazo</label>
+                            <select id="deadlineType" class="form-control" required>
+                                <option value="">Selecione</option>
+                                <option value="peticao">Petição</option>
+                                <option value="contestacao">Contestação</option>
+                                <option value="recurso">Recurso</option>
+                                <option value="audiencia">Audiência</option>
+                                <option value="diligencia">Diligência</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="deadlineDate">Data do Prazo</label>
+                            <input type="date" id="deadlineDate" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deadlineDescription">Descrição</label>
+                        <textarea id="deadlineDescription" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="deadlinePostTimeline"> Postar na timeline do processo
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDeadlineBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveDeadlineBtn">Salvar Prazo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Audiência -->
+    <div class="modal" id="hearingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="hearingModalTitle">Agendar Audiência</div>
+                <button class="modal-close" id="closeHearingModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="hearingForm">
+                    <input type="hidden" id="hearingId">
+                    <div class="form-group">
+                        <label for="hearingProcess">Processo</label>
+                        <select id="hearingProcess" class="form-control" required>
+                            <option value="">Selecione o processo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="hearingDate">Data</label>
+                            <input type="date" id="hearingDate" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="hearingTime">Hora</label>
+                            <input type="time" id="hearingTime" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hearingLocation">Local</label>
+                        <input type="text" id="hearingLocation" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hearingType">Tipo de Audiência</label>
+                        <select id="hearingType" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="instrucao">Instrução</option>
+                            <option value="conciliacao">Conciliação</option>
+                            <option value="julgamento">Julgamento</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hearingNotes">Observações</label>
+                        <textarea id="hearingNotes" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelHearingBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveHearingBtn">Salvar Audiência</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Parecer -->
+    <div class="modal" id="opinionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="opinionModalTitle">Novo Parecer</div>
+                <button class="modal-close" id="closeOpinionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="opinionForm">
+                    <input type="hidden" id="opinionId">
+                    <div class="form-group">
+                        <label for="opinionProcess">Processo</label>
+                        <select id="opinionProcess" class="form-control" required>
+                            <option value="">Selecione o processo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="opinionTitle">Título do Parecer</label>
+                            <input type="text" id="opinionTitle" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="opinionType">Tipo</label>
+                            <select id="opinionType" class="form-control" required>
+                                <option value="juridico">Jurídico</option>
+                                <option value="tecnico">Técnico</option>
+                                <option value="administrativo">Administrativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="opinionUrgency">Grau de Urgência</label>
+                        <select id="opinionUrgency" class="form-control" required>
+                            <option value="baixo">Baixo</option>
+                            <option value="medio">Médio</option>
+                            <option value="alto">Alto</option>
+                            <option value="critico">Crítico</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Conteúdo do Parecer</label>
+                        <div class="opinion-editor">
+                            <div class="editor-toolbar">
+                                <button type="button" class="editor-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="editor-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="editor-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                <button type="button" class="editor-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" class="editor-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                            </div>
+                            <div class="editor-content" id="opinionContent" contenteditable="true"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="opinionConclusion">Conclusões e Recomendações</label>
+                        <textarea id="opinionConclusion" class="form-control" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelOpinionBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveOpinionBtn">Salvar Parecer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Anotação -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="noteModalTitle">Nova Anotação</div>
+                <button class="modal-close" id="closeNoteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="noteForm">
+                    <input type="hidden" id="noteId">
+                    <div class="form-group">
+                        <label for="noteProcess">Processo</label>
+                        <select id="noteProcess" class="form-control" required>
+                            <option value="">Selecione o processo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteTitle">Título</label>
+                        <input type="text" id="noteTitle" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteContent">Conteúdo</label>
+                        <textarea id="noteContent" class="form-control" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="d-flex gap-1 mb-2">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="noteColor">Cor</label>
+                            <select id="noteColor" class="form-control">
+                                <option value="#fff9c4">Amarelo</option>
+                                <option value="#c8e6c9">Verde</option>
+                                <option value="#bbdefb">Azul</option>
+                                <option value="#f8bbd0">Rosa</option>
+                                <option value="#e1bee7">Roxo</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="notePriority">Prioridade</label>
+                            <select id="notePriority" class="form-control">
+                                <option value="baixa">Baixa</option>
+                                <option value="media">Média</option>
+                                <option value="alta">Alta</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelNoteBtn">Cancelar</button>
+                <button class="btn btn-primary" id="saveNoteBtn">Salvar Anotação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://vzwwmiupvfdrmgcmuldf.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6d3dtaXVwdmZkcm1nY211bGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjQ2NzQsImV4cCI6MjA3OTk0MDY3NH0.tsQkCfxcZQmt6fJf6lLBnAdzl4fjQPWPAVmWlMQe1ss';
+
+        // Inicializar cliente Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Estado da aplicação
+        let currentUser = null;
+        let currentPage = 'dashboard';
+        let processes = [];
+        let clients = [];
+        let deadlines = [];
+        let hearings = [];
+        let opinions = [];
+        let notes = [];
+        let lawyers = [];
+
+        // Elementos DOM
+        const loginPage = document.getElementById('loginPage');
+        const app = document.getElementById('app');
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggleSidebar');
+        const navItems = document.querySelectorAll('.nav-item');
+        const pageTitle = document.getElementById('pageTitle');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const dynamicContent = document.getElementById('dynamicContent');
+
+        // Modais
+        const processModal = document.getElementById('processModal');
+        const clientModal = document.getElementById('clientModal');
+        const deadlineModal = document.getElementById('deadlineModal');
+        const hearingModal = document.getElementById('hearingModal');
+        const opinionModal = document.getElementById('opinionModal');
+        const noteModal = document.getElementById('noteModal');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se há usuário salvo
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    showApp();
+                } catch (e) {
+                    localStorage.removeItem('currentUser');
+                    showLogin();
+                }
+            } else {
+                showLogin();
+            }
+
+            // Configurar eventos
+            setupEventListeners();
+            
+            // Carregar dados iniciais
+            if (currentUser) {
+                loadInitialData();
+            }
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Login
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Logout
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Navegação
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    switchPage(page);
+                });
+            });
+            
+            // Sidebar
+            toggleSidebarBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+            
+            // Modais - Processo
+            document.getElementById('addProcessBtn').addEventListener('click', function() {
+                openProcessModal();
+            });
+            
+            document.getElementById('closeProcessModal').addEventListener('click', function() {
+                processModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelProcessBtn').addEventListener('click', function() {
+                processModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveProcessBtn').addEventListener('click', function() {
+                saveProcess();
+            });
+            
+            // Modais - Cliente
+            document.getElementById('closeClientModal').addEventListener('click', function() {
+                clientModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelClientBtn').addEventListener('click', function() {
+                clientModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveClientBtn').addEventListener('click', function() {
+                saveClient();
+            });
+            
+            // Modais - Prazo
+            document.getElementById('closeDeadlineModal').addEventListener('click', function() {
+                deadlineModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelDeadlineBtn').addEventListener('click', function() {
+                deadlineModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveDeadlineBtn').addEventListener('click', function() {
+                saveDeadline();
+            });
+            
+            // Modais - Audiência
+            document.getElementById('closeHearingModal').addEventListener('click', function() {
+                hearingModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelHearingBtn').addEventListener('click', function() {
+                hearingModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveHearingBtn').addEventListener('click', function() {
+                saveHearing();
+            });
+            
+            // Modais - Parecer
+            document.getElementById('closeOpinionModal').addEventListener('click', function() {
+                opinionModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelOpinionBtn').addEventListener('click', function() {
+                opinionModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveOpinionBtn').addEventListener('click', function() {
+                saveOpinion();
+            });
+            
+            // Modais - Anotação
+            document.getElementById('closeNoteModal').addEventListener('click', function() {
+                noteModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancelNoteBtn').addEventListener('click', function() {
+                noteModal.classList.remove('active');
+            });
+            
+            document.getElementById('saveNoteBtn').addEventListener('click', function() {
+                saveNote();
+            });
+            
+            // Fechar modais ao clicar fora
+            window.addEventListener('click', function(event) {
+                if (event.target === processModal) processModal.classList.remove('active');
+                if (event.target === clientModal) clientModal.classList.remove('active');
+                if (event.target === deadlineModal) deadlineModal.classList.remove('active');
+                if (event.target === hearingModal) hearingModal.classList.remove('active');
+                if (event.target === opinionModal) opinionModal.classList.remove('active');
+                if (event.target === noteModal) noteModal.classList.remove('active');
+            });
+            
+            // Editor de pareceres
+            document.querySelectorAll('.editor-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const command = this.getAttribute('data-command');
+                    document.execCommand(command, false, null);
+                    document.getElementById('opinionContent').focus();
+                });
+            });
+        }
+
+        // Funções de autenticação
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const userType = document.getElementById('loginType').value;
+            
+            // Simulação de login - em produção, isso seria feito via Supabase
+            if (email && password && userType) {
+                currentUser = {
+                    id: 1,
+                    name: 'Dr. Lucas Medeiros',
+                    email: email,
+                    type: userType
+                };
+                
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showApp();
+            } else {
+                alert('Por favor, preencha todos os campos');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showLogin();
+        }
+
+        function showLogin() {
+            loginPage.style.display = 'flex';
+            app.style.display = 'none';
+        }
+
+        function showApp() {
+            loginPage.style.display = 'none';
+            app.style.display = 'flex';
+            
+            // Atualizar informações do usuário
+            userName.textContent = currentUser.name;
+            userRole.textContent = currentUser.type === 'admin' ? 'Administrador' : 
+                                  currentUser.type === 'advogado' ? 'Advogado' : 'Cliente';
+            userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            // Carregar página inicial
+            switchPage('dashboard');
+        }
+
+        // Navegação entre páginas
+        function switchPage(page) {
+            currentPage = page;
+            
+            // Atualizar navegação
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Atualizar título da página
+            const pageTitles = {
+                'dashboard': 'Dashboard',
+                'processos': 'Processos',
+                'clientes': 'Clientes',
+                'prazos': 'Controle de Prazos',
+                'audiencias': 'Audiências',
+                'pareceres': 'Pareceres',
+                'anotacoes': 'Anotações',
+                'advogados': 'Advogados',
+                'relatorios': 'Relatórios',
+                'configuracoes': 'Configurações'
+            };
+            
+            pageTitle.textContent = pageTitles[page] || 'Página';
+            
+            // Mostrar/ocultar páginas
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            if (page === 'dashboard') {
+                document.getElementById('dashboardPage').classList.add('active');
+                updateDashboard();
+            } else {
+                // Carregar conteúdo dinâmico para outras páginas
+                loadPageContent(page);
+            }
+        }
+
+        // Carregar conteúdo das páginas
+        function loadPageContent(page) {
+            let content = '';
+            
+            switch(page) {
+                case 'processos':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Lista de Processos</div>
+                                    <button class="btn btn-primary" id="addProcessPageBtn">
+                                        <i class="fas fa-plus"></i> Novo Processo
+                                    </button>
+                                </div>
+                                <div class="filters">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterProcessStatus">Status</label>
+                                            <select id="filterProcessStatus" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="pendente">Pendente</option>
+                                                <option value="andamento">Em Andamento</option>
+                                                <option value="concluido">Concluído</option>
+                                                <option value="arquivado">Arquivado</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterProcessType">Tipo</label>
+                                            <select id="filterProcessType" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="civil">Civil</option>
+                                                <option value="trabalhista">Trabalhista</option>
+                                                <option value="penal">Penal</option>
+                                                <option value="previdenciario">Previdenciário</option>
+                                                <option value="empresarial">Empresarial</option>
+                                                <option value="familia">Família</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterProcessLawyer">Advogado</label>
+                                            <select id="filterProcessLawyer" class="form-control">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearProcessFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyProcessFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Número</th>
+                                                <th>Cliente</th>
+                                                <th>Tipo</th>
+                                                <th>Status</th>
+                                                <th>Advogado</th>
+                                                <th>Data Abertura</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="processesTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'clientes':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Lista de Clientes</div>
+                                    <button class="btn btn-primary" id="addClientPageBtn">
+                                        <i class="fas fa-plus"></i> Novo Cliente
+                                    </button>
+                                </div>
+                                <div class="filters">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterClientStatus">Status</label>
+                                            <select id="filterClientStatus" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="ativo">Ativo</option>
+                                                <option value="inativo">Inativo</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterClientSearch">Buscar</label>
+                                            <input type="text" id="filterClientSearch" class="form-control" placeholder="Nome, CPF ou e-mail">
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearClientFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyClientFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>E-mail</th>
+                                                <th>Telefone</th>
+                                                <th>CPF/CNPJ</th>
+                                                <th>Status</th>
+                                                <th>Data Cadastro</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'prazos':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Controle de Prazos</div>
+                                    <button class="btn btn-primary" id="addDeadlinePageBtn">
+                                        <i class="fas fa-plus"></i> Novo Prazo
+                                    </button>
+                                </div>
+                                <div class="filters">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterDeadlineType">Tipo</label>
+                                            <select id="filterDeadlineType" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="peticao">Petição</option>
+                                                <option value="contestacao">Contestação</option>
+                                                <option value="recurso">Recurso</option>
+                                                <option value="audiencia">Audiência</option>
+                                                <option value="diligencia">Diligência</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterDeadlineStatus">Status</label>
+                                            <select id="filterDeadlineStatus" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="pendente">Pendente</option>
+                                                <option value="concluido">Concluído</option>
+                                                <option value="vencido">Vencido</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterDeadlineDate">Período</label>
+                                            <select id="filterDeadlineDate" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="hoje">Hoje</option>
+                                                <option value="semana">Esta semana</option>
+                                                <option value="mes">Este mês</option>
+                                                <option value="proximos">Próximos 7 dias</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearDeadlineFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyDeadlineFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Processo</th>
+                                                <th>Tipo</th>
+                                                <th>Descrição</th>
+                                                <th>Data</th>
+                                                <th>Status</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="deadlinesTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'audiencias':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Calendário de Audiências</div>
+                                    <button class="btn btn-primary" id="addHearingPageBtn">
+                                        <i class="fas fa-plus"></i> Nova Audiência
+                                    </button>
+                                </div>
+                                <div class="filters mb-2">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterHearingType">Tipo</label>
+                                            <select id="filterHearingType" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="instrucao">Instrução</option>
+                                                <option value="conciliacao">Conciliação</option>
+                                                <option value="julgamento">Julgamento</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterHearingDate">Período</label>
+                                            <select id="filterHearingDate" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="hoje">Hoje</option>
+                                                <option value="semana">Esta semana</option>
+                                                <option value="mes">Este mês</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearHearingFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyHearingFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="card mb-2">
+                                    <div class="card-header">
+                                        <div class="card-title">Calendário</div>
+                                    </div>
+                                    <div id="calendarContainer" style="padding: 1rem;">
+                                        <!-- Calendário será gerado dinamicamente -->
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Processo</th>
+                                                <th>Data/Hora</th>
+                                                <th>Local</th>
+                                                <th>Tipo</th>
+                                                <th>Status</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="hearingsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'pareceres':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Pareceres Jurídicos</div>
+                                    <button class="btn btn-primary" id="addOpinionPageBtn">
+                                        <i class="fas fa-plus"></i> Novo Parecer
+                                    </button>
+                                </div>
+                                <div class="filters">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterOpinionType">Tipo</label>
+                                            <select id="filterOpinionType" class="form-control">
+                                                <option value="">Todos</option>
+                                                <option value="juridico">Jurídico</option>
+                                                <option value="tecnico">Técnico</option>
+                                                <option value="administrativo">Administrativo</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterOpinionUrgency">Urgência</label>
+                                            <select id="filterOpinionUrgency" class="form-control">
+                                                <option value="">Todas</option>
+                                                <option value="baixo">Baixa</option>
+                                                <option value="medio">Média</option>
+                                                <option value="alto">Alta</option>
+                                                <option value="critico">Crítica</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterOpinionAuthor">Autor</label>
+                                            <select id="filterOpinionAuthor" class="form-control">
+                                                <option value="">Todos</option>
+                                            <option value="lucas">Dr. Lucas Medeiros</option>
+                                                <option value="losainny">Dra. Losainny Silva</option>
+                                                <option value="taiza">Taiza Barros</option>
+                                                <option value="marvilei">Marvilei Soares</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearOpinionFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyOpinionFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Processo</th>
+                                                <th>Título</th>
+                                                <th>Tipo</th>
+                                                <th>Urgência</th>
+                                                <th>Data</th>
+                                                <th>Autor</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="opinionsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'anotacoes':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Anotações e Lembretes</div>
+                                    <button class="btn btn-primary" id="addNotePageBtn">
+                                        <i class="fas fa-plus"></i> Nova Anotação
+                                    </button>
+                                </div>
+                                <div class="filters mb-2">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="filterNoteProcess">Processo</label>
+                                            <select id="filterNoteProcess" class="form-control">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="filterNotePriority">Prioridade</label>
+                                            <select id="filterNotePriority" class="form-control">
+                                                <option value="">Todas</option>
+                                                <option value="baixa">Baixa</option>
+                                                <option value="media">Média</option>
+                                                <option value="alta">Alta</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-outline" id="clearNoteFilters">Limpar Filtros</button>
+                                        <button class="btn btn-primary" id="applyNoteFilters">Aplicar Filtros</button>
+                                    </div>
+                                </div>
+                                <div class="notes-container" id="notesContainer">
+                                    <!-- Anotações serão carregadas dinamicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'advogados':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Advogados do Escritório</div>
+                                    <button class="btn btn-primary" id="addLawyerPageBtn">
+                                        <i class="fas fa-plus"></i> Novo Advogado
+                                    </button>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>OAB</th>
+                                                <th>Especialidade</th>
+                                                <th>E-mail</th>
+                                                <th>Telefone</th>
+                                                <th>Status</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="lawyersTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'relatorios':
+                    content = `
+                        <div class="page active">
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <div class="card-title">Relatórios e Estatísticas</div>
+                                </div>
+                                <div class="filters">
+                                    <div class="filter-row">
+                                        <div class="form-group">
+                                            <label for="reportPeriod">Período</label>
+                                            <select id="reportPeriod" class="form-control">
+                                                <option value="30">Últimos 30 dias</option>
+                                                <option value="90">Últimos 3 meses</option>
+                                                <option value="365">Último ano</option>
+                                                <option value="all">Todo o período</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="reportLawyer">Advogado</label>
+                                            <select id="reportLawyer" class="form-control">
+                                                <option value="all">Todos</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="reportType">Tipo de Relatório</label>
+                                            <select id="reportType" class="form-control">
+                                                <option value="processos">Processos</option>
+                                                <option value="prazos">Prazos</option>
+                                                <option value="audiencias">Audiências</option>
+                                                <option value="financeiro">Financeiro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary" id="generateReport">Gerar Relatório</button>
+                                        <button class="btn btn-accent" id="exportReport">Exportar PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-1 mb-2" style="flex-wrap: wrap;">
+                                <div class="card" style="flex: 1; min-width: 300px;">
+                                    <div class="card-header">
+                                        <div class="card-title">Processos por Status</div>
+                                    </div>
+                                    <div style="height: 300px; padding: 1rem;">
+                                        <canvas id="reportStatusChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="card" style="flex: 1; min-width: 300px;">
+                                    <div class="card-header">
+                                        <div class="card-title">Processos por Advogado</div>
+                                    </div>
+                                    <div style="height: 300px; padding: 1rem;">
+                                        <canvas id="reportLawyerChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Detalhamento dos Processos</div>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Número</th>
+                                                <th>Cliente</th>
+                                                <th>Tipo</th>
+                                                <th>Status</th>
+                                                <th>Advogado</th>
+                                                <th>Data Abertura</th>
+                                                <th>Duração</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reportProcessesBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'configuracoes':
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Configurações do Sistema</div>
+                                </div>
+                                <div class="tabs">
+                                    <div class="tab active" data-tab="geral">Geral</div>
+                                    <div class="tab" data-tab="usuarios">Usuários</div>
+                                    <div class="tab" data-tab="notificacoes">Notificações</div>
+                                    <div class="tab" data-tab="backup">Backup</div>
+                                </div>
+                                
+                                <div class="tab-content active" id="geral-tab">
+                                    <div class="p-3">
+                                        <div class="form-group">
+                                            <label for="settingFirmName">Nome do Escritório</label>
+                                            <input type="text" id="settingFirmName" class="form-control" value="MPS Advogados">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="settingFirmAddress">Endereço</label>
+                                            <input type="text" id="settingFirmAddress" class="form-control" value="Av. Principal, 123 - Centro">
+                                        </div>
+                                        
+                                        <div class="d-flex gap-1 mb-2">
+                                            <div class="form-group" style="flex: 1;">
+                                                <label for="settingFirmPhone">Telefone</label>
+                                                <input type="text" id="settingFirmPhone" class="form-control" value="(11) 9999-9999">
+                                            </div>
+                                            <div class="form-group" style="flex: 1;">
+                                                <label for="settingFirmEmail">E-mail</label>
+                                                <input type="email" id="settingFirmEmail" class="form-control" value="contato@mpsadvogados.com.br">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-right">
+                                            <button class="btn btn-primary">Salvar Configurações</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-content" id="usuarios-tab">
+                                    <div class="p-3">
+                                        <div class="table-container">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nome</th>
+                                                        <th>E-mail</th>
+                                                        <th>Tipo</th>
+                                                        <th>Status</th>
+                                                        <th>Último Acesso</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Dr. Lucas Medeiros</td>
+                                                        <td>lucas@mpsadvogados.com.br</td>
+                                                        <td>Administrador</td>
+                                                        <td><span class="badge badge-success">Ativo</span></td>
+                                                        <td>15/06/2023 10:30</td>
+                                                        <td>
+                                                            <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Dra. Losainny Silva</td>
+                                                        <td>losainny@mpsadvogados.com.br</td>
+                                                        <td>Advogado</td>
+                                                        <td><span class="badge badge-success">Ativo</span></td>
+                                                        <td>14/06/2023 16:45</td>
+                                                        <td>
+                                                            <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-content" id="notificacoes-tab">
+                                    <div class="p-3">
+                                        <div class="form-group">
+                                            <label>
+                                                <input type="checkbox" checked> Notificar sobre prazos próximos
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>
+                                                <input type="checkbox" checked> Notificar sobre novas audiências
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>
+                                                <input type="checkbox"> Notificar sobre processos sem movimento
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="notificationEmail">E-mail para notificações</label>
+                                            <input type="email" id="notificationEmail" class="form-control" value="notificacoes@mpsadvogados.com.br">
+                                        </div>
+                                        
+                                        <div class="text-right">
+                                            <button class="btn btn-primary">Salvar Configurações</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-content" id="backup-tab">
+                                    <div class="p-3">
+                                        <div class="form-group">
+                                            <label>Backup Automático</label>
+                                            <select class="form-control">
+                                                <option value="diario">Diário</option>
+                                                <option value="semanal" selected>Semanal</option>
+                                                <option value="mensal">Mensal</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Último Backup</label>
+                                            <p>14/06/2023 02:00</p>
+                                        </div>
+                                        
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-primary">
+                                                <i class="fas fa-download"></i> Fazer Backup Agora
+                                            </button>
+                                            <button class="btn btn-outline">
+                                                <i class="fas fa-upload"></i> Restaurar Backup
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    content = `
+                        <div class="page active">
+                            <div class="card">
+                                <div class="text-center" style="padding: 3rem;">
+                                    <i class="fas fa-cog" style="font-size: 3rem; color: var(--text-medium); margin-bottom: 1rem;"></i>
+                                    <h3 style="color: var(--text-medium);">Página em Desenvolvimento</h3>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }
+            
+            dynamicContent.innerHTML = content;
+            
+            // Configurar eventos específicos da página
+            setupPageEvents(page);
+            
+            // Carregar dados da página
+            loadPageData(page);
+        }
+
+        // Configurar eventos específicos de cada página
+        function setupPageEvents(page) {
+            switch(page) {
+                case 'processos':
+                    document.getElementById('addProcessPageBtn').addEventListener('click', function() {
+                        openProcessModal();
+                    });
+                    
+                    document.getElementById('applyProcessFilters').addEventListener('click', function() {
+                        loadProcessesTable();
+                    });
+                    
+                    document.getElementById('clearProcessFilters').addEventListener('click', function() {
+                        document.getElementById('filterProcessStatus').value = '';
+                        document.getElementById('filterProcessType').value = '';
+                        document.getElementById('filterProcessLawyer').value = '';
+                        loadProcessesTable();
+                    });
+                    break;
+                    
+                case 'clientes':
+                    document.getElementById('addClientPageBtn').addEventListener('click', function() {
+                        openClientModal();
+                    });
+                    
+                    document.getElementById('applyClientFilters').addEventListener('click', function() {
+                        loadClientsTable();
+                    });
+                    
+                    document.getElementById('clearClientFilters').addEventListener('click', function() {
+                        document.getElementById('filterClientStatus').value = '';
+                        document.getElementById('filterClientSearch').value = '';
+                        loadClientsTable();
+                    });
+                    break;
+                    
+                case 'prazos':
+                    document.getElementById('addDeadlinePageBtn').addEventListener('click', function() {
+                        openDeadlineModal();
+                    });
+                    
+                    document.getElementById('applyDeadlineFilters').addEventListener('click', function() {
+                        loadDeadlinesTable();
+                    });
+                    
+                    document.getElementById('clearDeadlineFilters').addEventListener('click', function() {
+                        document.getElementById('filterDeadlineType').value = '';
+                        document.getElementById('filterDeadlineStatus').value = '';
+                        document.getElementById('filterDeadlineDate').value = '';
+                        loadDeadlinesTable();
+                    });
+                    break;
+                    
+                case 'audiencias':
+                    document.getElementById('addHearingPageBtn').addEventListener('click', function() {
+                        openHearingModal();
+                    });
+                    
+                    document.getElementById('applyHearingFilters').addEventListener('click', function() {
+                        loadHearingsTable();
+                        generateCalendar();
+                    });
+                    
+                    document.getElementById('clearHearingFilters').addEventListener('click', function() {
+                        document.getElementById('filterHearingType').value = '';
+                        document.getElementById('filterHearingDate').value = '';
+                        loadHearingsTable();
+                        generateCalendar();
+                    });
+                    break;
+                    
+                case 'pareceres':
+                    document.getElementById('addOpinionPageBtn').addEventListener('click', function() {
+                        openOpinionModal();
+                    });
+                    
+                    document.getElementById('applyOpinionFilters').addEventListener('click', function() {
+                        loadOpinionsTable();
+                    });
+                    
+                    document.getElementById('clearOpinionFilters').addEventListener('click', function() {
+                        document.getElementById('filterOpinionType').value = '';
+                        document.getElementById('filterOpinionUrgency').value = '';
+                        document.getElementById('filterOpinionAuthor').value = '';
+                        loadOpinionsTable();
+                    });
+                    break;
+                    
+                case 'anotacoes':
+                    document.getElementById('addNotePageBtn').addEventListener('click', function() {
+                        openNoteModal();
+                    });
+                    
+                    document.getElementById('applyNoteFilters').addEventListener('click', function() {
+                        loadNotes();
+                    });
+                    
+                    document.getElementById('clearNoteFilters').addEventListener('click', function() {
+                        document.getElementById('filterNoteProcess').value = '';
+                        document.getElementById('filterNotePriority').value = '';
+                        loadNotes();
+                    });
+                    break;
+                    
+                case 'advogados':
+                    document.getElementById('addLawyerPageBtn').addEventListener('click', function() {
+                        alert('Funcionalidade de cadastro de advogados em desenvolvimento');
+                    });
+                    break;
+                    
+                case 'relatorios':
+                    document.getElementById('generateReport').addEventListener('click', function() {
+                        generateReport();
+                    });
+                    
+                    document.getElementById('exportReport').addEventListener('click', function() {
+                        alert('Relatório exportado com sucesso!');
+                    });
+                    break;
+                    
+                case 'configuracoes':
+                    // Configurar tabs
+                    document.querySelectorAll('#configuracoes .tab').forEach(tab => {
+                        tab.addEventListener('click', function() {
+                            const tabId = this.getAttribute('data-tab');
+                            
+                            // Ativar tab
+                            document.querySelectorAll('#configuracoes .tab').forEach(t => {
+                                t.classList.remove('active');
+                            });
+                            this.classList.add('active');
+                            
+                            // Mostrar conteúdo
+                            document.querySelectorAll('#configuracoes .tab-content').forEach(content => {
+                                content.classList.remove('active');
+                            });
+                            document.getElementById(`${tabId}-tab`).classList.add('active');
+                        });
+                    });
+                    break;
+            }
+        }
+
+        // Carregar dados iniciais
+        function loadInitialData() {
+            // Dados de exemplo
+            processes = [
+                {
+                    id: 1,
+                    number: '2023.001.0001',
+                    client: 'João Silva',
+                    type: 'Civil',
+                    status: 'andamento',
+                    lawyer: 'Dr. Lucas Medeiros',
+                    startDate: '2023-01-15',
+                    description: 'Ação de indenização por danos morais'
+                },
+                {
+                    id: 2,
+                    number: '2023.002.0045',
+                    client: 'Maria Santos',
+                    type: 'Trabalhista',
+                    status: 'pendente',
+                    lawyer: 'Dra. Losainny Silva',
+                    startDate: '2023-02-20',
+                    description: 'Reclamação trabalhista'
+                },
+                {
+                    id: 3,
+                    number: '2023.001.0032',
+                    client: 'Empresa XYZ',
+                    type: 'Empresarial',
+                    status: 'andamento',
+                    lawyer: 'Taiza Barros',
+                    startDate: '2023-03-10',
+                    description: 'Contrato societário'
+                },
+                {
+                    id: 4,
+                    number: '2023.003.0012',
+                    client: 'Carlos Oliveira',
+                    type: 'Família',
+                    status: 'concluido',
+                    lawyer: 'Marvilei Soares',
+                    startDate: '2023-01-05',
+                    description: 'Divórcio consensual'
+                }
+            ];
+            
+            clients = [
+                {
+                    id: 1,
+                    name: 'João Silva',
+                    email: 'joao.silva@email.com',
+                    phone: '(11) 99999-9999',
+                    cpf: '123.456.789-00',
+                    address: 'Rua das Flores, 123 - Centro',
+                    status: 'ativo'
+                },
+                {
+                    id: 2,
+                    name: 'Maria Santos',
+                    email: 'maria.santos@email.com',
+                    phone: '(11) 98888-8888',
+                    cpf: '987.654.321-00',
+                    address: 'Av. Principal, 456 - Jardins',
+                    status: 'ativo'
+                },
+                {
+                    id: 3,
+                    name: 'Empresa XYZ',
+                    email: 'contato@xyz.com.br',
+                    phone: '(11) 97777-7777',
+                    cpf: '12.345.678/0001-90',
+                    address: 'Rua Comercial, 789 - Centro',
+                    status: 'ativo'
+                },
+                {
+                    id: 4,
+                    name: 'Carlos Oliveira',
+                    email: 'carlos.oliveira@email.com',
+                    phone: '(11) 96666-6666',
+                    cpf: '111.222.333-44',
+                    address: 'Alameda dos Anjos, 101 - Vila Nova',
+                    status: 'inativo'
+                }
+            ];
+            
+            deadlines = [
+                {
+                    id: 1,
+                    processId: 1,
+                    type: 'peticao',
+                    description: 'Petição inicial',
+                    date: '2023-06-20',
+                    status: 'pendente'
+                },
+                {
+                    id: 2,
+                    processId: 2,
+                    type: 'contestacao',
+                    description: 'Contestação',
+                    date: '2023-06-18',
+                    status: 'concluido'
+                },
+                {
+                    id: 3,
+                    processId: 3,
+                    type: 'recurso',
+                    description: 'Recurso de apelação',
+                    date: '2023-06-25',
+                    status: 'pendente'
+                }
+            ];
+            
+            hearings = [
+                {
+                    id: 1,
+                    processId: 1,
+                    date: '2023-06-28',
+                    time: '14:30',
+                    location: 'Fórum Central - Sala 205',
+                    type: 'instrucao',
+                    notes: 'Trazer testemunhas'
+                },
+                {
+                    id: 2,
+                    processId: 2,
+                    date: '2023-07-05',
+                    time: '09:00',
+                    location: 'Fórum Trabalhista - Sala 102',
+                    type: 'conciliacao',
+                    notes: 'Tentativa de acordo'
+                }
+            ];
+            
+            opinions = [
+                {
+                    id: 1,
+                    processId: 1,
+                    title: 'Parecer sobre viabilidade da ação',
+                    type: 'juridico',
+                    urgency: 'alto',
+                    content: 'Analisados os documentos, verifica-se a viabilidade da ação...',
+                    conclusion: 'Recomenda-se o ajuizamento da ação',
+                    author: 'Dr. Lucas Medeiros',
+                    date: '2023-06-10'
+                }
+            ];
+            
+            notes = [
+                {
+                    id: 1,
+                    processId: 1,
+                    title: 'Lembrar de contactar testemunha',
+                    content: 'Joana Silva - (11) 95555-5555',
+                    color: '#fff9c4',
+                    priority: 'alta',
+                    date: '2023-06-15'
+                },
+                {
+                    id: 2,
+                    processId: 2,
+                    title: 'Documentos pendentes',
+                    content: 'Solicitar holerites dos últimos 3 meses',
+                    color: '#c8e6c9',
+                    priority: 'media',
+                    date: '2023-06-12'
+                }
+            ];
+            
+            lawyers = [
+                {
+                    id: 1,
+                    name: 'Dr. Lucas Medeiros',
+                    oab: '123456/SP',
+                    specialty: 'Direito Civil',
+                    email: 'lucas@mpsadvogados.com.br',
+                    phone: '(11) 99999-9999',
+                    status: 'ativo'
+                },
+                {
+                    id: 2,
+                    name: 'Dra. Losainny Silva',
+                    oab: '654321/SP',
+                    specialty: 'Direito Trabalhista',
+                    email: 'losainny@mpsadvogados.com.br',
+                    phone: '(11) 98888-8888',
+                    status: 'ativo'
+                },
+                {
+                    id: 3,
+                    name: 'Taiza Barros',
+                    oab: '789012/SP',
+                    specialty: 'Direito Empresarial',
+                    email: 'taiza@mpsadvogados.com.br',
+                    phone: '(11) 97777-7777',
+                    status: 'ativo'
+                },
+                {
+                    id: 4,
+                    name: 'Marvilei Soares',
+                    oab: '210987/SP',
+                    specialty: 'Direito de Família',
+                    email: 'marvilei@mpsadvogados.com.br',
+                    phone: '(11) 96666-6666',
+                    status: 'ativo'
+                }
+            ];
+            
+            // Atualizar dashboard
+            updateDashboard();
+        }
+
+        // Atualizar dashboard
+        function updateDashboard() {
+            // Atualizar cards
+            document.getElementById('totalProcessos').textContent = processes.length;
+            document.getElementById('totalClientes').textContent = clients.filter(c => c.status === 'ativo').length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('prazosHoje').textContent = deadlines.filter(d => d.date === today && d.status === 'pendente').length;
+            
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const nextWeekStr = nextWeek.toISOString().split('T')[0];
+            document.getElementById('audienciasAgendadas').textContent = hearings.filter(h => h.date <= nextWeekStr && h.date >= today).length;
+            
+            // Atualizar gráfico
+            updateStatusChart();
+            
+            // Atualizar lista de prazos
+            updateDeadlinesList();
+            
+            // Atualizar tabela de processos recentes
+            updateRecentProcessesTable();
+        }
+
+        // Atualizar gráfico de status
+        function updateStatusChart() {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            const statusCount = {
+                'pendente': processes.filter(p => p.status === 'pendente').length,
+                'andamento': processes.filter(p => p.status === 'andamento').length,
+                'concluido': processes.filter(p => p.status === 'concluido').length,
+                'arquivado': processes.filter(p => p.status === 'arquivado').length
+            };
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendente', 'Em Andamento', 'Concluído', 'Arquivado'],
+                    datasets: [{
+                        data: [statusCount.pendente, statusCount.andamento, statusCount.concluido, statusCount.arquivado],
+                        backgroundColor: [
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(0, 77, 77, 0.8)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(0, 77, 77, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Atualizar lista de prazos
+        function updateDeadlinesList() {
+            const deadlinesList = document.getElementById('deadlinesList');
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Ordenar prazos por data
+            const sortedDeadlines = [...deadlines].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            deadlinesList.innerHTML = '';
+            
+            sortedDeadlines.slice(0, 5).forEach(deadline => {
+                const process = processes.find(p => p.id === deadline.processId);
+                const deadlineDate = new Date(deadline.date);
+                const today = new Date();
+                const diffTime = deadlineDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                let dateText = formatDate(deadline.date);
+                if (diffDays === 0) dateText = 'Hoje';
+                else if (diffDays === 1) dateText = 'Amanhã';
+                else if (diffDays < 0) dateText = `${Math.abs(diffDays)} dias atrás`;
+                
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-date">${dateText}</div>
+                    <div class="timeline-content">
+                        <strong>${getDeadlineTypeText(deadline.type)}</strong> - ${process ? process.number : 'N/A'}
+                        <div style="font-size: 0.9rem; margin-top: 0.3rem;">${deadline.description}</div>
+                    </div>
+                `;
+                deadlinesList.appendChild(item);
+            });
+        }
+
+        // Atualizar tabela de processos recentes
+        function updateRecentProcessesTable() {
+            const tbody = document.getElementById('recentProcessesTable');
+            
+            // Ordenar processos por data (mais recentes primeiro)
+            const sortedProcesses = [...processes].sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+            
+            tbody.innerHTML = '';
+            
+            sortedProcesses.slice(0, 5).forEach(process => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${process.client}</td>
+                    <td>${process.type}</td>
+                    <td><span class="badge ${getStatusBadgeClass(process.status)}">${getStatusText(process.status)}</span></td>
+                    <td>${process.lawyer}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Carregar dados específicos de cada página
+        function loadPageData(page) {
+            switch(page) {
+                case 'processos':
+                    loadProcessesTable();
+                    populateLawyerFilter('filterProcessLawyer');
+                    break;
+                    
+                case 'clientes':
+                    loadClientsTable();
+                    break;
+                    
+                case 'prazos':
+                    loadDeadlinesTable();
+                    break;
+                    
+                case 'audiencias':
+                    loadHearingsTable();
+                    generateCalendar();
+                    break;
+                    
+                case 'pareceres':
+                    loadOpinionsTable();
+                    break;
+                    
+                case 'anotacoes':
+                    loadNotes();
+                    populateProcessFilter('filterNoteProcess');
+                    break;
+                    
+                case 'advogados':
+                    loadLawyersTable();
+                    break;
+                    
+                case 'relatorios':
+                    generateReport();
+                    populateLawyerFilter('reportLawyer');
+                    break;
+            }
+        }
+
+        // ========== FUNÇÕES PARA CARREGAR TABELAS ==========
+
+        function loadProcessesTable() {
+            const tbody = document.getElementById('processesTableBody');
+            const statusFilter = document.getElementById('filterProcessStatus').value;
+            const typeFilter = document.getElementById('filterProcessType').value;
+            const lawyerFilter = document.getElementById('filterProcessLawyer').value;
+            
+            let filteredProcesses = processes;
+            
+            if (statusFilter) {
+                filteredProcesses = filteredProcesses.filter(p => p.status === statusFilter);
+            }
+            
+            if (typeFilter) {
+                filteredProcesses = filteredProcesses.filter(p => p.type === typeFilter);
+            }
+            
+            if (lawyerFilter) {
+                filteredProcesses = filteredProcesses.filter(p => p.lawyer.includes(lawyerFilter));
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredProcesses.forEach(process => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${process.client}</td>
+                    <td>${process.type}</td>
+                    <td><span class="badge ${getStatusBadgeClass(process.status)}">${getStatusText(process.status)}</span></td>
+                    <td>${process.lawyer}</td>
+                    <td>${formatDate(process.startDate)}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="viewProcess(${process.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editProcess(${process.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; color: var(--danger);" onclick="deleteProcess(${process.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadClientsTable() {
+            const tbody = document.getElementById('clientsTableBody');
+            const statusFilter = document.getElementById('filterClientStatus').value;
+            const searchFilter = document.getElementById('filterClientSearch').value.toLowerCase();
+            
+            let filteredClients = clients;
+            
+            if (statusFilter) {
+                filteredClients = filteredClients.filter(c => c.status === statusFilter);
+            }
+            
+            if (searchFilter) {
+                filteredClients = filteredClients.filter(c => 
+                    c.name.toLowerCase().includes(searchFilter) || 
+                    c.email.toLowerCase().includes(searchFilter) ||
+                    c.cpf.includes(searchFilter)
+                );
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredClients.forEach(client => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${client.name}</td>
+                    <td>${client.email}</td>
+                    <td>${client.phone}</td>
+                    <td>${client.cpf}</td>
+                    <td><span class="badge ${client.status === 'ativo' ? 'badge-success' : 'badge-danger'}">${client.status === 'ativo' ? 'Ativo' : 'Inativo'}</span></td>
+                    <td>15/06/2023</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editClient(${client.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; color: var(--danger);" onclick="deleteClient(${client.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadDeadlinesTable() {
+            const tbody = document.getElementById('deadlinesTableBody');
+            const typeFilter = document.getElementById('filterDeadlineType').value;
+            const statusFilter = document.getElementById('filterDeadlineStatus').value;
+            const dateFilter = document.getElementById('filterDeadlineDate').value;
+            
+            let filteredDeadlines = deadlines;
+            
+            if (typeFilter) {
+                filteredDeadlines = filteredDeadlines.filter(d => d.type === typeFilter);
+            }
+            
+            if (statusFilter) {
+                filteredDeadlines = filteredDeadlines.filter(d => d.status === statusFilter);
+            }
+            
+            if (dateFilter) {
+                const today = new Date();
+                let startDate, endDate;
+                
+                switch(dateFilter) {
+                    case 'hoje':
+                        startDate = today;
+                        endDate = today;
+                        break;
+                    case 'semana':
+                        startDate = today;
+                        endDate = new Date(today);
+                        endDate.setDate(today.getDate() + 7);
+                        break;
+                    case 'mes':
+                        startDate = today;
+                        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                        break;
+                    case 'proximos':
+                        startDate = today;
+                        endDate = new Date(today);
+                        endDate.setDate(today.getDate() + 7);
+                        break;
+                }
+                
+                filteredDeadlines = filteredDeadlines.filter(d => {
+                    const deadlineDate = new Date(d.date);
+                    return deadlineDate >= startDate && deadlineDate <= endDate;
+                });
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredDeadlines.forEach(deadline => {
+                const process = processes.find(p => p.id === deadline.processId);
+                const deadlineDate = new Date(deadline.date);
+                const today = new Date();
+                const diffTime = deadlineDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                let statusClass = 'badge-primary';
+                if (deadline.status === 'concluido') statusClass = 'badge-success';
+                else if (diffDays < 0) statusClass = 'badge-danger';
+                else if (diffDays <= 3) statusClass = 'badge-warning';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process ? process.number : 'N/A'}</td>
+                    <td>${getDeadlineTypeText(deadline.type)}</td>
+                    <td>${deadline.description}</td>
+                    <td>${formatDate(deadline.date)}</td>
+                    <td><span class="badge ${statusClass}">${getDeadlineStatusText(deadline.status, diffDays)}</span></td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editDeadline(${deadline.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; color: var(--danger);" onclick="deleteDeadline(${deadline.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadHearingsTable() {
+            const tbody = document.getElementById('hearingsTableBody');
+            const typeFilter = document.getElementById('filterHearingType').value;
+            const dateFilter = document.getElementById('filterHearingDate').value;
+            
+            let filteredHearings = hearings;
+            
+            if (typeFilter) {
+                filteredHearings = filteredHearings.filter(h => h.type === typeFilter);
+            }
+            
+            if (dateFilter) {
+                const today = new Date();
+                let startDate, endDate;
+                
+                switch(dateFilter) {
+                    case 'hoje':
+                        startDate = today;
+                        endDate = today;
+                        break;
+                    case 'semana':
+                        startDate = today;
+                        endDate = new Date(today);
+                        endDate.setDate(today.getDate() + 7);
+                        break;
+                    case 'mes':
+                        startDate = today;
+                        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                        break;
+                }
+                
+                filteredHearings = filteredHearings.filter(h => {
+                    const hearingDate = new Date(h.date);
+                    return hearingDate >= startDate && hearingDate <= endDate;
+                });
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredHearings.forEach(hearing => {
+                const process = processes.find(p => p.id === hearing.processId);
+                const hearingDate = new Date(hearing.date);
+                const today = new Date();
+                const diffTime = hearingDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                let statusClass = 'badge-primary';
+                if (diffDays < 0) statusClass = 'badge-success';
+                else if (diffDays <= 3) statusClass = 'badge-warning';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process ? process.number : 'N/A'}</td>
+                    <td>${formatDate(hearing.date)} ${hearing.time}</td>
+                    <td>${hearing.location}</td>
+                    <td>${getHearingTypeText(hearing.type)}</td>
+                    <td><span class="badge ${statusClass}">${diffDays < 0 ? 'Realizada' : diffDays === 0 ? 'Hoje' : `Em ${diffDays} dias`}</span></td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editHearing(${hearing.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; color: var(--danger);" onclick="deleteHearing(${hearing.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadOpinionsTable() {
+            const tbody = document.getElementById('opinionsTableBody');
+            const typeFilter = document.getElementById('filterOpinionType').value;
+            const urgencyFilter = document.getElementById('filterOpinionUrgency').value;
+            const authorFilter = document.getElementById('filterOpinionAuthor').value;
+            
+            let filteredOpinions = opinions;
+            
+            if (typeFilter) {
+                filteredOpinions = filteredOpinions.filter(o => o.type === typeFilter);
+            }
+            
+            if (urgencyFilter) {
+                filteredOpinions = filteredOpinions.filter(o => o.urgency === urgencyFilter);
+            }
+            
+            if (authorFilter) {
+                filteredOpinions = filteredOpinions.filter(o => o.author.includes(authorFilter));
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredOpinions.forEach(opinion => {
+                const process = processes.find(p => p.id === opinion.processId);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process ? process.number : 'N/A'}</td>
+                    <td>${opinion.title}</td>
+                    <td>${getOpinionTypeText(opinion.type)}</td>
+                    <td><span class="badge ${getUrgencyBadgeClass(opinion.urgency)}">${getUrgencyText(opinion.urgency)}</span></td>
+                    <td>${formatDate(opinion.date)}</td>
+                    <td>${opinion.author}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="viewOpinion(${opinion.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editOpinion(${opinion.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; color: var(--danger);" onclick="deleteOpinion(${opinion.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadLawyersTable() {
+            const tbody = document.getElementById('lawyersTableBody');
+            
+            tbody.innerHTML = '';
+            
+            lawyers.forEach(lawyer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lawyer.name}</td>
+                    <td>${lawyer.oab}</td>
+                    <td>${lawyer.specialty}</td>
+                    <td>${lawyer.email}</td>
+                    <td>${lawyer.phone}</td>
+                    <td><span class="badge ${lawyer.status === 'ativo' ? 'badge-success' : 'badge-danger'}">${lawyer.status === 'ativo' ? 'Ativo' : 'Inativo'}</span></td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            const processFilter = document.getElementById('filterNoteProcess').value;
+            const priorityFilter = document.getElementById('filterNotePriority').value;
+            
+            let filteredNotes = notes;
+            
+            if (processFilter) {
+                filteredNotes = filteredNotes.filter(n => n.processId == processFilter);
+            }
+            
+            if (priorityFilter) {
+                filteredNotes = filteredNotes.filter(n => n.priority === priorityFilter);
+            }
+            
+            container.innerHTML = '';
+            
+            filteredNotes.forEach(note => {
+                const process = processes.find(p => p.id === note.processId);
+                
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note';
+                noteElement.style.backgroundColor = note.color;
+                noteElement.draggable = true;
+                noteElement.innerHTML = `
+                    <div class="note-header">
+                        <div class="note-date">${formatDate(note.date)}</div>
+                        <div class="note-actions">
+                            <button class="note-action" onclick="editNote(${note.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="note-action" onclick="deleteNote(${note.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="note-title" style="font-weight: 600; margin-bottom: 0.5rem;">${note.title}</div>
+                    <div class="note-content">${note.content}</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-medium);">
+                        ${process ? process.number : 'Geral'} • ${getPriorityText(note.priority)}
+                    </div>
+                `;
+                
+                container.appendChild(noteElement);
+            });
+        }
+
+        // ========== FUNÇÕES DOS MODAIS ==========
+
+        function openProcessModal(id = null) {
+            const title = document.getElementById('processModalTitle');
+            const form = document.getElementById('processForm');
+            
+            // Popular selects
+            populateClientSelect('processClient');
+            populateLawyerSelect('processLawyer');
+            
+            if (id) {
+                title.textContent = 'Editar Processo';
+                const process = processes.find(p => p.id === id);
+                if (process) {
+                    document.getElementById('processId').value = process.id;
+                    document.getElementById('processNumber').value = process.number;
+                    document.getElementById('processClient').value = process.client;
+                    document.getElementById('processType').value = process.type;
+                    document.getElementById('processStatus').value = process.status;
+                    document.getElementById('processLawyer').value = process.lawyer;
+                    document.getElementById('processStartDate').value = process.startDate;
+                    document.getElementById('processDescription').value = process.description;
+                }
+            } else {
+                title.textContent = 'Adicionar Processo';
+                form.reset();
+                document.getElementById('processId').value = '';
+                document.getElementById('processStartDate').valueAsDate = new Date();
+            }
+            
+            processModal.classList.add('active');
+        }
+
+        function saveProcess() {
+            const form = document.getElementById('processForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('processNumber') || !formData.get('processClient')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const processData = {
+                id: formData.get('processId') ? parseInt(formData.get('processId')) : null,
+                number: formData.get('processNumber'),
+                client: formData.get('processClient'),
+                type: formData.get('processType'),
+                status: formData.get('processStatus'),
+                lawyer: formData.get('processLawyer'),
+                startDate: formData.get('processStartDate'),
+                description: formData.get('processDescription')
+            };
+            
+            if (processData.id) {
+                // Atualizar processo existente
+                const index = processes.findIndex(p => p.id === processData.id);
+                if (index !== -1) {
+                    processes[index] = { ...processes[index], ...processData };
+                }
+            } else {
+                // Adicionar novo processo
+                processData.id = processes.length > 0 ? Math.max(...processes.map(p => p.id)) + 1 : 1;
+                processes.push(processData);
+            }
+            
+            // Fechar modal e recarregar dados
+            processModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'dashboard') {
+                updateDashboard();
+            } else if (currentPage === 'processos') {
+                loadProcessesTable();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Processo salvo com sucesso!');
+        }
+
+        function openClientModal(id = null) {
+            const title = document.getElementById('clientModalTitle');
+            const form = document.getElementById('clientForm');
+            
+            if (id) {
+                title.textContent = 'Editar Cliente';
+                const client = clients.find(c => c.id === id);
+                if (client) {
+                    document.getElementById('clientId').value = client.id;
+                    document.getElementById('clientName').value = client.name;
+                    document.getElementById('clientEmail').value = client.email;
+                    document.getElementById('clientPhone').value = client.phone;
+                    document.getElementById('clientCPF').value = client.cpf;
+                    document.getElementById('clientAddress').value = client.address;
+                    document.getElementById('clientStatus').value = client.status;
+                    document.getElementById('clientPassword').value = '********';
+                }
+            } else {
+                title.textContent = 'Adicionar Cliente';
+                form.reset();
+                document.getElementById('clientId').value = '';
+            }
+            
+            clientModal.classList.add('active');
+        }
+
+        function saveClient() {
+            const form = document.getElementById('clientForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('clientName') || !formData.get('clientEmail')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const clientData = {
+                id: formData.get('clientId') ? parseInt(formData.get('clientId')) : null,
+                name: formData.get('clientName'),
+                email: formData.get('clientEmail'),
+                phone: formData.get('clientPhone'),
+                cpf: formData.get('clientCPF'),
+                address: formData.get('clientAddress'),
+                status: formData.get('clientStatus')
+            };
+            
+            if (clientData.id) {
+                // Atualizar cliente existente
+                const index = clients.findIndex(c => c.id === clientData.id);
+                if (index !== -1) {
+                    clients[index] = { ...clients[index], ...clientData };
+                }
+            } else {
+                // Adicionar novo cliente
+                clientData.id = clients.length > 0 ? Math.max(...clients.map(c => c.id)) + 1 : 1;
+                clients.push(clientData);
+            }
+            
+            // Fechar modal e recarregar dados
+            clientModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'dashboard') {
+                updateDashboard();
+            } else if (currentPage === 'clientes') {
+                loadClientsTable();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Cliente salvo com sucesso!');
+        }
+
+        function openDeadlineModal(id = null) {
+            const title = document.getElementById('deadlineModalTitle');
+            const form = document.getElementById('deadlineForm');
+            
+            // Popular selects
+            populateProcessSelect('deadlineProcess');
+            
+            if (id) {
+                title.textContent = 'Editar Prazo';
+                const deadline = deadlines.find(d => d.id === id);
+                if (deadline) {
+                    document.getElementById('deadlineId').value = deadline.id;
+                    document.getElementById('deadlineProcess').value = deadline.processId;
+                    document.getElementById('deadlineType').value = deadline.type;
+                    document.getElementById('deadlineDate').value = deadline.date;
+                    document.getElementById('deadlineDescription').value = deadline.description;
+                    document.getElementById('deadlinePostTimeline').checked = true;
+                }
+            } else {
+                title.textContent = 'Adicionar Prazo';
+                form.reset();
+                document.getElementById('deadlineId').value = '';
+                document.getElementById('deadlineDate').valueAsDate = new Date();
+            }
+            
+            deadlineModal.classList.add('active');
+        }
+
+        function saveDeadline() {
+            const form = document.getElementById('deadlineForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('deadlineProcess') || !formData.get('deadlineType')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const deadlineData = {
+                id: formData.get('deadlineId') ? parseInt(formData.get('deadlineId')) : null,
+                processId: parseInt(formData.get('deadlineProcess')),
+                type: formData.get('deadlineType'),
+                date: formData.get('deadlineDate'),
+                description: formData.get('deadlineDescription'),
+                status: 'pendente'
+            };
+            
+            if (deadlineData.id) {
+                // Atualizar prazo existente
+                const index = deadlines.findIndex(d => d.id === deadlineData.id);
+                if (index !== -1) {
+                    deadlines[index] = { ...deadlines[index], ...deadlineData };
+                }
+            } else {
+                // Adicionar novo prazo
+                deadlineData.id = deadlines.length > 0 ? Math.max(...deadlines.map(d => d.id)) + 1 : 1;
+                deadlines.push(deadlineData);
+            }
+            
+            // Fechar modal e recarregar dados
+            deadlineModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'dashboard') {
+                updateDashboard();
+            } else if (currentPage === 'prazos') {
+                loadDeadlinesTable();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Prazo salvo com sucesso!');
+        }
+
+        function openHearingModal(id = null) {
+            const title = document.getElementById('hearingModalTitle');
+            const form = document.getElementById('hearingForm');
+            
+            // Popular selects
+            populateProcessSelect('hearingProcess');
+            
+            if (id) {
+                title.textContent = 'Editar Audiência';
+                const hearing = hearings.find(h => h.id === id);
+                if (hearing) {
+                    document.getElementById('hearingId').value = hearing.id;
+                    document.getElementById('hearingProcess').value = hearing.processId;
+                    document.getElementById('hearingDate').value = hearing.date;
+                    document.getElementById('hearingTime').value = hearing.time;
+                    document.getElementById('hearingLocation').value = hearing.location;
+                    document.getElementById('hearingType').value = hearing.type;
+                    document.getElementById('hearingNotes').value = hearing.notes;
+                }
+            } else {
+                title.textContent = 'Agendar Audiência';
+                form.reset();
+                document.getElementById('hearingId').value = '';
+                document.getElementById('hearingDate').valueAsDate = new Date();
+                document.getElementById('hearingTime').value = '09:00';
+            }
+            
+            hearingModal.classList.add('active');
+        }
+
+        function saveHearing() {
+            const form = document.getElementById('hearingForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('hearingProcess') || !formData.get('hearingDate')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const hearingData = {
+                id: formData.get('hearingId') ? parseInt(formData.get('hearingId')) : null,
+                processId: parseInt(formData.get('hearingProcess')),
+                date: formData.get('hearingDate'),
+                time: formData.get('hearingTime'),
+                location: formData.get('hearingLocation'),
+                type: formData.get('hearingType'),
+                notes: formData.get('hearingNotes')
+            };
+            
+            if (hearingData.id) {
+                // Atualizar audiência existente
+                const index = hearings.findIndex(h => h.id === hearingData.id);
+                if (index !== -1) {
+                    hearings[index] = { ...hearings[index], ...hearingData };
+                }
+            } else {
+                // Adicionar nova audiência
+                hearingData.id = hearings.length > 0 ? Math.max(...hearings.map(h => h.id)) + 1 : 1;
+                hearings.push(hearingData);
+            }
+            
+            // Fechar modal e recarregar dados
+            hearingModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'dashboard') {
+                updateDashboard();
+            } else if (currentPage === 'audiencias') {
+                loadHearingsTable();
+                generateCalendar();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Audiência salva com sucesso!');
+        }
+
+        function openOpinionModal(id = null) {
+            const title = document.getElementById('opinionModalTitle');
+            const form = document.getElementById('opinionForm');
+            
+            // Popular selects
+            populateProcessSelect('opinionProcess');
+            
+            if (id) {
+                title.textContent = 'Editar Parecer';
+                const opinion = opinions.find(o => o.id === id);
+                if (opinion) {
+                    document.getElementById('opinionId').value = opinion.id;
+                    document.getElementById('opinionProcess').value = opinion.processId;
+                    document.getElementById('opinionTitle').value = opinion.title;
+                    document.getElementById('opinionType').value = opinion.type;
+                    document.getElementById('opinionUrgency').value = opinion.urgency;
+                    document.getElementById('opinionContent').innerHTML = opinion.content;
+                    document.getElementById('opinionConclusion').value = opinion.conclusion;
+                }
+            } else {
+                title.textContent = 'Novo Parecer';
+                form.reset();
+                document.getElementById('opinionId').value = '';
+                document.getElementById('opinionContent').innerHTML = '';
+            }
+            
+            opinionModal.classList.add('active');
+        }
+
+        function saveOpinion() {
+            const form = document.getElementById('opinionForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('opinionProcess') || !formData.get('opinionTitle')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const opinionData = {
+                id: formData.get('opinionId') ? parseInt(formData.get('opinionId')) : null,
+                processId: parseInt(formData.get('opinionProcess')),
+                title: formData.get('opinionTitle'),
+                type: formData.get('opinionType'),
+                urgency: formData.get('opinionUrgency'),
+                content: document.getElementById('opinionContent').innerHTML,
+                conclusion: formData.get('opinionConclusion'),
+                author: currentUser.name,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            if (opinionData.id) {
+                // Atualizar parecer existente
+                const index = opinions.findIndex(o => o.id === opinionData.id);
+                if (index !== -1) {
+                    opinions[index] = { ...opinions[index], ...opinionData };
+                }
+            } else {
+                // Adicionar novo parecer
+                opinionData.id = opinions.length > 0 ? Math.max(...opinions.map(o => o.id)) + 1 : 1;
+                opinions.push(opinionData);
+            }
+            
+            // Fechar modal e recarregar dados
+            opinionModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'pareceres') {
+                loadOpinionsTable();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Parecer salvo com sucesso!');
+        }
+
+        function openNoteModal(id = null) {
+            const title = document.getElementById('noteModalTitle');
+            const form = document.getElementById('noteForm');
+            
+            // Popular selects
+            populateProcessSelect('noteProcess');
+            
+            if (id) {
+                title.textContent = 'Editar Anotação';
+                const note = notes.find(n => n.id === id);
+                if (note) {
+                    document.getElementById('noteId').value = note.id;
+                    document.getElementById('noteProcess').value = note.processId;
+                    document.getElementById('noteTitle').value = note.title;
+                    document.getElementById('noteContent').value = note.content;
+                    document.getElementById('noteColor').value = note.color;
+                    document.getElementById('notePriority').value = note.priority;
+                }
+            } else {
+                title.textContent = 'Nova Anotação';
+                form.reset();
+                document.getElementById('noteId').value = '';
+            }
+            
+            noteModal.classList.add('active');
+        }
+
+        function saveNote() {
+            const form = document.getElementById('noteForm');
+            const formData = new FormData(form);
+            
+            // Validação básica
+            if (!formData.get('noteTitle') || !formData.get('noteContent')) {
+                alert('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            const noteData = {
+                id: formData.get('noteId') ? parseInt(formData.get('noteId')) : null,
+                processId: formData.get('noteProcess') ? parseInt(formData.get('noteProcess')) : null,
+                title: formData.get('noteTitle'),
+                content: formData.get('noteContent'),
+                color: formData.get('noteColor'),
+                priority: formData.get('notePriority'),
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            if (noteData.id) {
+                // Atualizar anotação existente
+                const index = notes.findIndex(n => n.id === noteData.id);
+                if (index !== -1) {
+                    notes[index] = { ...notes[index], ...noteData };
+                }
+            } else {
+                // Adicionar nova anotação
+                noteData.id = notes.length > 0 ? Math.max(...notes.map(n => n.id)) + 1 : 1;
+                notes.push(noteData);
+            }
+            
+            // Fechar modal e recarregar dados
+            noteModal.classList.remove('active');
+            
+            // Atualizar a visualização atual
+            if (currentPage === 'anotacoes') {
+                loadNotes();
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Anotação salva com sucesso!');
+        }
+
+        // ========== FUNÇÕES AUXILIARES ==========
+
+        // Popular selects
+        function populateClientSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Selecione um cliente</option>';
+            
+            clients.filter(c => c.status === 'ativo').forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.name;
+                option.textContent = client.name;
+                select.appendChild(option);
+            });
+        }
+
+        function populateLawyerSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Selecione o advogado</option>';
+            
+            lawyers.forEach(lawyer => {
+                const option = document.createElement('option');
+                option.value = lawyer.name;
+                option.textContent = lawyer.name;
+                select.appendChild(option);
+            });
+        }
+
+        function populateProcessSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Selecione o processo</option>';
+            
+            processes.forEach(process => {
+                const option = document.createElement('option');
+                option.value = process.id;
+                option.textContent = `${process.number} - ${process.client}`;
+                select.appendChild(option);
+            });
+        }
+
+        function populateLawyerFilter(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Todos</option>';
+            
+            lawyers.forEach(lawyer => {
+                const option = document.createElement('option');
+                option.value = lawyer.name;
+                option.textContent = lawyer.name;
+                select.appendChild(option);
+            });
+        }
+
+        function populateProcessFilter(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Todos</option>';
+            
+            processes.forEach(process => {
+                const option = document.createElement('option');
+                option.value = process.id;
+                option.textContent = `${process.number} - ${process.client}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Funções de formatação
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pendente': 'Pendente',
+                'andamento': 'Em Andamento',
+                'concluido': 'Concluído',
+                'arquivado': 'Arquivado'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusBadgeClass(status) {
+            const badgeMap = {
+                'pendente': 'badge-warning',
+                'andamento': 'badge-primary',
+                'concluido': 'badge-success',
+                'arquivado': 'badge-danger'
+            };
+            return badgeMap[status] || 'badge-primary';
+        }
+
+        function getDeadlineTypeText(type) {
+            const typeMap = {
+                'peticao': 'Petição',
+                'contestacao': 'Contestação',
+                'recurso': 'Recurso',
+                'audiencia': 'Audiência',
+                'diligencia': 'Diligência',
+                'outro': 'Outro'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getDeadlineStatusText(status, diffDays) {
+            if (status === 'concluido') return 'Concluído';
+            if (diffDays < 0) return 'Vencido';
+            if (diffDays === 0) return 'Vence hoje';
+            if (diffDays === 1) return 'Vence amanhã';
+            return `Vence em ${diffDays} dias`;
+        }
+
+        function getHearingTypeText(type) {
+            const typeMap = {
+                'instrucao': 'Instrução',
+                'conciliacao': 'Conciliação',
+                'julgamento': 'Julgamento',
+                'outro': 'Outro'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getOpinionTypeText(type) {
+            const typeMap = {
+                'juridico': 'Jurídico',
+                'tecnico': 'Técnico',
+                'administrativo': 'Administrativo'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getUrgencyText(urgency) {
+            const urgencyMap = {
+                'baixo': 'Baixa',
+                'medio': 'Média',
+                'alto': 'Alta',
+                'critico': 'Crítica'
+            };
+            return urgencyMap[urgency] || urgency;
+        }
+
+        function getUrgencyBadgeClass(urgency) {
+            const badgeMap = {
+                'baixo': 'badge-success',
+                'medio': 'badge-primary',
+                'alto': 'badge-warning',
+                'critico': 'badge-danger'
+            };
+            return badgeMap[urgency] || 'badge-primary';
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'baixa': 'Baixa',
+                'media': 'Média',
+                'alta': 'Alta'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        // Gerar calendário
+        function generateCalendar() {
+            const container = document.getElementById('calendarContainer');
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Primeiro dia do mês
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            // Último dia do mês
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            
+            // Dias da semana
+            const weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            
+            let calendarHTML = `
+                <div class="calendar">
+                    <div class="calendar-header">
+                        ${today.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+                    </div>
+            `;
+            
+            // Cabeçalho dos dias da semana
+            weekdays.forEach(day => {
+                calendarHTML += `<div class="calendar-day" style="text-align: center; font-weight: 600;">${day}</div>`;
+            });
+            
+            // Dias vazios no início do mês
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                calendarHTML += `<div class="calendar-day other-month"></div>`;
+            }
+            
+            // Dias do mês
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayHearings = hearings.filter(h => h.date === dateStr);
+                
+                let dayClass = 'calendar-day';
+                if (day === today.getDate() && currentMonth === today.getMonth()) {
+                    dayClass += ' has-events';
+                }
+                
+                calendarHTML += `<div class="${dayClass}">${day}`;
+                
+                // Adicionar eventos do dia
+                dayHearings.forEach(hearing => {
+                    const process = processes.find(p => p.id === hearing.processId);
+                    calendarHTML += `
+                        <div class="calendar-event" onclick="viewHearing(${hearing.id})">
+                            ${hearing.time} - ${process ? process.number : 'N/A'}
+                        </div>
+                    `;
+                });
+                
+                calendarHTML += `</div>`;
+            }
+            
+            calendarHTML += `</div>`;
+            container.innerHTML = calendarHTML;
+        }
+
+        // Gerar relatórios
+        function generateReport() {
+            // Gráfico de status
+            const statusCtx = document.getElementById('reportStatusChart').getContext('2d');
+            
+            const statusCount = {
+                'pendente': processes.filter(p => p.status === 'pendente').length,
+                'andamento': processes.filter(p => p.status === 'andamento').length,
+                'concluido': processes.filter(p => p.status === 'concluido').length,
+                'arquivado': processes.filter(p => p.status === 'arquivado').length
+            };
+            
+            new Chart(statusCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pendente', 'Em Andamento', 'Concluído', 'Arquivado'],
+                    datasets: [{
+                        label: 'Processos por Status',
+                        data: [statusCount.pendente, statusCount.andamento, statusCount.concluido, statusCount.arquivado],
+                        backgroundColor: [
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(0, 77, 77, 0.8)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(0, 77, 77, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de advogados
+            const lawyerCtx = document.getElementById('reportLawyerChart').getContext('2d');
+            
+            const lawyerCount = {};
+            processes.forEach(p => {
+                lawyerCount[p.lawyer] = (lawyerCount[p.lawyer] || 0) + 1;
+            });
+            
+            new Chart(lawyerCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(lawyerCount),
+                    datasets: [{
+                        data: Object.values(lawyerCount),
+                        backgroundColor: [
+                            'rgba(0, 77, 77, 0.8)',
+                            'rgba(201, 167, 105, 0.8)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(23, 162, 184, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 77, 77, 1)',
+                            'rgba(201, 167, 105, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(23, 162, 184, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Tabela de processos
+            const tbody = document.getElementById('reportProcessesBody');
+            tbody.innerHTML = '';
+            
+            processes.forEach(process => {
+                const startDate = new Date(process.startDate);
+                const today = new Date();
+                const diffTime = today - startDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process.number}</td>
+                    <td>${process.client}</td>
+                    <td>${process.type}</td>
+                    <td><span class="badge ${getStatusBadgeClass(process.status)}">${getStatusText(process.status)}</span></td>
+                    <td>${process.lawyer}</td>
+                    <td>${formatDate(process.startDate)}</td>
+                    <td>${diffDays} dias</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Funções de visualização (simuladas)
+        function viewProcess(id) {
+            alert(`Visualizando processo ${id}`);
+        }
+
+        function editProcess(id) {
+            openProcessModal(id);
+        }
+
+        function deleteProcess(id) {
+            if (confirm('Tem certeza que deseja excluir este processo?')) {
+                processes = processes.filter(p => p.id !== id);
+                loadProcessesTable();
+                updateDashboard();
+                alert('Processo excluído com sucesso!');
+            }
+        }
+
+        function editClient(id) {
+            openClientModal(id);
+        }
+
+        function deleteClient(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                clients = clients.filter(c => c.id !== id);
+                loadClientsTable();
+                updateDashboard();
+                alert('Cliente excluído com sucesso!');
+            }
+        }
+
+        function editDeadline(id) {
+            openDeadlineModal(id);
+        }
+
+        function deleteDeadline(id) {
+            if (confirm('Tem certeza que deseja excluir este prazo?')) {
+                deadlines = deadlines.filter(d => d.id !== id);
+                loadDeadlinesTable();
+                updateDashboard();
+                alert('Prazo excluído com sucesso!');
+            }
+        }
+
+        function viewHearing(id) {
+            alert(`Visualizando audiência ${id}`);
+        }
+
+        function editHearing(id) {
+            openHearingModal(id);
+        }
+
+        function deleteHearing(id) {
+            if (confirm('Tem certeza que deseja excluir esta audiência?')) {
+                hearings = hearings.filter(h => h.id !== id);
+                loadHearingsTable();
+                generateCalendar();
+                alert('Audiência excluída com sucesso!');
+            }
+        }
+
+        function viewOpinion(id) {
+            alert(`Visualizando parecer ${id}`);
+        }
+
+        function editOpinion(id) {
+            openOpinionModal(id);
+        }
+
+        function deleteOpinion(id) {
+            if (confirm('Tem certeza que deseja excluir este parecer?')) {
+                opinions = opinions.filter(o => o.id !== id);
+                loadOpinionsTable();
+                alert('Parecer excluído com sucesso!');
+            }
+        }
+
+        function editNote(id) {
+            openNoteModal(id);
+        }
+
+        function deleteNote(id) {
+            if (confirm('Tem certeza que deseja excluir esta anotação?')) {
+                notes = notes.filter(n => n.id !== id);
+                loadNotes();
+                alert('Anotação excluída com sucesso!');
+            }
+        }
+
+        // Responsividade - toggle sidebar em mobile
+        function handleResize() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Chamar na inicialização
+    </script>
+</body>
+</html>
