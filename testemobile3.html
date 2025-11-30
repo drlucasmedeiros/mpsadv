@@ -2115,50 +2115,147 @@ async function getFinancials() {
         return [];
     }
 }
-
-async function saveFinancial(financial) {
+async function loadFinancialData(processId) {
     try {
-        const financialData = {
-            processo_id: financial.processId,
-            type: financial.type,
-            description: financial.description,
-            value: financial.value,
-            date: financial.date,
-            status: financial.status
-        };
-
-        if (financial.id) {
-            const { data, error } = await supabase
-                .from('financeiro')
-                .update(financialData)
-                .eq('id', financial.id)
-                .select();
-            if (error) throw error;
-            return data[0];
-        } else {
-            const { data, error } = await supabase
-                .from('financeiro')
-                .insert([financialData])
-                .select();
-            if (error) throw error;
-            return data[0];
-        }
+        const financials = await getFinancials();
+        const processFinancials = financials.filter(f => f.processo_id === processId);
+        const container = document.getElementById('financialDetailsContent');
+        
+        const totalReceita = processFinancials
+            .filter(f => f.type === 'receita')
+            .reduce((sum, f) => sum + parseFloat(f.value || 0), 0);
+            
+        const totalDespesa = processFinancials
+            .filter(f => f.type === 'despesa')
+            .reduce((sum, f) => sum + parseFloat(f.value || 0), 0);
+            
+        const saldo = totalReceita - totalDespesa;
+        
+        // CORREÇÃO: Usar deleteFinancialConfirm no lugar de deleteFinancial
+        container.innerHTML = `
+            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--success);">R$ ${totalReceita.toFixed(2)}</div>
+                    <div class="stat-label">Total Receita</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--danger);">R$ ${totalDespesa.toFixed(2)}</div>
+                    <div class="stat-label">Total Despesa</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: ${saldo >= 0 ? 'var(--success)' : 'var(--danger)'};">R$ ${saldo.toFixed(2)}</div>
+                    <div class="stat-label">Saldo</div>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${processFinancials.map(f => `
+                            <tr>
+                                <td>${formatDate(f.date)}</td>
+                                <td>${f.description}</td>
+                                <td>
+                                    <span class="financial-badge financial-${f.type}">
+                                        ${f.type === 'receita' ? 'Receita' : 'Despesa'}
+                                    </span>
+                                </td>
+                                <td>R$ ${parseFloat(f.value || 0).toFixed(2)}</td>
+                                <td>
+                                    <span class="financial-badge financial-${f.status}">
+                                        ${f.status === 'pago' ? 'Pago' : 'Pendente'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="action-btn" onclick="editFinancial(${f.id})" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-danger" onclick="deleteFinancialConfirm(${f.id})" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
     } catch (error) {
-        console.error('Erro ao salvar dado financeiro:', error);
-        return null;
+        console.error('❌ Erro ao carregar dados financeiros:', error);
+        showAlert('Erro ao carregar dados financeiros!', 'error');
     }
 }
 
-async function deleteFinancial(id) {
+async function editFinancial(id) {
     try {
-        const { error } = await supabase
-            .from('financeiro')
-            .delete()
-            .eq('id', id);
-        return !error;
+        const financials = await getFinancials();
+        const financial = financials.find(f => f.id === id);
+        if (!financial) {
+            showAlert('Registro financeiro não encontrado!', 'error');
+            return;
+        }
+        
+        // Preencher o formulário com os dados existentes
+        document.getElementById('financialType').value = financial.type;
+        document.getElementById('financialStatus').value = financial.status;
+        document.getElementById('financialDescription').value = financial.description;
+        document.getElementById('financialValue').value = financial.value;
+        document.getElementById('financialDate').value = financial.date.split('T')[0]; // Apenas a data
+        
+        // Rolar para o formulário
+        document.getElementById('addFinancialContainer').scrollIntoView({ behavior: 'smooth' });
+        
+        // Alterar o botão para "Atualizar"
+        const form = document.getElementById('addFinancialForm');
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.innerHTML = '<i class="fas fa-save"></i> Atualizar';
+        
+        // Remover event listeners anteriores para evitar duplicação
+        const newForm = form.cloneNode(true);
+        form.parentNode.replaceChild(newForm, form);
+        
+        // Adicionar novo event listener
+        document.getElementById('addFinancialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Atualizar o lançamento
+            const updatedFinancial = {
+                id: financial.id,
+                processo_id: financial.processo_id,
+                type: document.getElementById('financialType').value,
+                status: document.getElementById('financialStatus').value,
+                description: document.getElementById('financialDescription').value,
+                value: parseFloat(document.getElementById('financialValue').value),
+                date: document.getElementById('financialDate').value
+            };
+            
+            const saved = await saveFinancial(updatedFinancial);
+            if (saved) {
+                await loadFinancialData(currentProcessId);
+                showAlert('Lançamento financeiro atualizado com sucesso!', 'success');
+                
+                // Restaurar o formulário para adição
+                document.getElementById('addFinancialForm').reset();
+                document.getElementById('financialDate').valueAsDate = new Date();
+                submitButton.innerHTML = '<i class="fas fa-plus"></i> Adicionar Transação';
+            } else {
+                showAlert('Erro ao atualizar lançamento financeiro!', 'error');
+            }
+        });
+        
     } catch (error) {
-        console.error('Erro ao excluir dado financeiro:', error);
-        return false;
+        console.error('❌ Erro ao editar registro financeiro:', error);
+        showAlert('Erro ao carregar dados para edição!', 'error');
     }
 }
 
@@ -3888,235 +3985,73 @@ async function deleteFinancial(id) {
                 </button>
             `;
             
-    financialContainer.innerHTML = html;
-    
-    // Adicionar formulário para novos lançamentos (apenas para admin)
-    const addFinancialContainer = document.getElementById('addFinancialContainer');
-    if(currentUser.user_type === 'admin') {
-        addFinancialContainer.innerHTML = `
-            <h4>Adicionar Lançamento Financeiro</h4>
-            <form id="addFinancialForm">
-                <input type="hidden" id="financialProcessId" value="${processId}">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div>
-                        <label>Tipo</label>
-                        <select id="financialType" class="form-control" required>
-                            <option value="">Selecione</option>
-                            <option value="honorario">Honorário</option>
-                            <option value="custo">Custo</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Status</label>
-                        <select id="financialStatus" class="form-control" required>
-                            <option value="pendente">Pendente</option>
-                            <option value="pago">Pago</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="margin-bottom: 1rem">
-                    <label>Descrição</label>
-                    <input type="text" id="financialDescription" class="form-control" required>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div>
-                        <label>Valor (R$)</label>
-                        <input type="number" id="financialValue" class="form-control" step="0.01" min="0" required>
-                    </div>
-                    <div>
-                        <label>Data</label>
-                        <input type="date" id="financialDate" class="form-control" required>
-                    </div>
-                </div>
-                <div style="text-align:right">
-                    <button type="submit" class="btn">Adicionar</button>
-                </div>
-            </form>
-        `;
-        
-        // Definir data atual como padrão
-        document.getElementById('financialDate').valueAsDate = new Date();
-        
-        document.getElementById('addFinancialForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const processId = parseInt(document.getElementById('financialProcessId').value);
-            const type = document.getElementById('financialType').value;
-            const description = document.getElementById('financialDescription').value;
-            const value = parseFloat(document.getElementById('financialValue').value);
-            const date = document.getElementById('financialDate').value;
-            const status = document.getElementById('financialStatus').value;
-            
-            if(!type || !description || !value) return;
-            
-            const financial = {
-                processId: processId,
-                type: type,
-                description: description,
-                value: value,
-                date: date,
-                status: status
-            };
-            
-            const saved = await saveFinancial(financial);
-            if (saved) {
-                await loadFinancialData(processId);
-                showAlert('Lançamento financeiro adicionado com sucesso!', 'success');
-                
-                // Limpar formulário
-                document.getElementById('addFinancialForm').reset();
-                document.getElementById('financialDate').valueAsDate = new Date();
-            } else {
-                showAlert('Erro ao adicionar lançamento financeiro!', 'error');
-            }
-        });
-    } else {
-        addFinancialContainer.innerHTML = '';
-    }
-}
+            // Adicionar formulário financeiro
+            // NO LUGAR DO FORMULÁRIO DUPLICADO, use apenas este:
+document.getElementById('addFinancialContainer').innerHTML = `
+    <h4>Adicionar Transação Financeira</h4>
+    <form id="addFinancialForm">
+        <input type="hidden" id="financialProcessId" value="${processId}">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="financialType" class="form-control" required>
+                    <option value="receita">Receita</option>
+                    <option value="despesa">Despesa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Valor (R$)</label>
+                <input id="financialValue" class="form-control" type="number" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Data</label>
+                <input id="financialDate" class="form-control" type="date" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <input id="financialDescription" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="financialStatus" class="form-control" required>
+                <option value="pendente">Pendente</option>
+                <option value="pago">Pago</option>
+            </select>
+        </div>
+        <div style="margin-top:1rem; text-align:right">
+            <button class="btn" type="submit">
+                <i class="fas fa-plus"></i>
+                Adicionar Transação
+            </button>
+        </div>
+    </form>
+`;
 
-function closeProcessDetails(){ 
-    document.getElementById('processDetailsModal').classList.remove('active'); 
-    document.getElementById('addUpdateContainer').innerHTML = '';
-    document.getElementById('addFinancialContainer').innerHTML = '';
-    currentProcessId = null;
-}
-
-async function editFinancial(id) {
-    const financials = await getFinancials();
-    const financial = financials.find(f => f.id === id);
-    if (!financial) return;
+// REMOVA event listeners duplicados e use apenas este:
+document.getElementById('addFinancialForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
     
-    // Preencher o formulário com os dados existentes
-    document.getElementById('financialType').value = financial.type;
-    document.getElementById('financialStatus').value = financial.status;
-    document.getElementById('financialDescription').value = financial.description;
-    document.getElementById('financialValue').value = financial.value;
-    document.getElementById('financialDate').value = financial.date;
-    
-    // Rolar para o formulário
-    document.getElementById('addFinancialContainer').scrollIntoView({ behavior: 'smooth' });
-    
-    // Alterar o botão para "Atualizar"
-    const form = document.getElementById('addFinancialForm');
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.textContent = 'Atualizar';
-    submitButton.onclick = async function(e) {
-        e.preventDefault();
-        
-        // Atualizar o lançamento
-        financial.type = document.getElementById('financialType').value;
-        financial.status = document.getElementById('financialStatus').value;
-        financial.description = document.getElementById('financialDescription').value;
-        financial.value = parseFloat(document.getElementById('financialValue').value);
-        financial.date = document.getElementById('financialDate').value;
-        
-        const saved = await saveFinancial(financial);
-        if (saved) {
-            await loadFinancialData(currentProcessId);
-            showAlert('Lançamento financeiro atualizado com sucesso!', 'success');
-            
-            // Restaurar o formulário para adição
-            document.getElementById('addFinancialForm').reset();
-            document.getElementById('financialDate').valueAsDate = new Date();
-            submitButton.textContent = 'Adicionar';
-            submitButton.onclick = null;
-        } else {
-            showAlert('Erro ao atualizar lançamento financeiro!', 'error');
-        }
+    const financialData = {
+        processo_id: parseInt(document.getElementById('financialProcessId').value),
+        type: document.getElementById('financialType').value,
+        value: parseFloat(document.getElementById('financialValue').value),
+        date: document.getElementById('financialDate').value,
+        description: document.getElementById('financialDescription').value,
+        status: document.getElementById('financialStatus').value
     };
-}
 
-async function deleteFinancialConfirm(id) {
-    if(confirm('Tem certeza que deseja excluir este lançamento financeiro?')) {
-        const success = await deleteFinancial(id);
-        if (success) {
-            await loadFinancialData(currentProcessId);
-            showAlert('Lançamento financeiro excluído com sucesso!', 'success');
-        } else {
-            showAlert('Erro ao excluir lançamento financeiro!', 'error');
-        }
+    console.log('🔄 Enviando dados financeiros:', financialData);
+
+    const saved = await saveFinancial(financialData);
+    if (saved) {
+        document.getElementById('addFinancialForm').reset();
+        await loadFinancialData(processId);
+        showAlert('Transação financeira adicionada com sucesso!', 'success');
+    } else {
+        showAlert('Erro ao adicionar transação financeira!', 'error');
     }
-}
-            
-            document.getElementById('addFinancialForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await saveFinancial({
-                    processo_id: id,
-                    type: document.getElementById('financialType').value,
-                    value: parseFloat(document.getElementById('financialValue').value),
-                    date: document.getElementById('financialDate').value,
-                    description: document.getElementById('financialDescription').value,
-                    status: 'pendente'
-                });
-                document.getElementById('addFinancialForm').reset();
-                loadFinancialData(id);
-                showAlert('Transação adicionada com sucesso!', 'success');
-            });
-            
-            // Carregar conteúdo inicial (timeline)
-            await loadProcessTimeline(id);
-            modal.classList.add('active');
-        }
-
-        function closeProcessDetails(){ 
-            document.getElementById('processDetailsModal').classList.remove('active'); 
-            currentProcessId = null;
-        }
-
-        async function loadProcessTimeline(processId){ 
-            const updates = await getProcessUpdates(processId); 
-            const container = document.getElementById('processDetailsContent'); 
-            const timelineHtml = `
-                <div class="timeline">
-                    ${updates.map(update => `
-                        <div class="timeline-item">
-                            <span class="timeline-date">${formatDateTime(update.data_atualizacao)}</span>
-                            ${update.descricao}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            // Inserir após o primeiro elemento (cabeçalho)
-            const existingContent = container.innerHTML;
-            const headerEnd = existingContent.indexOf('</p>') + 4;
-            container.innerHTML = existingContent.slice(0, headerEnd) + timelineHtml + existingContent.slice(headerEnd);
-        }
-
-        async function loadProcessPrazos(processId){ 
-            const prazos = await getPrazosInternos(processId); 
-            const container = document.getElementById('processPrazosContent'); 
-            container.innerHTML = `
-                <div class="prazos-grid">
-                    ${prazos.map(prazo => `
-                        <div class="prazo-card ${prazo.prioridade}">
-                            <div class="prazo-header">
-                                <div>
-                                    <div class="prazo-title">${prazo.titulo}</div>
-                                    <div class="prazo-desc">${prazo.descricao}</div>
-                                </div>
-                                <span class="priority-badge priority-${prazo.prioridade}">${prazo.prioridade}</span>
-                            </div>
-                            <div class="prazo-meta">
-                                <span><strong>Vence:</strong> ${formatDateTime(prazo.data_vencimento)}</span>
-                                <span><strong>Responsável:</strong> ${prazo.usuarios?.name || 'N/A'}</span>
-                            </div>
-                            <div class="prazo-meta">
-                                <span><strong>Status:</strong> ${prazo.status}</span>
-                                <span><strong>Visível ao cliente:</strong> ${prazo.visivel_cliente ? 'Sim' : 'Não'}</span>
-                            </div>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <button class="btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="editPrazoInterno(${prazo.id})">
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <button class="btn btn-secondary" style="padding: 0.5rem; font-size: 0.8rem;" onclick="concluirPrazo(${prazo.id})">
-                                    <i class="fas fa-check"></i> Concluir
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
+});
 
         async function loadFinancialData(processId){ 
             const financials = await getFinancials(); 
