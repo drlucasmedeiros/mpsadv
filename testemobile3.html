@@ -2101,66 +2101,66 @@
             }
         }
 
-        // Financeiro
-        async function getFinancials() {
-            try {
-                const { data, error } = await supabase
-                    .from('financeiro')
-                    .select('*')
-                    .order('date');
-                if (error) throw error;
-                return data || [];
-            } catch (error) {
-                console.error('Erro ao buscar dados financeiros:', error);
-                return [];
-            }
-        }
+       // Financeiro
+async function getFinancials() {
+    try {
+        const { data, error } = await supabase
+            .from('financeiro')
+            .select('*')
+            .order('date');
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('Erro ao buscar dados financeiros:', error);
+        return [];
+    }
+}
 
-        async function saveFinancial(financial) {
-            try {
-                const financialData = {
-                    processo_id: financial.processId,
-                    type: financial.type,
-                    description: financial.description,
-                    value: financial.value,
-                    date: financial.date,
-                    status: financial.status
-                };
+async function saveFinancial(financial) {
+    try {
+        const financialData = {
+            processo_id: financial.processId,
+            type: financial.type,
+            description: financial.description,
+            value: financial.value,
+            date: financial.date,
+            status: financial.status
+        };
 
-                if (financial.id) {
-                    const { data, error } = await supabase
-                        .from('financeiro')
-                        .update(financialData)
-                        .eq('id', financial.id)
-                        .select();
-                    if (error) throw error;
-                    return data[0];
-                } else {
-                    const { data, error } = await supabase
-                        .from('financeiro')
-                        .insert([financialData])
-                        .select();
-                    if (error) throw error;
-                    return data[0];
-                }
-            } catch (error) {
-                console.error('Erro ao salvar dado financeiro:', error);
-                return null;
-            }
+        if (financial.id) {
+            const { data, error } = await supabase
+                .from('financeiro')
+                .update(financialData)
+                .eq('id', financial.id)
+                .select();
+            if (error) throw error;
+            return data[0];
+        } else {
+            const { data, error } = await supabase
+                .from('financeiro')
+                .insert([financialData])
+                .select();
+            if (error) throw error;
+            return data[0];
         }
+    } catch (error) {
+        console.error('Erro ao salvar dado financeiro:', error);
+        return null;
+    }
+}
 
-        async function deleteFinancial(id) {
-            try {
-                const { error } = await supabase
-                    .from('financeiro')
-                    .delete()
-                    .eq('id', id);
-                return !error;
-            } catch (error) {
-                console.error('Erro ao excluir dado financeiro:', error);
-                return false;
-            }
-        }
+async function deleteFinancial(id) {
+    try {
+        const { error } = await supabase
+            .from('financeiro')
+            .delete()
+            .eq('id', id);
+        return !error;
+    } catch (error) {
+        console.error('Erro ao excluir dado financeiro:', error);
+        return false;
+    }
+}
 
         // Notificações
         async function getNotifications() {
