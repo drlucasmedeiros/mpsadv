@@ -1,0 +1,3584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Classificados globais anônimos - Conecte-se localmente com pessoas através de código">
+    <title>SYNTA • Conexões Locais Anônimas</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        /* CSS Reset & Variables */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --warning: #fbbf24;
+            --success: #10b981;
+            
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --gradient-accent: linear-gradient(135deg, var(--accent), #f97316);
+            --gradient-success: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --blur-amount: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* PWA Styles */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .install-prompt {
+                display: none !important;
+            }
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 30%);
+            z-index: -2;
+        }
+        
+        /* Main Container */
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .main-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        
+        .logo-icon {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            transition: var(--transition);
+            flex: 1;
+            max-width: 80px;
+        }
+        
+        .nav-item i {
+            font-size: 1.25rem;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: 4px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.625rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            padding-bottom: 5rem; /* Space for bottom nav */
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+        
+        /* Access Screen */
+        .access-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Forms */
+        .form-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+            max-width: 400px;
+            width: 100%;
+            margin: 1rem auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .form-hint {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+            user-select: none;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* Feed & Posts */
+        .location-filter {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            margin-bottom: 1.5rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .location-filter::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .location-btn {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .location-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .location-btn i {
+            margin-right: 0.25rem;
+        }
+        
+        .posts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .posts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .posts-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .post-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .post-header {
+            padding: 1.25rem 1.25rem 0;
+        }
+        
+        .post-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .post-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .post-description {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .post-body {
+            padding: 0 1.25rem 1.25rem;
+            flex: 1;
+        }
+        
+        .post-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .post-distance {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        
+        /* Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 640px) {
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .category-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .category-count {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        /* Messages */
+        .conversations-list {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+        }
+        
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .conversation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .conversation-item:hover {
+            background: var(--gray-50);
+        }
+        
+        .conversation-item.unread {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .conversation-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .conversation-preview {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .conversation-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-align: right;
+        }
+        
+        /* Chat */
+        .chat-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .chat-back-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            cursor: pointer;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-back-btn {
+                display: block;
+            }
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-lg);
+            position: relative;
+            animation: fadeInUp 0.3s ease;
+        }
+        
+        .message.sent {
+            background: var(--gradient-primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: var(--radius-sm);
+        }
+        
+        .message.received {
+            background: var(--gray-100);
+            color: var(--gray-800);
+            align-self: flex-start;
+            border-bottom-left-radius: var(--radius-sm);
+        }
+        
+        .message-content {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+            background: white;
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        /* Profile */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-location {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+        
+        /* Map Container */
+        .map-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            height: 50vh;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        #globalMap {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 1rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 320px;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1500;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .notification.active {
+            transform: translateX(0);
+        }
+        
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .notification-success .notification-icon {
+            background: var(--gradient-success);
+        }
+        
+        .notification-warning .notification-icon {
+            background: linear-gradient(135deg, var(--warning), #f59e0b);
+        }
+        
+        .notification-error .notification-icon {
+            background: var(--danger);
+        }
+        
+        /* Loading */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius-md);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--gray-500); }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .d-none { display: none !important; }
+        .d-flex { display: flex; }
+        .flex-column { flex-direction: column; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .w-100 { width: 100%; }
+        
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 5.5rem;
+            left: 1rem;
+            right: 1rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1500;
+            transform: translateY(120%);
+            transition: transform 0.3s ease;
+        }
+        
+        .install-prompt.active {
+            transform: translateY(0);
+        }
+        
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray-500);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .main-header {
+                padding: 0.5rem;
+            }
+            
+            .main-content {
+                padding: 0.75rem;
+                padding-bottom: 5rem;
+            }
+            
+            .form-card {
+                padding: 1.25rem;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .bottom-nav {
+                display: none;
+            }
+            
+            .main-header {
+                padding: 1rem 2rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                padding-bottom: 2rem;
+            }
+            
+            .desktop-nav {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            
+            .desktop-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                border-radius: var(--radius-md);
+                text-decoration: none;
+                color: var(--gray-700);
+                font-weight: 500;
+                transition: var(--transition);
+            }
+            
+            .desktop-nav-item:hover,
+            .desktop-nav-item.active {
+                color: var(--primary);
+                background: rgba(99, 102, 241, 0.1);
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --light: #0f172a;
+                --dark: #f8fafc;
+                --gray-50: #0f172a;
+                --gray-100: #1e293b;
+                --gray-200: #334155;
+                --gray-300: #475569;
+                --gray-400: #64748b;
+                --gray-500: #94a3b8;
+                --gray-600: #cbd5e1;
+                --gray-700: #e2e8f0;
+                --gray-800: #f1f5f9;
+                --gray-900: #f8fafc;
+                
+                --glass-bg: rgba(15, 23, 42, 0.92);
+                --glass-border: rgba(255, 255, 255, 0.1);
+            }
+            
+            body {
+                background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
+                color: var(--dark);
+            }
+            
+            .form-card,
+            .post-card,
+            .category-card,
+            .chat-container,
+            .modal,
+            .notification,
+            .install-prompt {
+                background: var(--gray-100);
+                border-color: var(--gray-200);
+            }
+            
+            .form-control,
+            .location-btn {
+                background: var(--gray-100);
+                border-color: var(--gray-300);
+                color: var(--gray-700);
+            }
+            
+            .form-control:focus {
+                border-color: var(--primary-light);
+            }
+            
+            .post-title,
+            .section-title,
+            .modal-title,
+            .conversation-name,
+            .profile-name,
+            .category-name {
+                color: var(--gray-800);
+            }
+            
+            .post-description,
+            .section-subtitle,
+            .form-hint,
+            .conversation-preview,
+            .category-count {
+                color: var(--gray-600);
+            }
+            
+            .post-footer,
+            .chat-header {
+                background: var(--gray-200);
+                border-color: var(--gray-300);
+            }
+            
+            .message.received {
+                background: var(--gray-200);
+                color: var(--gray-800);
+            }
+            
+            .skeleton {
+                background: linear-gradient(90deg, var(--gray-300) 25%, var(--gray-400) 50%, var(--gray-300) 75%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+    
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <a href="#" class="logo" id="homeLogo">
+                <span class="logo-icon">🌐</span>
+                <span>SYNTA</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav d-none">
+                <a href="#" class="desktop-nav-item" data-page="feed">
+                    <i class="fas fa-home"></i>
+                    <span>Feed</span>
+                </a>
+                <a href="#" class="desktop-nav-item" data-page="messages">
+                    <i class="fas fa-comments"></i>
+                    <span>Mensagens</span>
+                    <span class="badge" id="desktopMessageBadge">0</span>
+                </a>
+                <a href="#" class="desktop-nav-item" data-page="map">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Mapa</span>
+                </a>
+                <a href="#" class="desktop-nav-item" data-page="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Perfil</span>
+                </a>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="user-code-display d-none" id="userCodeDisplay">SYNTA-XXXXXX</div>
+                <button class="btn btn-primary btn-small d-none" id="newPostBtn">
+                    <i class="fas fa-plus"></i>
+                    <span class="d-none">Novo</span>
+                </button>
+                <button class="btn btn-secondary btn-small" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+            <!-- Access Screen -->
+            <section id="accessScreen" class="access-screen">
+                <h1 class="hero-title">Conecte-se Anonimamente</h1>
+                <p class="section-subtitle mb-3">
+                    Encontre pessoas próximas a você através de um código simples.<br>
+                    Total anonimato. Conexões locais.
+                </p>
+                
+                <div class="form-card">
+                    <h2 class="section-title text-center" style="font-size: 1.25rem;">
+                        <i class="fas fa-key"></i> Acesso por Código
+                    </h2>
+                    
+                    <form id="accessForm">
+                        <div class="form-group">
+                            <label class="form-label">Seu Código SYNTA</label>
+                            <input type="text" class="form-control" id="accessCode" 
+                                   placeholder="SYNTA-XXXXXX" required
+                                   pattern="SYNTA-[A-Z0-9]{6}"
+                                   title="Formato: SYNTA- seguido de 6 caracteres">
+                            <div class="form-hint">
+                                Digite o código que você recebeu ou <a href="#" id="createAccountLink">crie uma nova conta</a>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input type="checkbox" id="enableLocation" checked>
+                                Usar minha localização atual
+                            </label>
+                            <div class="form-hint" id="locationStatus">
+                                Permitindo acesso à localização...
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block" id="accessSubmit">
+                            <i class="fas fa-unlock"></i> Acessar
+                        </button>
+                    </form>
+                    
+                    <div class="mt-3 text-center">
+                        <p class="text-muted">Primeira vez aqui?</p>
+                        <button class="btn btn-secondary btn-small" id="quickStartBtn">
+                            <i class="fas fa-bolt"></i> Começar Agora
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <p class="text-muted" style="font-size: 0.875rem;">
+                        <i class="fas fa-lock"></i> 100% anônimo • Sem cadastro • Local
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Feed Page -->
+            <section id="feedPage" class="page-section">
+                <div class="section-header">
+                    <h1 class="section-title">Próximo de Você</h1>
+                    <p class="section-subtitle" id="feedLocation">Carregando sua localização...</p>
+                </div>
+                
+                <div class="location-filter" id="locationFilter">
+                    <button class="location-btn active" data-radius="1">
+                        <i class="fas fa-walking"></i> 1km
+                    </button>
+                    <button class="location-btn" data-radius="5">
+                        <i class="fas fa-bicycle"></i> 5km
+                    </button>
+                    <button class="location-btn" data-radius="10">
+                        <i class="fas fa-car"></i> 10km
+                    </button>
+                    <button class="location-btn" data-radius="50">
+                        <i class="fas fa-city"></i> Cidade
+                    </button>
+                    <button class="location-btn" data-radius="global">
+                        <i class="fas fa-globe-americas"></i> Global
+                    </button>
+                </div>
+                
+                <div class="categories-grid" id="categoriesGrid">
+                    <!-- Categories will be loaded here -->
+                </div>
+                
+                <div class="posts-grid" id="feedPosts">
+                    <!-- Posts will be loaded here -->
+                </div>
+                
+                <div class="empty-state d-none" id="emptyFeed">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Nenhuma proposta próxima</h3>
+                    <p class="text-muted mt-1">Seja o primeiro a criar uma proposta na sua área!</p>
+                    <button class="btn btn-primary mt-2" id="createFirstPost">
+                        <i class="fas fa-plus"></i> Criar Primeira Proposta
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Messages Page -->
+            <section id="messagesPage" class="page-section">
+                <div class="section-header">
+                    <h1 class="section-title">Mensagens</h1>
+                    <p class="section-subtitle">Suas conversas privadas</p>
+                </div>
+                
+                <div class="conversations-list" id="conversationsList">
+                    <!-- Conversations will be loaded here -->
+                </div>
+                
+                <div class="empty-state d-none" id="emptyMessages">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Nenhuma conversa</h3>
+                    <p class="text-muted mt-1">Envie propostas para iniciar conversas</p>
+                </div>
+            </section>
+            
+            <!-- Chat Page -->
+            <section id="chatPage" class="page-section">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <button class="chat-back-btn" id="chatBackBtn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="conversation-avatar" id="chatAvatar">U</div>
+                        <div class="conversation-info">
+                            <div class="conversation-name" id="chatName">Carregando...</div>
+                            <div class="conversation-preview" id="chatStatus">Online</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <input type="text" class="form-control" id="messageInput" 
+                                   placeholder="Digite sua mensagem..." disabled>
+                            <button class="btn btn-primary" id="sendMessageBtn" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Map Page -->
+            <section id="mapPage" class="page-section">
+                <div class="section-header">
+                    <h1 class="section-title">Mapa Global</h1>
+                    <p class="section-subtitle">Propostas ao redor do mundo</p>
+                </div>
+                
+                <div class="map-container">
+                    <div id="globalMap"></div>
+                    <div class="map-controls">
+                        <button class="btn btn-secondary btn-small" id="locateMeBtn">
+                            <i class="fas fa-location-arrow"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-small" id="refreshMapBtn">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h3 class="section-title" style="font-size: 1.125rem;">Estatísticas</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="totalPostsCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Propostas</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--secondary);" id="activeUsersCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Usuários</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);" id="countriesCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Países</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);" id="connectionsCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Conexões</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Profile Page -->
+            <section id="profilePage" class="page-section">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">
+                        <span id="avatarText">U</span>
+                    </div>
+                    <h2 class="profile-name" id="profileName">Usuário SYNTA</h2>
+                    <p class="profile-location" id="profileLocation">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Localização não definida</span>
+                    </p>
+                    
+                    <div class="mt-2">
+                        <div class="user-code-display" id="profileCode">SYNTA-XXXXXX</div>
+                    </div>
+                </div>
+                
+                <div class="form-card">
+                    <h3 class="section-title" style="font-size: 1.125rem;">
+                        <i class="fas fa-user-edit"></i> Editar Perfil
+                    </h3>
+                    
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Nome de Exibição</label>
+                            <input type="text" class="form-control" id="displayName" 
+                                   placeholder="Como você quer ser chamado" maxlength="30">
+                            <div class="form-hint">Pode ser um apelido para manter o anonimato</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Foto de Perfil (URL)</label>
+                            <input type="url" class="form-control" id="avatarUrl" 
+                                   placeholder="https://exemplo.com/foto.jpg">
+                            <div class="form-hint">
+                                Use serviços como <a href="https://imgbb.com" target="_blank">ImgBB</a> para upload gratuito
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Localização Padrão</label>
+                            <input type="text" class="form-control" id="defaultLocation" 
+                                   placeholder="Digite sua cidade">
+                            <div class="form-hint">Para quando o GPS não estiver disponível</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Notificações</label>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="notifyMessages" checked>
+                                    <span>Novas mensagens</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="notifyProposals" checked>
+                                    <span>Novas propostas</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="notifyNearby" checked>
+                                    <span>Propostas próximas</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="resetProfileBtn">
+                                <i class="fas fa-undo"></i> Redefinir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="mt-3">
+                    <h3 class="section-title" style="font-size: 1.125rem;">
+                        <i class="fas fa-chart-bar"></i> Suas Estatísticas
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="userPostsCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Propostas</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--secondary);" id="userMessagesCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Mensagens</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);" id="userConnectionsCount">0</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Conexões</div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);" id="userReputation">100</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">Reputação</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button class="btn btn-danger btn-block" id="deleteAccountBtn">
+                        <i class="fas fa-trash"></i> Excluir Minha Conta
+                    </button>
+                    <div class="form-hint text-center mt-1">
+                        Esta ação é irreversível. Todos os seus dados serão apagados.
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Bottom Navigation (Mobile) -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-page="feed">
+                <i class="fas fa-home"></i>
+                <span>Feed</span>
+            </a>
+            <a href="#" class="nav-item" data-page="messages">
+                <i class="fas fa-comments"></i>
+                <span>Mensagens</span>
+                <span class="badge d-none" id="messageBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-page="map">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Mapa</span>
+            </a>
+            <a href="#" class="nav-item" data-page="profile">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+        
+        <!-- Install Prompt -->
+        <div class="install-prompt d-none" id="installPrompt">
+            <div class="notification-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <div>
+                <div style="font-weight: 600;">Instalar SYNTA</div>
+                <div style="font-size: 0.875rem; color: var(--gray-600);">
+                    Adicione à tela inicial para acesso rápido
+                </div>
+            </div>
+            <button class="btn btn-primary btn-small" id="installBtn">
+                Instalar
+            </button>
+            <button class="btn btn-secondary btn-small" id="dismissInstall">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Notification -->
+        <div class="notification d-none" id="notification">
+            <div class="notification-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div>
+                <div style="font-weight: 600;" id="notificationTitle">Informação</div>
+                <div style="font-size: 0.875rem; color: var(--gray-600);" id="notificationMessage">
+                    Mensagem de notificação
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal-overlay" id="createPostModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-plus-circle"></i> Nova Proposta
+                </h3>
+                <button class="modal-close" id="closePostModal">&times;</button>
+            </div>
+            
+            <form id="postForm">
+                <div class="form-group">
+                    <label class="form-label">Título *</label>
+                    <input type="text" class="form-control" id="postTitle" 
+                           placeholder="Ex: Procuro parceiro para projeto" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Categoria *</label>
+                    <div class="categories-grid" style="grid-template-columns: repeat(3, 1fr);" id="modalCategories">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Descrição *</label>
+                    <textarea class="form-control" id="postDescription" rows="4" 
+                              placeholder="Descreva sua proposta em detalhes..." 
+                              required maxlength="1000"></textarea>
+                    <div class="form-hint" id="charCounter">0/1000 caracteres</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Localização *</label>
+                    <input type="text" class="form-control" id="postLocation" 
+                           placeholder="Digite sua cidade ou endereço" required>
+                    <div class="form-hint" id="locationAccuracy">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Usando sua localização atual</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Anonimato</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="anonymity" value="full" checked>
+                            <span>Total (apenas código SYNTA visível)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="anonymity" value="partial">
+                            <span>Parcial (código e nome de exibição)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Duração da Proposta</label>
+                    <select class="form-control" id="postDuration">
+                        <option value="7">7 dias</option>
+                        <option value="14" selected>14 dias</option>
+                        <option value="30">30 dias</option>
+                        <option value="90">3 meses</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelPostBtn">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- View Post Modal -->
+    <div class="modal-overlay" id="viewPostModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="viewPostTitle">Carregando...</h3>
+                <button class="modal-close" id="closeViewModal">&times;</button>
+            </div>
+            
+            <div id="viewPostContent">
+                <!-- Post content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="modal-overlay" id="loadingOverlay">
+        <div class="modal" style="background: transparent; box-shadow: none; text-align: center;">
+            <div class="loading-spinner"></div>
+            <p style="color: white; margin-top: 1rem;" id="loadingText">Carregando...</p>
+        </div>
+    </div>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+        
+        // Create manifest dynamically
+        const manifest = {
+            "name": "SYNTA",
+            "short_name": "SYNTA",
+            "description": "Classificados globais anônimos",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#f0f9ff",
+            "theme_color": "#6366f1",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%236366f1%22>🌐</text></svg>",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        };
+        
+        // Create manifest link
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+        document.head.appendChild(manifestLink);
+    </script>
+    
+    <!-- Main Application Script -->
+    <script>
+        // ============================================
+        // SYNTA - Classificados Globais Anônimos
+        // Sistema Completo 100% Operacional
+        // ============================================
+        
+        // Namespace principal
+        const SYNTA = {
+            // Configurações
+            config: {
+                appName: 'SYNTA',
+                version: '1.0.0',
+                storageKey: 'syntax_data',
+                maxPosts: 1000,
+                defaultRadius: 5, // km
+                categories: [
+                    { id: 'friendship', name: 'Amizade', icon: 'fa-user-friends', color: '#10b981' },
+                    { id: 'business', name: 'Negócios', icon: 'fa-briefcase', color: '#6366f1' },
+                    { id: 'services', name: 'Serviços', icon: 'fa-tools', color: '#f59e0b' },
+                    { id: 'events', name: 'Eventos', icon: 'fa-calendar-alt', color: '#ef4444' },
+                    { id: 'housing', name: 'Moradia', icon: 'fa-home', color: '#8b5cf6' },
+                    { id: 'jobs', name: 'Emprego', icon: 'fa-briefcase', color: '#06b6d4' },
+                    { id: 'learning', name: 'Aprendizado', icon: 'fa-graduation-cap', color: '#84cc16' },
+                    { id: 'sports', name: 'Esportes', icon: 'fa-futbol', color: '#f97316' },
+                    { id: 'music', name: 'Música', icon: 'fa-music', color: '#ec4899' },
+                    { id: 'travel', name: 'Viagens', icon: 'fa-plane', color: '#3b82f6' },
+                    { id: 'volunteer', name: 'Voluntariado', icon: 'fa-hands-helping', color: '#22c55e' },
+                    { id: 'other', name: 'Outros', icon: 'fa-ellipsis-h', color: '#94a3b8' }
+                ],
+                bannedWords: [
+                    // Palavras proibidas básicas (pode ser expandido)
+                    'xxx', 'porn', 'sex', 'drug', 'weapon', 'hate', 'scam'
+                ]
+            },
+            
+            // Estado da aplicação
+            state: {
+                currentUser: null,
+                currentPage: 'feed',
+                currentLocation: null,
+                userLocation: null,
+                map: null,
+                posts: [],
+                conversations: [],
+                users: {},
+                selectedPost: null,
+                selectedConversation: null,
+                deferredPrompt: null
+            },
+            
+            // Inicialização
+            async init() {
+                console.log('SYNTA v' + this.config.version + ' inicializando...');
+                
+                // Setup inicial
+                this.setupEventListeners();
+                this.setupGeolocation();
+                this.setupMap();
+                this.loadFromStorage();
+                this.updateUI();
+                
+                // Verificar instalação PWA
+                this.checkPWAInstall();
+                
+                // Mostrar tela de acesso se não houver usuário
+                if (!this.state.currentUser) {
+                    this.showPage('access');
+                } else {
+                    this.showPage('feed');
+                    this.loadNearbyPosts();
+                }
+                
+                console.log('SYNTA pronto para uso!');
+            },
+            
+            // Setup de Event Listeners
+            setupEventListeners() {
+                // Acesso
+                document.getElementById('accessForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleAccess();
+                });
+                
+                document.getElementById('createAccountLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.createNewAccount();
+                });
+                
+                document.getElementById('quickStartBtn').addEventListener('click', () => {
+                    this.quickStart();
+                });
+                
+                // Navegação
+                document.querySelectorAll('.nav-item, .desktop-nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = item.dataset.page;
+                        this.showPage(page);
+                    });
+                });
+                
+                document.getElementById('homeLogo').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showPage('feed');
+                });
+                
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.logout();
+                });
+                
+                // Posts
+                document.getElementById('newPostBtn').addEventListener('click', () => {
+                    this.showCreatePostModal();
+                });
+                
+                document.getElementById('createFirstPost').addEventListener('click', () => {
+                    this.showCreatePostModal();
+                });
+                
+                document.getElementById('postForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.createPost();
+                });
+                
+                document.getElementById('cancelPostBtn').addEventListener('click', () => {
+                    this.hideModal('createPostModal');
+                });
+                
+                document.getElementById('closePostModal').addEventListener('click', () => {
+                    this.hideModal('createPostModal');
+                });
+                
+                // Filtros de localização
+                document.querySelectorAll('.location-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.location-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        const radius = btn.dataset.radius;
+                        this.filterPostsByRadius(radius);
+                    });
+                });
+                
+                // Chat
+                document.getElementById('chatBackBtn').addEventListener('click', () => {
+                    this.showPage('messages');
+                });
+                
+                document.getElementById('sendMessageBtn').addEventListener('click', () => {
+                    this.sendMessage();
+                });
+                
+                document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                // Perfil
+                document.getElementById('profileForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveProfile();
+                });
+                
+                document.getElementById('resetProfileBtn').addEventListener('click', () => {
+                    this.resetProfile();
+                });
+                
+                document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+                    if (confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')) {
+                        this.deleteAccount();
+                    }
+                });
+                
+                // Mapa
+                document.getElementById('locateMeBtn').addEventListener('click', () => {
+                    this.locateOnMap();
+                });
+                
+                document.getElementById('refreshMapBtn').addEventListener('click', () => {
+                    this.refreshMap();
+                });
+                
+                // Modal de visualização
+                document.getElementById('closeViewModal').addEventListener('click', () => {
+                    this.hideModal('viewPostModal');
+                });
+                
+                // PWA Install
+                document.getElementById('installBtn').addEventListener('click', () => {
+                    this.installPWA();
+                });
+                
+                document.getElementById('dismissInstall').addEventListener('click', () => {
+                    this.hideInstallPrompt();
+                });
+                
+                // Carregamento de descrição
+                document.getElementById('postDescription').addEventListener('input', (e) => {
+                    document.getElementById('charCounter').textContent = 
+                        `${e.target.value.length}/1000 caracteres`;
+                });
+                
+                // Geolocation toggle
+                document.getElementById('enableLocation').addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        this.getUserLocation();
+                    } else {
+                        document.getElementById('locationStatus').textContent = 
+                            'Localização desativada';
+                    }
+                });
+                
+                // Close modals on overlay click
+                document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) {
+                            overlay.classList.remove('active');
+                        }
+                    });
+                });
+                
+                // Prevent form submission on Enter in textareas
+                document.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' && e.ctrlKey) {
+                            e.preventDefault();
+                            const start = textarea.selectionStart;
+                            const end = textarea.selectionEnd;
+                            textarea.value = textarea.value.substring(0, start) + '\n' + textarea.value.substring(end);
+                            textarea.selectionStart = textarea.selectionEnd = start + 1;
+                        }
+                    });
+                });
+                
+                // Listen for PWA install prompt
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    this.state.deferredPrompt = e;
+                    this.showInstallPrompt();
+                });
+            },
+            
+            // Geolocation
+            setupGeolocation() {
+                if ('geolocation' in navigator) {
+                    this.getUserLocation();
+                } else {
+                    this.showNotification('Geolocalização não suportada', 'warning');
+                    document.getElementById('enableLocation').disabled = true;
+                    document.getElementById('locationStatus').textContent = 
+                        'Geolocalização não disponível no seu navegador';
+                }
+            },
+            
+            async getUserLocation() {
+                return new Promise((resolve, reject) => {
+                    if (!document.getElementById('enableLocation').checked) {
+                        reject(new Error('Localização desativada pelo usuário'));
+                        return;
+                    }
+                    
+                    const options = {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    };
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            this.state.userLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                                accuracy: position.coords.accuracy,
+                                timestamp: Date.now()
+                            };
+                            
+                            // Atualizar UI
+                            document.getElementById('locationStatus').innerHTML = 
+                                `<i class="fas fa-check-circle" style="color: var(--success);"></i> Localização obtida`;
+                            
+                            // Atualizar feed location
+                            this.getCityFromCoordinates(this.state.userLocation.lat, this.state.userLocation.lng)
+                                .then(city => {
+                                    document.getElementById('feedLocation').textContent = 
+                                        `Propostas próximas de ${city}`;
+                                });
+                            
+                            resolve(this.state.userLocation);
+                        },
+                        (error) => {
+                            let message = 'Não foi possível obter sua localização';
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    message = 'Permissão de localização negada. Ative nas configurações do navegador.';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    message = 'Informação de localização indisponível.';
+                                    break;
+                                case error.TIMEOUT:
+                                    message = 'Tempo esgotado ao obter localização.';
+                                    break;
+                            }
+                            
+                            document.getElementById('locationStatus').innerHTML = 
+                                `<i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> ${message}`;
+                            reject(error);
+                        },
+                        options
+                    );
+                });
+            },
+            
+            async getCityFromCoordinates(lat, lng) {
+                try {
+                    // Usar OpenStreetMap Nominatim (gratuito, sem API key necessário)
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`
+                    );
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.address.city || data.address.town || data.address.village || 
+                               data.address.county || data.address.state || 'Local desconhecido';
+                    }
+                } catch (error) {
+                    console.error('Erro ao obter cidade:', error);
+                }
+                
+                return 'Sua localização';
+            },
+            
+            // Sistema de Armazenamento
+            loadFromStorage() {
+                try {
+                    const saved = localStorage.getItem(this.config.storageKey);
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        
+                        // Carregar usuário atual
+                        if (data.currentUser) {
+                            this.state.currentUser = data.currentUser;
+                        }
+                        
+                        // Carregar posts
+                        if (data.posts && Array.isArray(data.posts)) {
+                            this.state.posts = data.posts;
+                        }
+                        
+                        // Carregar conversas
+                        if (data.conversations && Array.isArray(data.conversations)) {
+                            this.state.conversations = data.conversations;
+                        }
+                        
+                        // Carregar outros usuários
+                        if (data.users && typeof data.users === 'object') {
+                            this.state.users = data.users;
+                        }
+                        
+                        console.log('Dados carregados do armazenamento local');
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar do armazenamento:', error);
+                    // Inicializar com dados padrão
+                    this.initializeDefaultData();
+                }
+            },
+            
+            saveToStorage() {
+                try {
+                    const data = {
+                        currentUser: this.state.currentUser,
+                        posts: this.state.posts,
+                        conversations: this.state.conversations,
+                        users: this.state.users,
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem(this.config.storageKey, JSON.stringify(data));
+                    console.log('Dados salvos no armazenamento local');
+                } catch (error) {
+                    console.error('Erro ao salvar no armazenamento:', error);
+                    this.showNotification('Erro ao salvar dados', 'error');
+                }
+            },
+            
+            initializeDefaultData() {
+                // Criar alguns posts de exemplo
+                this.state.posts = [
+                    {
+                        id: this.generateId(),
+                        title: 'Procuro parceiro para projeto de sustentabilidade',
+                        description: 'Desenvolvendo uma plataforma de rastreamento de carbono para pequenas empresas. Busco alguém com experiência em desenvolvimento web.',
+                        category: 'business',
+                        location: { lat: -23.5505, lng: -46.6333, city: 'São Paulo, Brasil' },
+                        author: 'SYNTA-8F9G2H',
+                        authorName: 'Maria S.',
+                        createdAt: Date.now() - 3600000, // 1 hora atrás
+                        expiresAt: Date.now() + (14 * 24 * 3600000), // 14 dias
+                        proposals: 3,
+                        anonymity: 'partial'
+                    },
+                    {
+                        id: this.generateId(),
+                        title: 'Grupo de corrida aos sábados',
+                        description: 'Organizando grupo para corridas no parque Ibirapuera todo sábado às 8h. Todos os níveis são bem-vindos!',
+                        category: 'sports',
+                        location: { lat: -23.5875, lng: -46.6576, city: 'São Paulo, Brasil' },
+                        author: 'SYNTA-3C4D5E',
+                        authorName: 'Carlos R.',
+                        createdAt: Date.now() - 7200000, // 2 horas atrás
+                        expiresAt: Date.now() + (7 * 24 * 3600000), // 7 dias
+                        proposals: 8,
+                        anonymity: 'full'
+                    },
+                    {
+                        id: this.generateId(),
+                        title: 'Aulas de violão para iniciantes',
+                        description: 'Músico com 10 anos de experiência oferece aulas particulares de violão. Preços acessíveis e primeira aula gratuita.',
+                        category: 'music',
+                        location: { lat: -23.5503, lng: -46.6342, city: 'São Paulo, Brasil' },
+                        author: 'SYNTA-6G7H8I',
+                        authorName: 'Ana L.',
+                        createdAt: Date.now() - 10800000, // 3 horas atrás
+                        expiresAt: Date.now() + (30 * 24 * 3600000), // 30 dias
+                        proposals: 5,
+                        anonymity: 'partial'
+                    }
+                ];
+                
+                // Criar algumas conversas de exemplo
+                this.state.conversations = [
+                    {
+                        id: this.generateId(),
+                        participants: ['SYNTA-5A8B3C', 'SYNTA-8F9G2H'],
+                        postId: this.state.posts[0].id,
+                        lastMessage: 'Olá! Tenho interesse na sua proposta de sustentabilidade.',
+                        lastMessageTime: Date.now() - 1800000, // 30 minutos atrás
+                        unread: true,
+                        messages: [
+                            {
+                                id: this.generateId(),
+                                sender: 'SYNTA-8F9G2H',
+                                content: 'Olá! Tenho interesse na sua proposta de sustentabilidade.',
+                                timestamp: Date.now() - 1800000,
+                                read: true
+                            }
+                        ]
+                    }
+                ];
+                
+                // Criar alguns usuários de exemplo
+                this.state.users = {
+                    'SYNTA-8F9G2H': {
+                        name: 'Maria S.',
+                        avatar: null,
+                        location: 'São Paulo, Brasil',
+                        reputation: 145,
+                        joined: Date.now() - 30 * 24 * 3600000 // 30 dias atrás
+                    },
+                    'SYNTA-3C4D5E': {
+                        name: 'Carlos R.',
+                        avatar: null,
+                        location: 'São Paulo, Brasil',
+                        reputation: 92,
+                        joined: Date.now() - 15 * 24 * 3600000 // 15 dias atrás
+                    },
+                    'SYNTA-6G7H8I': {
+                        name: 'Ana L.',
+                        avatar: null,
+                        location: 'São Paulo, Brasil',
+                        reputation: 210,
+                        joined: Date.now() - 60 * 24 * 3600000 // 60 dias atrás
+                    }
+                };
+                
+                this.saveToStorage();
+            },
+            
+            // Gerenciamento de Usuários
+            generateUserCode() {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removendo caracteres ambíguos
+                let code = 'SYNTA-';
+                
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                return code;
+            },
+            
+            createNewAccount() {
+                const code = this.generateUserCode();
+                const defaultLocation = this.state.userLocation ? 
+                    'Sua localização atual' : 'Local não definido';
+                
+                this.state.currentUser = {
+                    code: code,
+                    name: 'Usuário SYNTA',
+                    avatar: null,
+                    location: defaultLocation,
+                    settings: {
+                        notifyMessages: true,
+                        notifyProposals: true,
+                        notifyNearby: true,
+                        defaultAnonymity: 'full'
+                    },
+                    stats: {
+                        posts: 0,
+                        messages: 0,
+                        connections: 0,
+                        reputation: 100,
+                        joined: Date.now()
+                    }
+                };
+                
+                // Adicionar ao registro de usuários
+                this.state.users[code] = {
+                    name: 'Usuário SYNTA',
+                    avatar: null,
+                    location: defaultLocation,
+                    reputation: 100,
+                    joined: Date.now()
+                };
+                
+                this.saveToStorage();
+                this.showNotification(`Conta criada! Seu código: ${code}`, 'success');
+                
+                // Atualizar UI
+                this.updateUI();
+                this.showPage('feed');
+                
+                // Carregar posts próximos
+                this.loadNearbyPosts();
+            },
+            
+            quickStart() {
+                this.createNewAccount();
+            },
+            
+            handleAccess() {
+                const codeInput = document.getElementById('accessCode');
+                const code = codeInput.value.trim().toUpperCase();
+                
+                // Validar formato
+                if (!/^SYNTA-[A-Z0-9]{6}$/.test(code)) {
+                    this.showNotification('Código inválido. Formato: SYNTA-XXXXXX', 'error');
+                    return;
+                }
+                
+                // Verificar se usuário existe
+                if (this.state.users[code]) {
+                    this.state.currentUser = {
+                        code: code,
+                        name: this.state.users[code].name,
+                        avatar: this.state.users[code].avatar,
+                        location: this.state.users[code].location,
+                        settings: {
+                            notifyMessages: true,
+                            notifyProposals: true,
+                            notifyNearby: true,
+                            defaultAnonymity: 'full'
+                        },
+                        stats: {
+                            posts: 0,
+                            messages: 0,
+                            connections: 0,
+                            reputation: this.state.users[code].reputation,
+                            joined: this.state.users[code].joined
+                        }
+                    };
+                    
+                    this.saveToStorage();
+                    this.showNotification(`Bem-vindo de volta, ${this.state.currentUser.name}!`, 'success');
+                    this.updateUI();
+                    this.showPage('feed');
+                    this.loadNearbyPosts();
+                } else {
+                    this.showNotification('Código não encontrado. Crie uma nova conta.', 'error');
+                }
+            },
+            
+            logout() {
+                if (confirm('Deseja realmente sair da sua conta?')) {
+                    this.state.currentUser = null;
+                    this.saveToStorage();
+                    this.updateUI();
+                    this.showPage('access');
+                    this.showNotification('Você saiu da sua conta', 'info');
+                }
+            },
+            
+            // Gerenciamento de Posts
+            loadNearbyPosts() {
+                if (!this.state.userLocation) {
+                    this.showNotification('Ative a localização para ver posts próximos', 'warning');
+                    return;
+                }
+                
+                // Filtrar posts expirados
+                this.state.posts = this.state.posts.filter(post => post.expiresAt > Date.now());
+                
+                // Calcular distância para cada post
+                this.state.posts.forEach(post => {
+                    if (post.location && post.location.lat && post.location.lng) {
+                        post.distance = this.calculateDistance(
+                            this.state.userLocation.lat,
+                            this.state.userLocation.lng,
+                            post.location.lat,
+                            post.location.lng
+                        );
+                    } else {
+                        post.distance = null;
+                    }
+                });
+                
+                // Ordenar por proximidade
+                this.state.posts.sort((a, b) => {
+                    if (a.distance === null) return 1;
+                    if (b.distance === null) return -1;
+                    return a.distance - b.distance;
+                });
+                
+                this.renderPosts();
+                this.updateMap();
+            },
+            
+            filterPostsByRadius(radius) {
+                const postsGrid = document.getElementById('feedPosts');
+                const emptyState = document.getElementById('emptyFeed');
+                
+                if (radius === 'global') {
+                    // Mostrar todos os posts
+                    this.renderPosts(this.state.posts);
+                    return;
+                }
+                
+                const radiusKm = parseInt(radius);
+                const nearbyPosts = this.state.posts.filter(post => {
+                    return post.distance !== null && post.distance <= radiusKm;
+                });
+                
+                if (nearbyPosts.length > 0) {
+                    this.renderPosts(nearbyPosts);
+                    emptyState.classList.add('d-none');
+                } else {
+                    postsGrid.innerHTML = '';
+                    emptyState.classList.remove('d-none');
+                }
+            },
+            
+            calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Raio da Terra em km
+                const dLat = this.toRad(lat2 - lat1);
+                const dLon = this.toRad(lon2 - lon1);
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            },
+            
+            toRad(value) {
+                return value * Math.PI / 180;
+            },
+            
+            showCreatePostModal() {
+                if (!this.state.currentUser) {
+                    this.showNotification('Faça login para criar uma proposta', 'warning');
+                    return;
+                }
+                
+                // Limpar formulário
+                document.getElementById('postForm').reset();
+                document.getElementById('charCounter').textContent = '0/1000 caracteres';
+                
+                // Preencher localização atual se disponível
+                if (this.state.userLocation) {
+                    this.getCityFromCoordinates(this.state.userLocation.lat, this.state.userLocation.lng)
+                        .then(city => {
+                            document.getElementById('postLocation').value = city;
+                        });
+                    
+                    document.getElementById('locationAccuracy').innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <span>Localização precisa (${this.state.userLocation.accuracy.toFixed(0)}m)</span>
+                    `;
+                }
+                
+                // Carregar categorias no modal
+                this.renderCategories('modalCategories', true);
+                
+                this.showModal('createPostModal');
+            },
+            
+            async createPost() {
+                // Validar dados
+                const title = document.getElementById('postTitle').value.trim();
+                const description = document.getElementById('postDescription').value.trim();
+                const locationInput = document.getElementById('postLocation').value.trim();
+                const category = document.querySelector('input[name="category"]:checked');
+                const anonymity = document.querySelector('input[name="anonymity"]:checked').value;
+                const duration = parseInt(document.getElementById('postDuration').value);
+                
+                if (!title || !description || !locationInput || !category) {
+                    this.showNotification('Preencha todos os campos obrigatórios', 'error');
+                    return;
+                }
+                
+                // Verificar conteúdo proibido
+                if (this.containsBannedWords(title + ' ' + description)) {
+                    this.showNotification('O conteúdo contém palavras não permitidas', 'error');
+                    return;
+                }
+                
+                // Obter coordenadas da localização
+                let locationData;
+                try {
+                    locationData = await this.geocodeLocation(locationInput);
+                } catch (error) {
+                    this.showNotification('Não foi possível encontrar a localização. Use uma cidade válida.', 'error');
+                    return;
+                }
+                
+                // Criar post
+                const post = {
+                    id: this.generateId(),
+                    title: title,
+                    description: description,
+                    category: category.value,
+                    location: locationData,
+                    author: this.state.currentUser.code,
+                    authorName: anonymity === 'full' ? null : this.state.currentUser.name,
+                    createdAt: Date.now(),
+                    expiresAt: Date.now() + (duration * 24 * 3600000),
+                    proposals: 0,
+                    anonymity: anonymity,
+                    status: 'active'
+                };
+                
+                // Calcular distância do usuário atual
+                if (this.state.userLocation) {
+                    post.distance = this.calculateDistance(
+                        this.state.userLocation.lat,
+                        this.state.userLocation.lng,
+                        locationData.lat,
+                        locationData.lng
+                    );
+                }
+                
+                // Adicionar à lista
+                this.state.posts.unshift(post);
+                
+                // Atualizar estatísticas do usuário
+                this.state.currentUser.stats.posts++;
+                this.state.users[this.state.currentUser.code].reputation += 5;
+                
+                // Salvar
+                this.saveToStorage();
+                
+                // Fechar modal e atualizar UI
+                this.hideModal('createPostModal');
+                this.showNotification('Proposta publicada com sucesso!', 'success');
+                this.renderPosts();
+                this.updateMap();
+                
+                // Atualizar contadores
+                this.updateStats();
+            },
+            
+            async geocodeLocation(locationName) {
+                // Usar OpenStreetMap Nominatim para geocodificação
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}&limit=1`
+                    );
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data && data.length > 0) {
+                            return {
+                                lat: parseFloat(data[0].lat),
+                                lng: parseFloat(data[0].lon),
+                                city: locationName,
+                                displayName: data[0].display_name
+                            };
+                        }
+                    }
+                } catch (error) {
+                    console.error('Erro na geocodificação:', error);
+                }
+                
+                // Fallback para localização do usuário se disponível
+                if (this.state.userLocation) {
+                    return {
+                        lat: this.state.userLocation.lat,
+                        lng: this.state.userLocation.lng,
+                        city: locationName,
+                        displayName: locationName
+                    };
+                }
+                
+                throw new Error('Localização não encontrada');
+            },
+            
+            containsBannedWords(text) {
+                const lowerText = text.toLowerCase();
+                return this.config.bannedWords.some(word => lowerText.includes(word.toLowerCase()));
+            },
+            
+            viewPost(postId) {
+                const post = this.state.posts.find(p => p.id === postId);
+                if (!post) return;
+                
+                this.state.selectedPost = post;
+                
+                // Atualizar modal
+                document.getElementById('viewPostTitle').textContent = post.title;
+                
+                const category = this.config.categories.find(c => c.id === post.category);
+                const authorInfo = post.anonymity === 'full' ? 
+                    `Código: ${post.author}` : 
+                    `${post.authorName} (${post.author})`;
+                
+                const content = `
+                    <div style="margin-bottom: 1.5rem;">
+                        <span class="post-category" style="background: ${category.color}20; color: ${category.color};">
+                            <i class="fas ${category.icon}"></i> ${category.name}
+                        </span>
+                        <div style="font-size: 0.875rem; color: var(--gray-500); margin-top: 0.5rem;">
+                            <i class="far fa-clock"></i> ${this.formatTime(post.createdAt)}
+                            ${post.distance ? ` • <i class="fas fa-map-marker-alt"></i> ${post.distance.toFixed(1)}km` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Descrição</h4>
+                        <p style="color: var(--gray-700); line-height: 1.6;">${this.escapeHtml(post.description)}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Localização</h4>
+                        <p style="color: var(--gray-700);">
+                            <i class="fas fa-map-marker-alt"></i> ${post.location.city}
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Publicado por</h4>
+                        <p style="color: var(--gray-700);">
+                            <i class="fas fa-user-secret"></i> ${authorInfo}
+                        </p>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="closeViewBtn">
+                            Fechar
+                        </button>
+                        <button class="btn btn-primary" id="sendProposalBtn">
+                            <i class="fas fa-paper-plane"></i> Enviar Proposta
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('viewPostContent').innerHTML = content;
+                
+                // Adicionar event listeners aos botões do modal
+                document.getElementById('closeViewBtn').addEventListener('click', () => {
+                    this.hideModal('viewPostModal');
+                });
+                
+                document.getElementById('sendProposalBtn').addEventListener('click', () => {
+                    this.sendProposal(post);
+                });
+                
+                this.showModal('viewPostModal');
+            },
+            
+            sendProposal(post) {
+                if (!this.state.currentUser) {
+                    this.showNotification('Faça login para enviar propostas', 'warning');
+                    return;
+                }
+                
+                if (post.author === this.state.currentUser.code) {
+                    this.showNotification('Você não pode enviar proposta para seu próprio post', 'warning');
+                    return;
+                }
+                
+                // Verificar se já existe uma conversa para este post
+                const existingConversation = this.state.conversations.find(conv => 
+                    conv.postId === post.id && 
+                    conv.participants.includes(this.state.currentUser.code)
+                );
+                
+                if (existingConversation) {
+                    this.showNotification('Você já enviou uma proposta para este post', 'info');
+                    this.state.selectedConversation = existingConversation;
+                    this.showPage('chat');
+                    return;
+                }
+                
+                // Criar nova conversa
+                const conversation = {
+                    id: this.generateId(),
+                    participants: [this.state.currentUser.code, post.author],
+                    postId: post.id,
+                    postTitle: post.title,
+                    lastMessage: 'Proposta enviada',
+                    lastMessageTime: Date.now(),
+                    unread: false,
+                    messages: [
+                        {
+                            id: this.generateId(),
+                            sender: this.state.currentUser.code,
+                            content: 'Olá! Tenho interesse na sua proposta.',
+                            timestamp: Date.now(),
+                            read: false
+                        }
+                    ]
+                };
+                
+                this.state.conversations.unshift(conversation);
+                
+                // Atualizar contador de propostas no post
+                post.proposals++;
+                
+                // Atualizar estatísticas
+                this.state.currentUser.stats.messages++;
+                
+                // Salvar
+                this.saveToStorage();
+                
+                // Fechar modal e mostrar chat
+                this.hideModal('viewPostModal');
+                this.state.selectedConversation = conversation;
+                this.showPage('chat');
+                this.showNotification('Proposta enviada com sucesso!', 'success');
+            },
+            
+            // Sistema de Mensagens
+            loadConversations() {
+                const list = document.getElementById('conversationsList');
+                const emptyState = document.getElementById('emptyMessages');
+                
+                if (this.state.conversations.length === 0) {
+                    list.innerHTML = '';
+                    emptyState.classList.remove('d-none');
+                    return;
+                }
+                
+                emptyState.classList.add('d-none');
+                
+                // Ordenar por última mensagem
+                const sortedConversations = [...this.state.conversations].sort((a, b) => 
+                    b.lastMessageTime - a.lastMessageTime
+                );
+                
+                let html = '';
+                
+                sortedConversations.forEach(conv => {
+                    const otherParticipant = conv.participants.find(p => p !== this.state.currentUser.code);
+                    const otherUser = this.state.users[otherParticipant] || { name: 'Usuário SYNTA' };
+                    const post = this.state.posts.find(p => p.id === conv.postId);
+                    
+                    const timeAgo = this.formatTime(conv.lastMessageTime);
+                    const preview = conv.lastMessage.length > 50 ? 
+                        conv.lastMessage.substring(0, 50) + '...' : conv.lastMessage;
+                    
+                    html += `
+                        <a href="#" class="conversation-item ${conv.unread ? 'unread' : ''}" 
+                           data-conversation-id="${conv.id}">
+                            <div class="conversation-avatar">
+                                ${otherUser.avatar ? 
+                                    `<img src="${this.escapeHtml(otherUser.avatar)}" alt="${this.escapeHtml(otherUser.name)}">` :
+                                    otherUser.name.charAt(0)
+                                }
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">${this.escapeHtml(otherUser.name)}</div>
+                                <div class="conversation-preview">
+                                    ${post ? `<strong>${this.escapeHtml(post.title)}</strong> • ` : ''}
+                                    ${this.escapeHtml(preview)}
+                                </div>
+                            </div>
+                            <div class="conversation-time">${timeAgo}</div>
+                        </a>
+                    `;
+                });
+                
+                list.innerHTML = html;
+                
+                // Adicionar event listeners
+                document.querySelectorAll('.conversation-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const conversationId = item.dataset.conversationId;
+                        const conversation = this.state.conversations.find(c => c.id === conversationId);
+                        if (conversation) {
+                            this.state.selectedConversation = conversation;
+                            this.showPage('chat');
+                        }
+                    });
+                });
+                
+                // Atualizar badge de mensagens não lidas
+                this.updateMessageBadge();
+            },
+            
+            loadChat() {
+                if (!this.state.selectedConversation) {
+                    this.showPage('messages');
+                    return;
+                }
+                
+                // Encontrar o outro participante
+                const otherParticipant = this.state.selectedConversation.participants.find(
+                    p => p !== this.state.currentUser.code
+                );
+                const otherUser = this.state.users[otherParticipant] || { name: 'Usuário SYNTA', avatar: null };
+                
+                // Atualizar header do chat
+                document.getElementById('chatAvatar').innerHTML = otherUser.avatar ? 
+                    `<img src="${this.escapeHtml(otherUser.avatar)}" alt="${this.escapeHtml(otherUser.name)}">` :
+                    otherUser.name.charAt(0);
+                
+                document.getElementById('chatName').textContent = otherUser.name;
+                document.getElementById('chatStatus').textContent = 'Online';
+                
+                // Carregar mensagens
+                const messagesContainer = document.getElementById('chatMessages');
+                const messages = this.state.selectedConversation.messages || [];
+                
+                let html = '';
+                
+                messages.forEach(msg => {
+                    const isSent = msg.sender === this.state.currentUser.code;
+                    const time = new Date(msg.timestamp).toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    
+                    html += `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            <div class="message-content">${this.escapeHtml(msg.content)}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                });
+                
+                messagesContainer.innerHTML = html;
+                
+                // Habilitar input
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendMessageBtn').disabled = false;
+                document.getElementById('messageInput').focus();
+                
+                // Scroll para baixo
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Marcar mensagens como lidas
+                this.markConversationAsRead(this.state.selectedConversation.id);
+            },
+            
+            sendMessage() {
+                const input = document.getElementById('messageInput');
+                const content = input.value.trim();
+                
+                if (!content || !this.state.selectedConversation) return;
+                
+                // Criar nova mensagem
+                const message = {
+                    id: this.generateId(),
+                    sender: this.state.currentUser.code,
+                    content: content,
+                    timestamp: Date.now(),
+                    read: false
+                };
+                
+                // Adicionar à conversa
+                this.state.selectedConversation.messages.push(message);
+                this.state.selectedConversation.lastMessage = content;
+                this.state.selectedConversation.lastMessageTime = Date.now();
+                
+                // Atualizar estatísticas
+                this.state.currentUser.stats.messages++;
+                
+                // Salvar
+                this.saveToStorage();
+                
+                // Limpar input e atualizar chat
+                input.value = '';
+                this.loadChat();
+                
+                // Simular resposta após 1-3 segundos
+                if (Math.random() > 0.3) { // 70% chance de resposta
+                    setTimeout(() => {
+                        this.simulateReply();
+                    }, 1000 + Math.random() * 2000);
+                }
+            },
+            
+            simulateReply() {
+                if (!this.state.selectedConversation) return;
+                
+                const otherParticipant = this.state.selectedConversation.participants.find(
+                    p => p !== this.state.currentUser.code
+                );
+                
+                const replies = [
+                    'Obrigado pelo seu interesse!',
+                    'Podemos conversar mais sobre isso?',
+                    'Que ótimo! Quando você está disponível?',
+                    'Tenho algumas perguntas sobre sua proposta.',
+                    'Vamos marcar uma conversa?'
+                ];
+                
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+                
+                const message = {
+                    id: this.generateId(),
+                    sender: otherParticipant,
+                    content: reply,
+                    timestamp: Date.now(),
+                    read: false
+                };
+                
+                this.state.selectedConversation.messages.push(message);
+                this.state.selectedConversation.lastMessage = reply;
+                this.state.selectedConversation.lastMessageTime = Date.now();
+                this.state.selectedConversation.unread = true;
+                
+                this.saveToStorage();
+                
+                // Atualizar chat se estiver aberto
+                if (this.state.currentPage === 'chat') {
+                    this.loadChat();
+                } else {
+                    // Mostrar notificação
+                    this.showNotification('Nova mensagem recebida', 'info');
+                    this.updateMessageBadge();
+                }
+            },
+            
+            markConversationAsRead(conversationId) {
+                const conversation = this.state.conversations.find(c => c.id === conversationId);
+                if (conversation && conversation.unread) {
+                    conversation.unread = false;
+                    this.saveToStorage();
+                    this.updateMessageBadge();
+                }
+            },
+            
+            updateMessageBadge() {
+                const unreadCount = this.state.conversations.filter(c => c.unread).length;
+                
+                // Mobile badge
+                const mobileBadge = document.getElementById('messageBadge');
+                if (unreadCount > 0) {
+                    mobileBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                    mobileBadge.classList.remove('d-none');
+                } else {
+                    mobileBadge.classList.add('d-none');
+                }
+                
+                // Desktop badge
+                const desktopBadge = document.getElementById('desktopMessageBadge');
+                if (desktopBadge) {
+                    if (unreadCount > 0) {
+                        desktopBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                    } else {
+                        desktopBadge.textContent = '0';
+                    }
+                }
+            },
+            
+            // Sistema de Mapa
+            setupMap() {
+                // Inicializar mapa
+                this.state.map = L.map('globalMap', {
+                    zoomControl: false,
+                    tap: false
+                }).setView([0, 0], 2);
+                
+                // Adicionar tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 18
+                }).addTo(this.state.map);
+                
+                // Adicionar controle de zoom
+                L.control.zoom({
+                    position: 'topright'
+                }).addTo(this.state.map);
+            },
+            
+            updateMap() {
+                if (!this.state.map) return;
+                
+                // Limpar marcadores anteriores
+                this.state.map.eachLayer(layer => {
+                    if (layer instanceof L.Marker) {
+                        this.state.map.removeLayer(layer);
+                    }
+                });
+                
+                // Adicionar marcadores para posts ativos
+                this.state.posts
+                    .filter(post => post.status === 'active' && post.location && post.location.lat)
+                    .forEach(post => {
+                        const category = this.config.categories.find(c => c.id === post.category);
+                        
+                        const marker = L.marker([post.location.lat, post.location.lng], {
+                            icon: L.divIcon({
+                                className: 'custom-marker',
+                                html: `
+                                    <div style="
+                                        width: 24px;
+                                        height: 24px;
+                                        background: ${category.color};
+                                        border: 2px solid white;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        color: white;
+                                        font-size: 12px;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                                        cursor: pointer;
+                                    ">
+                                        <i class="fas ${category.icon}"></i>
+                                    </div>
+                                `,
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 12]
+                            })
+                        }).addTo(this.state.map);
+                        
+                        // Tooltip
+                        marker.bindTooltip(`
+                            <div style="font-weight: 600; margin-bottom: 4px;">${this.escapeHtml(post.title)}</div>
+                            <div style="font-size: 12px; color: #666;">
+                                <i class="fas ${category.icon}" style="color: ${category.color};"></i>
+                                ${category.name}
+                            </div>
+                        `);
+                        
+                        // Click para ver post
+                        marker.on('click', () => {
+                            this.viewPost(post.id);
+                        });
+                    });
+                
+                // Centralizar no usuário se disponível
+                if (this.state.userLocation) {
+                    this.state.map.setView([this.state.userLocation.lat, this.state.userLocation.lng], 12);
+                }
+                
+                // Atualizar estatísticas
+                this.updateStats();
+            },
+            
+            locateOnMap() {
+                if (this.state.userLocation) {
+                    this.state.map.setView([this.state.userLocation.lat, this.state.userLocation.lng], 13);
+                    L.marker([this.state.userLocation.lat, this.state.userLocation.lng], {
+                        icon: L.divIcon({
+                            className: 'user-marker',
+                            html: `
+                                <div style="
+                                    width: 32px;
+                                    height: 32px;
+                                    background: var(--primary);
+                                    border: 3px solid white;
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    color: white;
+                                    font-size: 14px;
+                                    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                                    animation: pulse 2s infinite;
+                                ">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            `,
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 16]
+                        })
+                    }).addTo(this.state.map).bindTooltip('Você está aqui').openTooltip();
+                } else {
+                    this.showNotification('Localização não disponível', 'warning');
+                }
+            },
+            
+            refreshMap() {
+                this.updateMap();
+                this.showNotification('Mapa atualizado', 'success');
+            },
+            
+            // Perfil do Usuário
+            saveProfile() {
+                const name = document.getElementById('displayName').value.trim();
+                const avatarUrl = document.getElementById('avatarUrl').value.trim();
+                const location = document.getElementById('defaultLocation').value.trim();
+                
+                // Atualizar usuário atual
+                if (name) {
+                    this.state.currentUser.name = name;
+                }
+                
+                if (avatarUrl) {
+                    // Validar URL
+                    try {
+                        new URL(avatarUrl);
+                        this.state.currentUser.avatar = avatarUrl;
+                    } catch (error) {
+                        this.showNotification('URL da imagem inválida', 'error');
+                        return;
+                    }
+                }
+                
+                if (location) {
+                    this.state.currentUser.location = location;
+                }
+                
+                // Atualizar configurações
+                this.state.currentUser.settings.notifyMessages = document.getElementById('notifyMessages').checked;
+                this.state.currentUser.settings.notifyProposals = document.getElementById('notifyProposals').checked;
+                this.state.currentUser.settings.notifyNearby = document.getElementById('notifyNearby').checked;
+                
+                // Atualizar no registro de usuários
+                this.state.users[this.state.currentUser.code] = {
+                    name: this.state.currentUser.name,
+                    avatar: this.state.currentUser.avatar,
+                    location: this.state.currentUser.location,
+                    reputation: this.state.currentUser.stats.reputation,
+                    joined: this.state.currentUser.stats.joined
+                };
+                
+                // Salvar
+                this.saveToStorage();
+                this.updateUI();
+                this.showNotification('Perfil atualizado com sucesso!', 'success');
+            },
+            
+            resetProfile() {
+                if (confirm('Redefinir perfil para configurações padrão?')) {
+                    this.state.currentUser.name = 'Usuário SYNTA';
+                    this.state.currentUser.avatar = null;
+                    this.state.currentUser.location = 'Local não definido';
+                    
+                    this.state.users[this.state.currentUser.code] = {
+                        name: 'Usuário SYNTA',
+                        avatar: null,
+                        location: 'Local não definido',
+                        reputation: this.state.currentUser.stats.reputation,
+                        joined: this.state.currentUser.stats.joined
+                    };
+                    
+                    this.saveToStorage();
+                    this.updateUI();
+                    this.showNotification('Perfil redefinido', 'info');
+                }
+            },
+            
+            deleteAccount() {
+                if (confirm('ATENÇÃO: Esta ação excluirá permanentemente sua conta e todos os seus dados. Continuar?')) {
+                    // Remover usuário do registro
+                    delete this.state.users[this.state.currentUser.code];
+                    
+                    // Remover posts do usuário
+                    this.state.posts = this.state.posts.filter(post => post.author !== this.state.currentUser.code);
+                    
+                    // Remover conversas do usuário
+                    this.state.conversations = this.state.conversations.filter(conv => 
+                        !conv.participants.includes(this.state.currentUser.code)
+                    );
+                    
+                    // Limpar usuário atual
+                    this.state.currentUser = null;
+                    
+                    // Salvar
+                    this.saveToStorage();
+                    
+                    // Atualizar UI
+                    this.updateUI();
+                    this.showPage('access');
+                    this.showNotification('Conta excluída com sucesso', 'info');
+                }
+            },
+            
+            // UI Helpers
+            showPage(pageName) {
+                // Atualizar estado
+                this.state.currentPage = pageName;
+                
+                // Esconder todas as páginas
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.nav-item, .desktop-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Mostrar página solicitada
+                const pageElement = document.getElementById(pageName + 'Page');
+                if (pageElement) {
+                    pageElement.classList.add('active');
+                }
+                
+                // Atualizar navegação ativa
+                document.querySelectorAll(`[data-page="${pageName}"]`).forEach(item => {
+                    item.classList.add('active');
+                });
+                
+                // Atualizar header
+                if (pageName === 'access') {
+                    document.getElementById('userCodeDisplay').classList.add('d-none');
+                    document.getElementById('newPostBtn').classList.add('d-none');
+                    document.querySelector('.desktop-nav').classList.add('d-none');
+                } else {
+                    document.getElementById('userCodeDisplay').classList.remove('d-none');
+                    document.getElementById('newPostBtn').classList.remove('d-none');
+                    document.querySelector('.desktop-nav').classList.remove('d-none');
+                }
+                
+                // Carregar dados específicos da página
+                switch(pageName) {
+                    case 'feed':
+                        this.renderCategories();
+                        this.renderPosts();
+                        break;
+                    case 'messages':
+                        this.loadConversations();
+                        break;
+                    case 'chat':
+                        this.loadChat();
+                        break;
+                    case 'map':
+                        this.updateMap();
+                        break;
+                    case 'profile':
+                        this.loadProfile();
+                        break;
+                }
+                
+                // Scroll para topo
+                window.scrollTo(0, 0);
+            },
+            
+            showModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+            
+            hideModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            },
+            
+            updateUI() {
+                // Atualizar código do usuário
+                if (this.state.currentUser) {
+                    document.getElementById('userCodeDisplay').textContent = this.state.currentUser.code;
+                    document.getElementById('profileCode').textContent = this.state.currentUser.code;
+                }
+                
+                // Atualizar estatísticas
+                this.updateStats();
+            },
+            
+            updateStats() {
+                // Estatísticas globais
+                const activePosts = this.state.posts.filter(post => post.status === 'active').length;
+                const uniqueUsers = new Set(this.state.posts.map(post => post.author)).size;
+                const uniqueCountries = new Set(
+                    this.state.posts
+                        .filter(post => post.location && post.location.city)
+                        .map(post => post.location.city.split(',').pop()?.trim())
+                ).size;
+                
+                document.getElementById('totalPostsCount').textContent = activePosts;
+                document.getElementById('activeUsersCount').textContent = uniqueUsers;
+                document.getElementById('countriesCount').textContent = uniqueCountries;
+                document.getElementById('connectionsCount').textContent = this.state.conversations.length;
+                
+                // Estatísticas do usuário
+                if (this.state.currentUser) {
+                    document.getElementById('userPostsCount').textContent = this.state.currentUser.stats.posts;
+                    document.getElementById('userMessagesCount').textContent = this.state.currentUser.stats.messages;
+                    document.getElementById('userConnectionsCount').textContent = this.state.currentUser.stats.connections;
+                    document.getElementById('userReputation').textContent = this.state.currentUser.stats.reputation;
+                }
+            },
+            
+            loadProfile() {
+                if (!this.state.currentUser) return;
+                
+                // Preencher formulário
+                document.getElementById('displayName').value = this.state.currentUser.name;
+                document.getElementById('avatarUrl').value = this.state.currentUser.avatar || '';
+                document.getElementById('defaultLocation').value = this.state.currentUser.location;
+                
+                // Atualizar configurações
+                document.getElementById('notifyMessages').checked = this.state.currentUser.settings.notifyMessages;
+                document.getElementById('notifyProposals').checked = this.state.currentUser.settings.notifyProposals;
+                document.getElementById('notifyNearby').checked = this.state.currentUser.settings.notifyNearby;
+                
+                // Atualizar avatar na visualização
+                const avatarText = document.getElementById('avatarText');
+                const avatarContainer = document.getElementById('profileAvatar');
+                
+                if (this.state.currentUser.avatar) {
+                    avatarText.style.display = 'none';
+                    avatarContainer.innerHTML = `<img src="${this.escapeHtml(this.state.currentUser.avatar)}" alt="${this.escapeHtml(this.state.currentUser.name)}">`;
+                } else {
+                    avatarText.style.display = 'flex';
+                    avatarText.textContent = this.state.currentUser.name.charAt(0);
+                    avatarContainer.innerHTML = `<span id="avatarText">${this.state.currentUser.name.charAt(0)}</span>`;
+                }
+                
+                // Atualizar nome e localização
+                document.getElementById('profileName').textContent = this.state.currentUser.name;
+                document.getElementById('profileLocation').innerHTML = `
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${this.escapeHtml(this.state.currentUser.location)}</span>
+                `;
+            },
+            
+            renderCategories(containerId = 'categoriesGrid', selectable = false) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                let html = '';
+                
+                this.config.categories.forEach(category => {
+                    const postCount = this.state.posts.filter(post => 
+                        post.category === category.id && post.status === 'active'
+                    ).length;
+                    
+                    if (selectable) {
+                        html += `
+                            <label class="category-card" style="cursor: pointer;">
+                                <input type="radio" name="category" value="${category.id}" 
+                                       style="display: none;" ${category.id === 'other' ? 'checked' : ''}>
+                                <div class="category-icon" style="background: ${category.color};">
+                                    <i class="fas ${category.icon}"></i>
+                                </div>
+                                <div class="category-name">${category.name}</div>
+                                <div class="category-count">${postCount} propostas</div>
+                            </label>
+                        `;
+                    } else {
+                        html += `
+                            <a href="#" class="category-card" data-category="${category.id}">
+                                <div class="category-icon" style="background: ${category.color};">
+                                    <i class="fas ${category.icon}"></i>
+                                </div>
+                                <div class="category-name">${category.name}</div>
+                                <div class="category-count">${postCount} propostas</div>
+                            </a>
+                        `;
+                    }
+                });
+                
+                container.innerHTML = html;
+                
+                // Adicionar event listeners para filtro por categoria
+                if (!selectable) {
+                    document.querySelectorAll('.category-card[data-category]').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const category = card.dataset.category;
+                            this.filterPostsByCategory(category);
+                        });
+                    });
+                }
+                
+                // Para categorias selecionáveis no modal
+                if (selectable) {
+                    document.querySelectorAll('.category-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            // Desmarcar todas
+                            document.querySelectorAll('.category-card').forEach(c => {
+                                c.style.border = '1px solid var(--gray-200)';
+                            });
+                            
+                            // Marcar a selecionada
+                            card.style.border = `2px solid ${this.config.categories.find(c => c.id === card.querySelector('input').value)?.color || var(--primary)}`;
+                            card.querySelector('input').checked = true;
+                        });
+                        
+                        // Estilizar a selecionada por padrão
+                        const defaultSelected = card.querySelector('input[value="other"]');
+                        if (defaultSelected && defaultSelected.checked) {
+                            card.style.border = `2px solid ${this.config.categories.find(c => c.id === 'other').color}`;
+                        }
+                    });
+                }
+            },
+            
+            filterPostsByCategory(categoryId) {
+                const postsGrid = document.getElementById('feedPosts');
+                const emptyState = document.getElementById('emptyFeed');
+                
+                const filteredPosts = categoryId === 'all' ? 
+                    this.state.posts : 
+                    this.state.posts.filter(post => post.category === categoryId && post.status === 'active');
+                
+                if (filteredPosts.length > 0) {
+                    this.renderPosts(filteredPosts);
+                    emptyState.classList.add('d-none');
+                } else {
+                    postsGrid.innerHTML = '';
+                    emptyState.classList.remove('d-none');
+                }
+            },
+            
+            renderPosts(posts = this.state.posts) {
+                const container = document.getElementById('feedPosts');
+                const emptyState = document.getElementById('emptyFeed');
+                
+                // Filtrar posts expirados
+                const activePosts = posts.filter(post => 
+                    post.status === 'active' && post.expiresAt > Date.now()
+                );
+                
+                if (activePosts.length === 0) {
+                    container.innerHTML = '';
+                    emptyState.classList.remove('d-none');
+                    return;
+                }
+                
+                emptyState.classList.add('d-none');
+                
+                let html = '';
+                
+                activePosts.forEach(post => {
+                    const category = this.config.categories.find(c => c.id === post.category);
+                    const timeAgo = this.formatTime(post.createdAt);
+                    const authorInfo = post.anonymity === 'full' ? 
+                        'Usuário SYNTA' : 
+                        `${post.authorName}`;
+                    
+                    html += `
+                        <div class="post-card" data-post-id="${post.id}">
+                            <div class="post-header">
+                                <span class="post-category" style="background: ${category.color}20; color: ${category.color};">
+                                    <i class="fas ${category.icon}"></i> ${category.name}
+                                </span>
+                                <h3 class="post-title">${this.escapeHtml(post.title)}</h3>
+                                <p class="post-description">${this.escapeHtml(post.description)}</p>
+                            </div>
+                            <div class="post-body">
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                                    <i class="fas fa-user"></i> ${this.escapeHtml(authorInfo)}
+                                </div>
+                            </div>
+                            <div class="post-footer">
+                                <div class="post-meta">
+                                    <span class="post-distance">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        ${post.distance ? `${post.distance.toFixed(1)}km` : '—'}
+                                    </span>
+                                    <span><i class="far fa-clock"></i> ${timeAgo}</span>
+                                </div>
+                                <button class="btn btn-primary btn-small view-post-btn">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+                // Adicionar event listeners
+                document.querySelectorAll('.view-post-btn').forEach((btn, index) => {
+                    btn.addEventListener('click', () => {
+                        const postId = activePosts[index].id;
+                        this.viewPost(postId);
+                    });
+                });
+            },
+            
+            // Utilitários
+            generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            },
+            
+            formatTime(timestamp) {
+                const now = Date.now();
+                const diff = now - timestamp;
+                
+                if (diff < 60000) return 'Agora mesmo';
+                if (diff < 3600000) return `${Math.floor(diff / 60000)} min atrás`;
+                if (diff < 86400000) return `${Math.floor(diff / 3600000)} h atrás`;
+                if (diff < 604800000) return `${Math.floor(diff / 86400000)} d atrás`;
+                
+                return new Date(timestamp).toLocaleDateString();
+            },
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+            
+            showNotification(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                const title = document.getElementById('notificationTitle');
+                const msg = document.getElementById('notificationMessage');
+                const icon = notification.querySelector('.notification-icon i');
+                
+                // Configurar tipo
+                notification.className = `notification notification-${type}`;
+                
+                // Configurar ícone
+                switch(type) {
+                    case 'success':
+                        icon.className = 'fas fa-check-circle';
+                        break;
+                    case 'warning':
+                        icon.className = 'fas fa-exclamation-triangle';
+                        break;
+                    case 'error':
+                        icon.className = 'fas fa-times-circle';
+                        break;
+                    default:
+                        icon.className = 'fas fa-info-circle';
+                }
+                
+                // Configurar mensagem
+                title.textContent = type === 'info' ? 'Informação' : 
+                                  type === 'success' ? 'Sucesso' : 
+                                  type === 'warning' ? 'Aviso' : 'Erro';
+                msg.textContent = message;
+                
+                // Mostrar
+                notification.classList.add('active');
+                
+                // Auto-esconder
+                setTimeout(() => {
+                    notification.classList.remove('active');
+                }, 5000);
+            },
+            
+            showLoading(text = 'Carregando...') {
+                document.getElementById('loadingText').textContent = text;
+                document.getElementById('loadingOverlay').classList.add('active');
+            },
+            
+            hideLoading() {
+                document.getElementById('loadingOverlay').classList.remove('active');
+            },
+            
+            // PWA Functions
+            checkPWAInstall() {
+                // Verificar se já está instalado
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    document.getElementById('installPrompt').classList.remove('active');
+                }
+            },
+            
+            showInstallPrompt() {
+                const prompt = document.getElementById('installPrompt');
+                prompt.classList.add('active');
+                
+                // Auto-esconder após 30 segundos
+                setTimeout(() => {
+                    prompt.classList.remove('active');
+                }, 30000);
+            },
+            
+            hideInstallPrompt() {
+                document.getElementById('installPrompt').classList.remove('active');
+            },
+            
+            async installPWA() {
+                if (!this.state.deferredPrompt) {
+                    this.showNotification('Instalação não disponível', 'warning');
+                    return;
+                }
+                
+                this.state.deferredPrompt.prompt();
+                const { outcome } = await this.state.deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    this.showNotification('SYNTA será instalado em breve!', 'success');
+                } else {
+                    this.showNotification('Instalação cancelada', 'info');
+                }
+                
+                this.state.deferredPrompt = null;
+                this.hideInstallPrompt();
+            }
+        };
+        
+        // Inicializar aplicação quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            SYNTA.init();
+        });
+        
+        // Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(new URL('data:application/javascript,' + encodeURIComponent(`
+                self.addEventListener('install', event => {
+                    console.log('Service Worker instalado');
+                    self.skipWaiting();
+                });
+                
+                self.addEventListener('activate', event => {
+                    console.log('Service Worker ativado');
+                });
+                
+                self.addEventListener('fetch', event => {
+                    // Pode ser expandido para cache offline
+                    event.respondWith(fetch(event.request));
+                });
+            `), document.baseURI).href).catch(console.error);
+        }
+    </script>
+</body>
+</html>
