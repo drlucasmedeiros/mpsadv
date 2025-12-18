@@ -17,7 +17,7 @@
      <!-- Meta tags para o iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Meu App">
+    <meta name="apple-mobile-web-app-title" content="MPS App">
 
     <!-- Ícone para iOS -->
     <link rel="apple-touch-icon" href="/ico_iphone.png">
@@ -1224,110 +1224,7 @@
         }
     }
 }
-/* Seção de Agendamento Calendly - Com altura adequada */
-.contact-column {
-    width: 100%;
-    margin: 4rem auto 0;
-    padding: 0 2rem;
-}
-
-.calendly-container {
-    background: var(--white);
-    border-radius: 8px;
-    margin-top: 3rem;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.calendly-header {
-    padding: 3rem 2rem 1.5rem;
-    text-align: center;
-}
-
-.calendly-header h3 {
-    font-family: 'Hatton', serif;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--primary-dark);
-}
-
-.calendly-header h3 i {
-    color: var(--accent);
-    margin-right: 0.8rem;
-}
-
-.calendly-header p {
-    color: var(--text-medium);
-    margin-bottom: 0.5rem;
-}
-
-/* Benefícios */
-.beneficios-agendamento {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin: 2rem 0;
-}
-
-.beneficio-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 1.2rem;
-    background: var(--gray-light);
-    border-radius: 6px;
-}
-
-.beneficio-icone {
-    width: 36px;
-    height: 36px;
-    margin-right: 1rem;
-    color: var(--accent);
-    font-size: 1rem;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.beneficio-texto h4 {
-    font-family: 'Hatton', serif;
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
-}
-
-.beneficio-texto p {
-    font-size: 0.9rem;
-    color: var(--text-medium);
-    margin: 0;
-}
-
-/* Calendly com altura suficiente */
-.calendly-inline-widget {
-    width: 100% !important;
-    height: 700px !important;
-    min-height: 700px;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-    .contact-column {
-        padding: 0 1rem;
-    }
-    
-    .calendly-header {
-        padding: 2rem 1rem 1rem;
-    }
-    
-    .beneficios-agendamento {
-        grid-template-columns: 1fr;
-    }
-    
-    .calendly-inline-widget {
-        height: 800px !important;
-        min-height: 800px;
-    }
-}
- </style>
+    </style>
 </head>
 <body>
     <!-- Header com Logo no Topo -->
@@ -1419,7 +1316,7 @@
             </div>
             <div class="area-card">
                 <i class="fas fa-credit-card"></i>
-                <h3>Superendividamento</h3>
+                <h2>Superendividamento</h2>
                 <p>Orientação e defesa de consumidores em situação de superendividamento.</p>
             </div>
             <div class="area-card">
@@ -1506,7 +1403,7 @@
                         <img src="img/equipe/paula.jpeg" alt="Paula Kirche">
                     </div>
                     <h3>Paula Kirche</h3>
-                    <p>Analista Medicina Legal</p>
+                    <p>Medicina Legal</p>
                 </a>
             </div>
         </div>
@@ -1598,61 +1495,6 @@
                     <p style="color: var(--text-medium); font-size: 0.9rem; margin: 0;">
                         📧 Você receberá uma confirmação por e-mail
                     </p>
-                </div>
-            </div>
-        </div>
-
-<!-- Calendly e Formulário -->
-        <div class="contact-column">
-            <!-- Widget Calendly -->
-            <div class="calendly-container" id="agendar">
-                <div class="calendly-header">
-                    <h3><i class="fas fa-video"></i> CONSULTA ONLINE OU PRESENCIAL</h3>
-                    <p>Escolha o horário que melhor se adapta à sua agenda</p>
-<br><p>Estamos à disposição para esclarecer dúvidas e oferecer a melhor solução.</p>
-
-		<div class="beneficios-agendamento">
-    <div class="beneficio-item">
-        <div class="beneficio-icone">
-            <i class="fas fa-stopwatch"></i>
-        </div>
-        <div class="beneficio-texto">
-            <h4>Atendimento Gratuito</h4>
-            <p>Até 30 minutos para análise do seu caso</p>
-        </div>
-    </div>
-    <div class="beneficio-item">
-        <div class="beneficio-icone">
-            <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="beneficio-texto">
-            <h4>Advogado Especialista</h4>
-            <p>Consulta direta com especialista na sua área</p>
-        </div>
-    </div>
-    <div class="beneficio-item">
-        <div class="beneficio-icone">
-            <i class="fas fa-bullseye"></i>
-        </div>
-        <div class="beneficio-texto">
-         <h4>Diagnóstico Completo</h4>
-         <p>Análise detalhada e definição das melhores estratégias</p>
-        </div>
-    </div>
-    <div class="beneficio-item">
-        <div class="beneficio-icone">
-            <i class="fas fa-hand-holding-usd"></i>
-        </div>
-        <div class="beneficio-texto">
-            <h4>Sem Custos Iniciais</h4>
-            <p>Consulta inicial totalmente gratuita, e análise pro-bono</p>
-        </div>
-    </div>
-</div>
-                     <!-- Calendly inline widget begin -->
-<div class="calendly-inline-widget" data-url="https://calendly.com/atendimentompsadvogados/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=003b3b&text_color=ffffff&primary_color=ffffff" style="min-width:320px;height:700px;"></div>
-<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<!-- Calendly inline widget end -->
                 </div>
             </div>
         </div>
