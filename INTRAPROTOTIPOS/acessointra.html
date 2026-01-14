@@ -344,7 +344,45 @@
     </div>
 
     <script>
-        // --- Banco simulado ---
+           // Configuração do Supabase
+        const SUPABASE_URL = 'https://obcyhswzogssjgeqwzpb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iY3loc3d6b2dzc2pnZXF3enBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MDIwODEsImV4cCI6MjA4MzM3ODA4MX0.Fb3ljUcBiF6qO1gfclBVAjknHQ8ziNiHF-GVhtWpou4';
+
+        // Inicializar cliente Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
+
+// Função de login atualizada
+async function handleLogin(e) { 
+    e.preventDefault(); 
+    const email = document.getElementById('email').value; 
+    const password = document.getElementById('password').value; 
+    const userType = document.getElementById('userType').value; 
+    
+    try {
+        // Primeiro, fazer signin com Supabase Auth
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (authError) {
+            // Se não existir no Supabase Auth, tentar criar
+            const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (signUpError) {
+                throw signUpError;
+            }
+        }
+      // --- Banco simulado ---
         const DB_KEYS = { USERS: 'mps_users', CLIENTS: 'mps_clients', PROCESSES: 'mps_processes', DOCUMENTS: 'mps_documents' };
 
         function initializeDatabase(){
