@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novas Regulamentações para Empresas de Tecnologia - Medeiros, Paiva & Soares</title>
+    <title>Desconsideração da Personalidade Jurídica - Medeiros, Paiva & Soares</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <style>
-         <style>
         /* Importação das fontes locais */
         @font-face {
             font-family: 'Big River';
@@ -127,28 +126,33 @@
             text-transform: uppercase;
         }
         
-        nav ul {
+        /* Navegação */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
             display: flex;
             list-style: none;
         }
         
-        nav ul li {
+        #nav-links li {
             margin-left: 2.5rem;
-            position: relative;
         }
         
-        nav ul li a {
+        #nav-links li a {
+            color: var(--text-light);
             text-decoration: none;
-            color: var(--white);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
             transition: var(--transition);
             position: relative;
-            padding: 5px 0;
+            padding: 0.5rem 0;
         }
         
-        nav ul li a:after {
+        #nav-links li a:after {
             content: '';
             position: absolute;
             width: 0;
@@ -159,28 +163,70 @@
             transition: var(--transition);
         }
         
-        nav ul li a:hover {
-            color: var(--accent-light);
-        }
-        
-        nav ul li a:hover:after {
-            width: 100%;
-        }
-        
-        nav ul li a.active {
+        #nav-links li a:hover,
+        #nav-links li a.active {
             color: var(--accent);
         }
         
-        nav ul li a.active:after {
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
             width: 100%;
         }
-
+        
+        /* Estilos do Menu Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
         
         /* Breadcrumb */
         .breadcrumb {
             background-color: var(--gray-light);
             padding: 1.5rem 3rem;
-            margin-top: 80px;
+            margin-top: 90px; /* Ajustado para compensar header fixo */
         }
         
         .breadcrumb-content {
@@ -726,64 +772,80 @@
             color: rgba(255, 255, 255, 0.6);
         }
         
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            html {
-                font-size: 16px;
-            }
-            
-            .article-title {
-                font-size: 3rem;
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .article-title {
-                font-size: 2.5rem;
-            }
-            
-            .article-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .article-body h2 {
-                font-size: 1.8rem;
-            }
-            
-            .article-body h3 {
-                font-size: 1.5rem;
-            }
-        }
-        
+        /* Media query para telas menores (mobile) */
         @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
             header {
                 padding: 1rem 2rem;
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: space-between;
             }
             
             header.scrolled {
                 padding: 0.8rem 2rem;
             }
             
-            .header-logo {
-                margin-bottom: 1rem;
-            }
-            
             .logo-text {
-                font-size: 1.3rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 0.5rem 1.2rem;
+                font-size: 1.4rem;
             }
             
             .breadcrumb {
                 padding: 1rem 2rem;
+                margin-top: 80px;
             }
             
             .article-hero {
@@ -839,6 +901,33 @@
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
+            
+            .logo-text {
+                font-size: 0.9rem;
+                white-space: nowrap;
+                margin-left: 0.5rem;
+            }
+            
+            .header-logo {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .logo-img {
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+                height: 35px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 0.8rem;
+            }
+            
+            .logo-img {
+                height: 30px;
+            }
         }
     </style>
 </head>
@@ -846,11 +935,13 @@
     <!-- Header -->
     <header>
         <div class="header-logo">
-            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <a href="index.html">
+                <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
             <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
         </div>
         <nav>
-            <ul>
+            <ul id="nav-links">
                 <li><a href="index.html">Início</a></li>
                 <li><a href="index.html#areas">Áreas</a></li>
                 <li><a href="index.html#about">Sobre</a></li>
@@ -858,85 +949,97 @@
                 <li><a href="index.html#blog" class="active">Blog</a></li>
                 <li><a href="index.html#contact">Contato</a></li>
             </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
+    
+    <!-- Overlay do menu mobile -->
+    <div class="nav-overlay"></div>
 
-   <!-- Breadcrumb -->
-<div class="breadcrumb">
-    <div class="breadcrumb-content">
-        <a href="index.html">Início</a> <span>></span>
-        <a href="index.html#blog">Blog</a> <span>></span>
-        <span>Rescisão Indireta: O Direito de "Demitir o Patrão"</span>
-    </div>
-</div>
-
-<!-- Article Hero -->
-<section class="article-hero">
-    <div class="article-hero-content">
-        <div class="article-category">Direito Trabalhista</div>
-        <h1 class="article-title">Rescisão Indireta: O trabalhador pode “demitir o patrão”?</h1>
-        <div class="article-meta">
-            <div class="article-date">8 de Janeiro de 2026</div>
-            <div class="article-type">Análise Especializada</div>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="index.html">Início</a> <span>></span>
+            <a href="index.html#blog">Blog</a> <span>></span>
+            <span>Desconsideração da Personalidade Jurídica</span>
         </div>
-        <p class="article-subtitle">Entenda quando a falta grave da empresa autoriza o rompimento do contrato com a manutenção de todos os direitos trabalhistas.</p>
     </div>
-</section>
 
-<!-- Article Content -->
-<article class="article-content">
-    <div class="article-body">
-        <p>No Direito do Trabalho, a relação contratual deve ser pautada pelo respeito mútuo. Quando o empregador rompe esse equilíbrio através de condutas graves, surge a figura da <strong>Rescisão Indireta</strong> (Art. 483 da CLT). Trata-se, na prática, da "Justa Causa aplicada ao Empregador".</p>
+    <!-- Article Hero -->
+    <section class="article-hero">
+        <div class="article-hero-content">
+            <div class="article-category">Direito Empresarial & Compliance</div>
+            <h1 class="article-title">Desconsideração da Personalidade Jurídica: Quando o Juiz Ignora o CNPJ</h1>
+            <div class="article-meta">
+                <div class="article-date">15 de Janeiro de 2026</div>
+                <div class="article-type">Artigo Técnico</div>
+            </div>
+            <p class="article-subtitle">Entenda os limites da autonomia patrimonial e como evitar que falhas na gestão contábil exponham o patrimônio pessoal dos sócios.</p>
+        </div>
+    </section>
 
-        <p>Esta modalidade permite que o colaborador encerre o vínculo mantendo o direito ao aviso-prévio, multa de 40% do FGTS e seguro-desemprego, protegendo sua dignidade e subsistência.</p>
-
-        <h2>O Caso Hipotético: O Dilema de "João"</h2>
-        
-        <p>Para ilustrar a gravidade necessária, analisemos o caso de <strong>João</strong>, gestor de logística. Ele enfrenta atrasos salariais recorrentes superiores a dois meses e a ausência de depósitos de FGTS por um longo período. Além disso, João passou a sofrer o "esvaziamento de funções" — uma tática de assédio moral para forçar seu pedido de demissão.</p>
-
-        <blockquote>
-            "Na rescisão indireta, a prova é o alicerce do sucesso. João não deve simplesmente pedir demissão, pois renunciaria a verbas essenciais. A via correta é a declaração judicial da quebra do vínculo por culpa patronal."
-        </blockquote>
-
-        <h2>Análise Técnica e Providências Necessárias</h2>
-        
-        <p>A estratégia para o reconhecimento da rescisão indireta exige cautela técnica. O trabalhador possui prerrogativas legais importantes durante o processo:</p>
-        
-        <ul>
-            <li><strong>Afastamento Legal:</strong> O Art. 483, § 3º da CLT permite que o empregado suspenda a prestação de serviços enquanto aguarda a decisão, sem configurar abandono de emprego.</li>
-            <li><strong>Produção Antecipada de Provas:</strong> É vital reunir extratos bancários, registros de FGTS e comunicações que comprovem o descumprimento das obrigações contratuais.</li>
-            <li><strong>Imediatidade:</strong> Embora o rigor seja menor para o empregado, a demora excessiva em questionar a falta grave pode ser interpretada como perdão tácito.</li>
-        </ul>
-
-        <div class="article-image">
-            <img src="https://img.freepik.com/fotos-gratis/abaixo-vista-do-empresario-irreconhecivel-deixando-o-escritorio-depois-de-perder-o-emprego_637285-6383.jpg" alt="Análise de Contrato de Trabalho">
-            <div class="image-caption">A rescisão indireta é um mecanismo de defesa contra o abuso de poder diretivo.</div>
+    <!-- Article Content -->
+    <article class="article-content">
+        <div class="article-body">
+            <p>A autonomia patrimonial é o alicerce do empreendedorismo moderno, permitindo que o risco do negócio seja segregado do patrimônio pessoal. Contudo, essa separação não é absoluta. O ordenamento jurídico brasileiro prevê a <strong>Desconsideração da Personalidade Jurídica</strong> como uma medida excepcional para coibir abusos.</p>
+            
+            <p>Neste artigo, analisamos os critérios rigorosos que permitem ao Judiciário "levantar o véu" da empresa e as estratégias preventivas essenciais para proteger os ativos dos sócios e administradores.</p>
+            
+            <h2>Teoria Maior vs. Teoria Menor: Onde Mora o Risco?</h2>
+            
+            <p>A aplicação da desconsideração varia conforme a natureza da obrigação. É fundamental que o empresário compreenda em qual cenário sua operação está inserida:</p>
+            
+            <ul>
+                <li><strong>Relações Cíveis e Comerciais:</strong> Exige a prova do abuso, caracterizado pelo desvio de finalidade ou pela confusão patrimonial (Art. 50 do Código Civil).</li>
+                <li><strong>Relações de Consumo e Ambientais:</strong> Adota-se a Teoria Menor, onde a mera insolvência da empresa pode autorizar o redirecionamento da execução aos sócios.</li>
+                <li><strong>Esfera Trabalhista:</strong> Onde a proteção é mais sensível, bastando o inadimplemento da pessoa jurídica para que o patrimônio pessoal seja acionado.</li>
+            </ul>
+            
+            <div class="article-image">
+                <img src="https://bpadvocacia.adv.br/wp-content/uploads/2024/04/Sem-Titulo-1-1.jpg" alt="Justiça e Proteção Patrimonial">
+                <div class="image-caption">A correta separação contábil é a principal defesa contra a desconsideração.</div>
+            </div>
+            
+            <h2>Confusão Patrimonial: O Erro Fatal na Gestão</h2>
+            
+            <p>O maior gatilho para a perda da proteção do CNPJ não é a má-fé deliberada, mas a desorganização administrativa. A Lei da Liberdade Econômica (Lei 13.874/19) detalhou o que configura confusão patrimonial:</p>
+            
+            <blockquote>
+                "A ausência de separação de fato entre os patrimônios, caracterizada pelo cumprimento repetitivo de obrigações do sócio pela sociedade (ou vice-versa) e pela transferência de ativos sem a devida contraprestação, é o que autoriza o juiz a ignorar a barreira do CNPJ."
+            </blockquote>
+            
+            <p>Entre os aspectos mais relevantes para a defesa patrimonial estão a regularidade das retiradas de pro-labore e a formalização técnica de aportes financeiros via contratos de mútuo ou aumento de capital.</p>
+            
+            <h3>Dicas de Ouro para Blindagem Jurídica e Contábil</h3>
+            
+            <p>Para manter a higidez da personalidade jurídica, as empresas devem implementar protocolos rígidos de <em>Compliance</em> Financeiro:</p>
+            
+            <ol>
+                <li><strong>Segregação Absoluta de Contas:</strong> Jamais utilize a conta bancária da empresa para pagamentos de despesas pessoais de sócios.</li>
+                <li><strong>Formalização de Mútuos:</strong> Qualquer transferência de recurso do sócio para a empresa deve ser lastreada por contrato escrito e registrado.</li>
+                <li><strong>Pro-labore e Dividendos:</strong> A remuneração dos sócios deve ser escriturada conforme as normas contábeis, evitando saques assistemáticos.</li>
+                <li><strong>Manutenção do Cadastro Ativo:</strong> O encerramento irregular da empresa (sem baixa formal) gera presunção de fraude.</li>
+                <li><strong>Governança de Grupos Econômicos:</strong> Documente a autonomia de cada CNPJ dentro de uma holding para evitar a solidariedade indesejada.</li>
+            </ol>
+            
+            <h2>Implicações Práticas e Estratégias de Defesa</h2>
+            
+            <p>Diante de um Incidente de Desconsideração da Personalidade Jurídica (IDPJ), a estratégia de defesa deve ser técnica e documental. Recomendamos:</p>
+            
+            <ul>
+                <li>Realizar auditorias contábeis periódicas para identificar possíveis "misturas" patrimoniais.</li>
+                <li>Desenvolver programas de governança que separem claramente a gestão da propriedade.</li>
+                <li>Estabelecer parcerias com especialistas jurídicos para revisão do Contrato Social e acordos de sócios.</li>
+                <li>Manter registros de assembleias e reuniões de diretoria que comprovem a lisura das decisões empresariais.</li>
+            </ul>
+            
+            <p>A proteção do patrimônio pessoal não é um ato de ocultação, mas o resultado de uma gestão transparente, ética e juridicamente assistida. A conformidade contábil é, hoje, a ferramenta mais poderosa de segurança jurídica do empresário.</p>
         </div>
 
-        <h3>Visão Contábil: O Impacto no Passivo da Empresa</h3>
-        
-        <p>Sob a ótica da gestão, a rescisão indireta representa um risco financeiro severo que muitas empresas negligenciam:</p>
-        
-        <ol>
-            <li><strong>Provisão de Verbas:</strong> Uma sentença favorável ao trabalhador obriga o pagamento imediato de todas as verbas de uma dispensa imotivada, acrescidas de juros e correção.</li>
-            <li><strong>Custo do Desequilíbrio:</strong> A economia momentânea gerada pelo não pagamento de encargos (como FGTS) costuma resultar em um passivo judicial exponencialmente maior.</li>
-            <li><strong>Auditoria Preventiva:</strong> O <em>compliance</em> trabalhista e a auditoria regular da folha de pagamento são as defesas mais eficazes para evitar condenações desta natureza.</li>
-        </ol>
-
-        <h2>Conclusão e Direcionamento Estratégico</h2>
-        
-        <p>A rescisão indireta deve ser encarada como a última instância para o restabelecimento da justiça contratual. Se o ambiente de trabalho tornou-se insuportável por descumprimento legal da empresa, o trabalhador possui o amparo necessário para buscar uma transição segura.</p>
-
-        <ul>
-            <li><strong>Para o Trabalhador:</strong> Nunca tome decisões precipitadas; a consultoria técnica evita a perda de direitos consolidados.</li>
-            <li><strong>Para a Empresa:</strong> A transparência e a pontualidade são os melhores investimentos para a saúde jurídica do negócio.</li>
-        </ul>
-
-        <p><strong>Está enfrentando irregularidades graves em seu contrato?</strong> Nossa equipe está preparada para analisar a viabilidade do seu caso e garantir seus direitos de forma estratégica.</p>
-    </div>
-</article>
-
-        
         <!-- Social Share -->
         <div class="social-share">
             <div class="share-text">Compartilhe este artigo:</div>
@@ -957,7 +1060,7 @@
                 <div class="author-details">
                     <h3>Dr. Lucas Medeiros - OAB/MT 32882/O</h3>
                     <div class="author-title">Sócio Fundador - Especialista em Direito Empresarial e Tecnologia</div>
-                    <p class="author-bio">Dr. Medeiros é especialista em direito empresarial com mais de 05 anos de experiência em assessoria jurídica para empresas de tecnologia.Atua como consultor para diversas startups e empresas estabelecidas no setor de tecnologia. É palestrante frequente em eventos do setor e autor de diversos artigos sobre regulamentação tecnológica.</p>
+                    <p class="author-bio">Dr. Medeiros é especialista em direito empresarial com mais de 05 anos de experiência em assessoria jurídica para empresas de tecnologia. Atua como consultor para diversas startups e empresas estabelecidas no setor de tecnologia. É palestrante frequente em eventos do setor e autor de diversos artigos sobre regulamentação tecnológica.</p>
                 </div>
             </div>
         </div>
@@ -1039,6 +1142,47 @@
     </footer>
 
     <script>
+        // Menu Mobile
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navOverlay = document.querySelector('.nav-overlay');
+        
+        // Abrir/fechar menu
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Fechar menu ao clicar no overlay
+        navOverlay.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            this.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.querySelector('header');

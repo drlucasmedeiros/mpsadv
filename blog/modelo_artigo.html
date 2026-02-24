@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novas Regulamentações para Empresas de Tecnologia - Medeiros, Paiva & Soares</title>
+    <title>Desconsideração da Personalidade Jurídica - Medeiros, Paiva & Soares</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <style>
-         <style>
         /* Importação das fontes locais */
         @font-face {
             font-family: 'Big River';
@@ -127,28 +126,33 @@
             text-transform: uppercase;
         }
         
-        nav ul {
+        /* Navegação */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        #nav-links {
             display: flex;
             list-style: none;
         }
         
-        nav ul li {
+        #nav-links li {
             margin-left: 2.5rem;
-            position: relative;
         }
         
-        nav ul li a {
+        #nav-links li a {
+            color: var(--text-light);
             text-decoration: none;
-            color: var(--white);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
             transition: var(--transition);
             position: relative;
-            padding: 5px 0;
+            padding: 0.5rem 0;
         }
         
-        nav ul li a:after {
+        #nav-links li a:after {
             content: '';
             position: absolute;
             width: 0;
@@ -159,28 +163,70 @@
             transition: var(--transition);
         }
         
-        nav ul li a:hover {
-            color: var(--accent-light);
-        }
-        
-        nav ul li a:hover:after {
-            width: 100%;
-        }
-        
-        nav ul li a.active {
+        #nav-links li a:hover,
+        #nav-links li a.active {
             color: var(--accent);
         }
         
-        nav ul li a.active:after {
+        #nav-links li a:hover:after,
+        #nav-links li a.active:after {
             width: 100%;
         }
-
+        
+        /* Estilos do Menu Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Overlay do menu mobile */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
         
         /* Breadcrumb */
         .breadcrumb {
             background-color: var(--gray-light);
             padding: 1.5rem 3rem;
-            margin-top: 80px;
+            margin-top: 90px; /* Ajustado para compensar header fixo */
         }
         
         .breadcrumb-content {
@@ -726,64 +772,80 @@
             color: rgba(255, 255, 255, 0.6);
         }
         
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            html {
-                font-size: 16px;
-            }
-            
-            .article-title {
-                font-size: 3rem;
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .article-title {
-                font-size: 2.5rem;
-            }
-            
-            .article-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .article-body h2 {
-                font-size: 1.8rem;
-            }
-            
-            .article-body h3 {
-                font-size: 1.5rem;
-            }
-        }
-        
+        /* Media query para telas menores (mobile) */
         @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            #nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 100px 30px 30px;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            #nav-links.active {
+                right: 0;
+            }
+            
+            #nav-links li {
+                margin: 0;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            
+            #nav-links li a {
+                font-size: 1.2rem;
+                padding: 12px 0;
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            #nav-links li a:after {
+                display: none;
+            }
+            
+            #nav-links li a:hover {
+                color: var(--accent-light);
+                background-color: rgba(255, 255, 255, 0.05);
+                padding-left: 10px;
+            }
+            
+            #nav-links li a.active {
+                color: var(--accent);
+                background-color: rgba(201, 167, 105, 0.1);
+                padding-left: 15px;
+                border-left: 3px solid var(--accent);
+            }
+            
             header {
                 padding: 1rem 2rem;
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: space-between;
             }
             
             header.scrolled {
                 padding: 0.8rem 2rem;
             }
             
-            .header-logo {
-                margin-bottom: 1rem;
-            }
-            
             .logo-text {
-                font-size: 1.3rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 0.5rem 1.2rem;
+                font-size: 1.4rem;
             }
             
             .breadcrumb {
                 padding: 1rem 2rem;
+                margin-top: 80px;
             }
             
             .article-hero {
@@ -839,6 +901,33 @@
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
+            
+            .logo-text {
+                font-size: 0.9rem;
+                white-space: nowrap;
+                margin-left: 0.5rem;
+            }
+            
+            .header-logo {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .logo-img {
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+                height: 35px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 0.8rem;
+            }
+            
+            .logo-img {
+                height: 30px;
+            }
         }
     </style>
 </head>
@@ -846,11 +935,13 @@
     <!-- Header -->
     <header>
         <div class="header-logo">
-            <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            <a href="index.html">
+                <img src="https://mpsadv.com.br/img/LOGO.fw_upscaled_sem%20coluna.fw.png" alt="Medeiros, Paiva & Soares" class="logo-img">
+            </a>
             <div class="logo-text">MEDEIROS, PAIVA & SOARES</div>
         </div>
         <nav>
-            <ul>
+            <ul id="nav-links">
                 <li><a href="index.html">Início</a></li>
                 <li><a href="index.html#areas">Áreas</a></li>
                 <li><a href="index.html#about">Sobre</a></li>
@@ -858,10 +949,18 @@
                 <li><a href="index.html#blog" class="active">Blog</a></li>
                 <li><a href="index.html#contact">Contato</a></li>
             </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
+    
+    <!-- Overlay do menu mobile -->
+    <div class="nav-overlay"></div>
 
-<!-- Breadcrumb -->
+    <!-- Breadcrumb -->
     <div class="breadcrumb">
         <div class="breadcrumb-content">
             <a href="index.html">Início</a> <span>></span>
@@ -940,9 +1039,7 @@
             
             <p>A proteção do patrimônio pessoal não é um ato de ocultação, mas o resultado de uma gestão transparente, ética e juridicamente assistida. A conformidade contábil é, hoje, a ferramenta mais poderosa de segurança jurídica do empresário.</p>
         </div>
-    </article>
 
-        
         <!-- Social Share -->
         <div class="social-share">
             <div class="share-text">Compartilhe este artigo:</div>
@@ -963,7 +1060,7 @@
                 <div class="author-details">
                     <h3>Dr. Lucas Medeiros - OAB/MT 32882/O</h3>
                     <div class="author-title">Sócio Fundador - Especialista em Direito Empresarial e Tecnologia</div>
-                    <p class="author-bio">Dr. Medeiros é especialista em direito empresarial com mais de 05 anos de experiência em assessoria jurídica para empresas de tecnologia.Atua como consultor para diversas startups e empresas estabelecidas no setor de tecnologia. É palestrante frequente em eventos do setor e autor de diversos artigos sobre regulamentação tecnológica.</p>
+                    <p class="author-bio">Dr. Medeiros é especialista em direito empresarial com mais de 05 anos de experiência em assessoria jurídica para empresas de tecnologia. Atua como consultor para diversas startups e empresas estabelecidas no setor de tecnologia. É palestrante frequente em eventos do setor e autor de diversos artigos sobre regulamentação tecnológica.</p>
                 </div>
             </div>
         </div>
@@ -1045,6 +1142,47 @@
     </footer>
 
     <script>
+        // Menu Mobile
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navOverlay = document.querySelector('.nav-overlay');
+        
+        // Abrir/fechar menu
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Fechar menu ao clicar no overlay
+        navOverlay.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            this.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.querySelector('header');
