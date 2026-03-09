@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Demitindo o seu Patrão - Medeiros, Paiva & Soares</title>
+    <meta property="og:title" content="Rescisão Indireta: O trabalhador pode “demitir o patrão”?">
+    <meta property="og:description" content="Entenda quando a falta grave da empresa autoriza o rompimento do contrato com a manutenção de todos os direitos trabalhistas. Análise especializada.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+    <meta property="og:url" content="https://mpsadv.com.br/blog/rescisao-indireta.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Medeiros, Paiva & Soares">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <style>
@@ -1114,6 +1121,40 @@
     </footer>
 
     <script>
+       // Compartilhamento social
+        const shareIcons = document.getElementById('shareIcons');
+        if (shareIcons) {
+            const pageUrl = encodeURIComponent(window.location.href);
+            const pageTitle = encodeURIComponent(document.title.replace(' - Medeiros, Paiva & Soares', ''));
+
+            shareIcons.addEventListener('click', (e) => {
+                const target = e.target.closest('.share-icon');
+                if (!target) return;
+
+                e.preventDefault();
+                const network = target.dataset.share;
+                let shareUrl = '';
+
+                switch (network) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+                        break;
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`;
+                        break;
+                }
+
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                }
+            });
+        }
         // Menu Mobile
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
